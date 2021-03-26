@@ -48,27 +48,27 @@ class NotesListAdapter(
 
         override fun onClick(view: View) {
             if (selectedItemsValue.contains(this.note)) {
-                removeNote()
+                deselectNote()
             } else if (selectedItemsValue.isEmpty()) {
                 openNote()
             } else if (selectedItemsValue.isNotEmpty() && !selectedItemsValue.contains(this.note)) {
-                addNote()
+                selectNote()
             }
         }
 
         override fun onLongClick(view: View): Boolean {
             if (!selectedItemsValue.contains(this.note)) {
-                addNote()
+                selectNote()
             }
             return true
         }
 
-        private fun addNote() {
+        private fun selectNote() {
             selectedItems.value = selectedItemsValue.also { it.add(this.note) }
             itemView.isActivated = true
         }
 
-        private fun removeNote() {
+        private fun deselectNote() {
             selectedItems.value = selectedItemsValue.also { it.remove(this.note) }
             itemView.isActivated = false
         }

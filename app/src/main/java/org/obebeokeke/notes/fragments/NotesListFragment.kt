@@ -7,26 +7,25 @@ import android.content.IntentFilter
 import android.os.Bundle
 import android.util.Log
 import android.view.*
+import android.widget.EditText
+import androidx.appcompat.app.AlertDialog
 import androidx.fragment.app.Fragment
-import androidx.fragment.app.FragmentResultListener
 import androidx.fragment.app.setFragmentResult
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import org.obebeokeke.notes.R
-import org.obebeokeke.notes.dialogs.NoteNameDialog
 import org.obebeokeke.notes.model.Note
 import org.obebeokeke.notes.recyclerview.NotesListAdapter
 
 private const val TAG = "NotesListFragment"
 private const val ARG_NOTE_NAME = "requestKey"
-private const val REQUEST_NOTE_NAME = "NoteNameDialog"
 
 const val ACTION_OPEN_NOTE = "org.obebeokeke.notes.open_note"
 const val NOTE_NAME = "org.obebeokeke.notes.note_name"
 const val NOTE_TEXT = "org.obebeokeke.notes.note_text"
 
-class NotesListFragment : Fragment(), FragmentResultListener {
+class NotesListFragment : Fragment() {
 
     private lateinit var notesRecyclerView: RecyclerView
     private var adapter: NotesListAdapter = NotesListAdapter(emptyList())
@@ -79,7 +78,6 @@ class NotesListFragment : Fragment(), FragmentResultListener {
             Log.i(TAG, "Received ${notes.size} notes.")
             updateUI(notes)
         }
-        childFragmentManager.setFragmentResultListener(REQUEST_NOTE_NAME, viewLifecycleOwner, this)
     }
 
     override fun onStart() {
@@ -113,30 +111,57 @@ class NotesListFragment : Fragment(), FragmentResultListener {
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         return when (item.itemId) {
             R.id.new_note -> {
-                with(NoteNameDialog.newInstance(REQUEST_NOTE_NAME)) {
-                    show(this@NotesListFragment.childFragmentManager, null)
-                }
+                showNoteCreationDialog()
                 true
             }
             else -> super.onOptionsItemSelected(item)
         }
     }
 
-    override fun onFragmentResult(requestKey: String, result: Bundle) {
-        when (requestKey) {
-            REQUEST_NOTE_NAME -> {
-                val noteName = result.getString(requestKey, "")
-                Log.i(TAG, "Received request to create note with name: $noteName")
-                val note = Note(noteName, "")
-                notesListViewModel.insertNote(note)
-                openNote(note)
-            }
-        }
-    }
-
     private fun updateUI(notes: List<Note>) {
         adapter.notes = notes
         notesRecyclerView.adapter = adapter
+    }
+
+    private fun showNoteCreationDialog() {
+        val dialogView = layoutInflater.inflate(R.layout.dialog_note_name, null)
+        val noteNameEditText = dialogView.findViewById<EditText>(R.id.note_name)
+
+        val alertDialog = AlertDialog.Builder(requireActivity())
+            .setView(dialogView)
+            .setTitle(R.string.new_note)
+            .setPositiveButton(R.string.create_new_note, null)
+            .setNegativeButton(R.string.cancel_new_note, null)
+            .create()
+
+        alertDialog.setOnShowListener {
+            val positiveButton = alertDialog.getButton(AlertDialog.BUTTON_POSITIVE)
+            val negativeButton = alertDialog.getButton(AlertDialog.BUTTON_NEGATIVE)
+
+            positiveButton.setOnClickListener {
+                val noteName = noteNameEditText.text.toString()
+
+                Log.i(TAG, "Note name: $noteName")
+
+                val notes = notesListViewModel.notesLiveData.value?.map { it.name } ?: emptyList()
+                if (notes.contains(noteName)) {
+                    noteNameEditText.setText("")
+                    noteNameEditText.hint = getString(R.string.note_already_exists)
+                } else if (noteName.isNotBlank()) {
+                    alertDialog.dismiss()
+
+                    val note = Note(noteName, "")
+                    notesListViewModel.insertNote(note)
+                    openNote(note)
+                }
+            }
+
+            negativeButton.setOnClickListener {
+                alertDialog.cancel()
+            }
+        }
+
+        alertDialog.show()
     }
 
     private fun openNote(note: Note) {
@@ -147,7 +172,8 @@ class NotesListFragment : Fragment(), FragmentResultListener {
         setFragmentResult(requestKey, resultBundle)
     }
 
-    private inner class NotesListActionMode(private val notesSelected: List<Note>) : ActionMode.Callback {
+    private inner class NotesListActionMode(private val notesSelected: List<Note>) :
+        ActionMode.Callback {
 
         private lateinit var actionMode: ActionMode
 
