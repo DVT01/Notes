@@ -33,7 +33,7 @@ class NotesListFragment : Fragment() {
     private val notesListViewModel: NotesListViewModel by lazy {
         ViewModelProvider(this).get(NotesListViewModel::class.java)
     }
-    private val broadcastReceiver: BroadcastReceiver by lazy {
+    private val selectNoteFromAdapter: BroadcastReceiver by lazy {
         object : BroadcastReceiver() {
             override fun onReceive(context: Context, intent: Intent) {
                 Log.i(TAG, "Received broadcast action: ${intent.action}")
@@ -95,12 +95,12 @@ class NotesListFragment : Fragment() {
         }
 
         val intentFilter = IntentFilter(ACTION_OPEN_NOTE)
-        requireContext().registerReceiver(broadcastReceiver, intentFilter)
+        requireContext().registerReceiver(selectNoteFromAdapter, intentFilter)
     }
 
     override fun onStop() {
         super.onStop()
-        requireContext().unregisterReceiver(broadcastReceiver)
+        requireContext().unregisterReceiver(selectNoteFromAdapter)
     }
 
     override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
