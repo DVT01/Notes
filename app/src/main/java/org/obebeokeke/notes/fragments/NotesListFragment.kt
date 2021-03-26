@@ -16,6 +16,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import org.obebeokeke.notes.R
 import org.obebeokeke.notes.model.Note
+import org.obebeokeke.notes.recyclerview.ACTION_DESELECT_NOTES
 import org.obebeokeke.notes.recyclerview.NotesListAdapter
 
 private const val TAG = "NotesListFragment"
@@ -82,15 +83,22 @@ class NotesListFragment : Fragment() {
 
     override fun onStart() {
         super.onStart()
+
+        val actionMode = NotesListActionMode()
+        var actionModeStarted = false
+
         adapter.selectedItemsLiveData.observe(viewLifecycleOwner) { notesSelected ->
             Log.i(TAG, "Selected: $notesSelected")
 
-            val actionMode = NotesListActionMode(notesSelected)
+            actionMode.notesSelected = notesSelected
 
-            requireActivity().startActionMode(actionMode)
+            if (notesSelected.isNotEmpty() && !actionModeStarted) {
+                requireActivity().startActionMode(actionMode)
+                actionModeStarted = true
 
-            if (notesSelected.isEmpty()) {
+            } else if (notesSelected.isEmpty() && actionModeStarted) {
                 actionMode.getActionMode().finish()
+                actionModeStarted = false
             }
         }
 
@@ -172,10 +180,10 @@ class NotesListFragment : Fragment() {
         setFragmentResult(requestKey, resultBundle)
     }
 
-    private inner class NotesListActionMode(private val notesSelected: List<Note>) :
-        ActionMode.Callback {
+    private inner class NotesListActionMode : ActionMode.Callback {
 
         private lateinit var actionMode: ActionMode
+        var notesSelected: List<Note> = emptyList()
 
         override fun onCreateActionMode(mode: ActionMode, menu: Menu): Boolean {
             val inflater = mode.menuInflater
@@ -204,6 +212,18 @@ class NotesListFragment : Fragment() {
         }
 
         override fun onDestroyActionMode(mode: ActionMode) {
+            for (i in 0 until notesRecyclerView.childCount) {
+                val a = notesRecyclerView.findViewHolderForAdapterPosition(i)
+                a?.let {
+                    it.itemView.isActivated = false
+                }
+            }
+
+            requireContext().sendBroadcast(
+                Intent().apply {
+                    action = ACTION_DESELECT_NOTES
+                }
+            )
         }
 
         fun getActionMode(): ActionMode {

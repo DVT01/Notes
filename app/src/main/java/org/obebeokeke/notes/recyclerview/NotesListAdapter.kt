@@ -1,6 +1,10 @@
 package org.obebeokeke.notes.recyclerview
 
+import android.content.BroadcastReceiver
+import android.content.Context
 import android.content.Intent
+import android.content.IntentFilter
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -16,6 +20,7 @@ import org.obebeokeke.notes.fragments.NOTE_TEXT
 import org.obebeokeke.notes.model.Note
 
 private const val TAG = "NotesListAdapter"
+const val ACTION_DESELECT_NOTES = "org.obebeokeke.notes.deselect_notes"
 
 class NotesListAdapter(
     var notes: List<Note>
@@ -26,6 +31,16 @@ class NotesListAdapter(
         Transformations.map(selectedItems) { newList ->
             newList
         }
+
+    private val deselectAllNotes: BroadcastReceiver by lazy {
+        object : BroadcastReceiver() {
+            override fun onReceive(context: Context, intent: Intent) {
+                Log.i(TAG, "Receive broadcast to deselect all notes")
+
+                selectedItems.value = mutableListOf()
+            }
+        }
+    }
 
     inner class NoteHolder(view: View) : RecyclerView.ViewHolder(view),
         View.OnClickListener, View.OnLongClickListener {
@@ -85,9 +100,7 @@ class NotesListAdapter(
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): NoteHolder {
-        val view =
-            LayoutInflater
-                .from(parent.context)
+        val view = LayoutInflater.from(parent.context)
                 .inflate(
                     R.layout.list_item_note,
                     parent,
@@ -102,4 +115,15 @@ class NotesListAdapter(
     }
 
     override fun getItemCount(): Int = notes.size
+
+    override fun onAttachedToRecyclerView(recyclerView: RecyclerView) {
+        super.onAttachedToRecyclerView(recyclerView)
+        val intentFilter = IntentFilter(ACTION_DESELECT_NOTES)
+        recyclerView.context.registerReceiver(deselectAllNotes, intentFilter)
+    }
+
+    override fun onDetachedFromRecyclerView(recyclerView: RecyclerView) {
+        super.onDetachedFromRecyclerView(recyclerView)
+        recyclerView.context.unregisterReceiver(deselectAllNotes)
+    }
 }
