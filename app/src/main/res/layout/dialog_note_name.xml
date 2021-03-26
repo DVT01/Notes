@@ -11,5 +11,7 @@
         android:layout_marginStart="20dp"
         android:hint="@string/new_note_name"
         android:inputType="text"
-        android:maxLines="1" />
+        android:maxLines="1"
+        android:textColor="@color/white"
+        android:textColorHint="@color/darker_white" />
 </LinearLayout>
