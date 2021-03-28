@@ -1,34 +1,31 @@
 <resources xmlns:tools="http://schemas.android.com/tools">
     <!-- Dark application theme. -->
-    <style name="Theme.Notes.Dark" parent="Theme.MaterialComponents.DayNight">
+    <style name="Theme.Notes.Dark" parent="Theme.MaterialComponents">
         <!-- Primary brand color. -->
-        <item name="colorPrimary">@color/purple_200</item>
-        <item name="colorPrimaryVariant">@color/purple_700</item>
-        <item name="colorOnPrimary">@color/black</item>
+        <item name="colorPrimary">@color/primaryColorDark</item>
+        <item name="colorPrimaryVariant">@color/primaryDarkColorDark</item>+
+        <item name="colorOnPrimary">@color/primaryTextColorDark</item>
         <!-- Secondary brand color. -->
-        <item name="colorSecondary">@color/teal_200</item>
-        <item name="colorOnSecondary">@color/black</item>
+        <item name="colorSecondary">@color/secondaryColorDark</item>
+        <item name="colorOnSecondary">@color/secondaryTextColorDark</item>
         <!-- Status bar color. -->
         <item name="android:statusBarColor" tools:targetApi="l">?attr/colorPrimaryVariant</item>
-        <!-- Customize your theme here. -->
-        <item name="backgroundColor">@color/black</item>
-        <item name="colorOnBackground">@color/white</item>
-        <item name="colorSurface">@color/lighter_black</item>
-        <item name="colorOnSurface">@color/white</item>
-        <item name="colorError">@color/red</item>
-        <item name="colorOnError">@color/black</item>
+        <!-- Text Attributes -->
+        <item name="android:textColor">?attr/colorOnPrimary</item>
+        <item name="android:textColorHint">@color/primaryTextHintColorDark</item>
+        <!-- Other -->
+        <item name="backgroundColor">@color/background</item>
+        <item name="colorSurface">@color/surface</item>
+        <item name="colorOnSurface">@color/surfaceColor</item>
+        <item name="alertDialogTheme">@style/NoteCreation.Dialog</item>
     </style>
-    <!-- Light application theme. -->
-    <style name="Theme.Notes.Light" parent="Theme.MaterialComponents.DayNight.DarkActionBar">
-        <!-- Primary brand color. -->
-        <item name="colorPrimary">@color/purple_500</item>
-        <item name="colorPrimaryVariant">@color/purple_700</item>
-        <item name="colorOnPrimary">@color/white</item>
-        <!-- Secondary brand color. -->
-        <item name="colorSecondary">@color/teal_200</item>
-        <item name="colorOnSecondary">@color/black</item>
-        <!-- Status bar color. -->
-        <item name="android:statusBarColor" tools:targetApi="l">?attr/colorPrimaryVariant</item>
-        <!-- Customize your theme here. -->
+    <style name="NoteCreation.Dialog" parent="Theme.MaterialComponents.Dialog.MinWidth">
+        <item name="android:textColor">?attr/colorOnSurface</item>
+        <item name="android:background">?attr/colorSurface</item>
+        <item name="buttonBarNegativeButtonStyle">@style/NoteCreation.Dialog.Button</item>
+        <item name="buttonBarPositiveButtonStyle">@style/NoteCreation.Dialog.Button</item>
+    </style>
+    <style name="NoteCreation.Dialog.Button" parent="Widget.MaterialComponents.Button.TextButton.Dialog">
+        <item name="android:textColor">@color/primaryColorDark</item>
     </style>
 </resources>

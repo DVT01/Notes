@@ -135,7 +135,7 @@ class NotesListFragment : Fragment() {
         val dialogView = layoutInflater.inflate(R.layout.dialog_note_name, null)
         val noteNameEditText = dialogView.findViewById<EditText>(R.id.note_name)
 
-        val alertDialog = AlertDialog.Builder(requireContext(), android.R.style.Theme_Material_Dialog_NoActionBar_MinWidth)
+        val alertDialog = AlertDialog.Builder(requireContext())
             .setView(dialogView)
             .setTitle(R.string.new_note)
             .setPositiveButton(R.string.create_new_note, null)
