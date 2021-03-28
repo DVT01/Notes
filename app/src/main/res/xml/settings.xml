@@ -4,6 +4,7 @@
     <PreferenceCategory android:title="@string/theme_category">
 
         <SwitchPreferenceCompat
+            android:defaultValue="true"
             android:key="@string/dark_mode_key"
             android:title="@string/dark_mode" />
 
