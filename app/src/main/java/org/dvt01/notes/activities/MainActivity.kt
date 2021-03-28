@@ -16,7 +16,7 @@ import org.dvt01.notes.fragments.SettingsFragment
 private const val TAG = "MainActivity"
 private const val REQUEST_NOTE = "request_note"
 
-const val ACTION_OPEN_SETTINGS = "org.obebeokeke.notes.open_settings"
+const val ACTION_OPEN_SETTINGS = "org.dvt01.notes.open_settings"
 
 class MainActivity : AppCompatActivity(), FragmentResultListener {
 

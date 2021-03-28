@@ -20,7 +20,7 @@ import org.dvt01.notes.fragments.NOTE_TEXT
 import org.dvt01.notes.model.Note
 
 private const val TAG = "NotesListAdapter"
-const val ACTION_DESELECT_NOTES = "org.obebeokeke.notes.deselect_notes"
+const val ACTION_DESELECT_NOTES = "org.dvt01.notes.deselect_notes"
 
 class NotesListAdapter(
     var notes: List<Note>

@@ -23,9 +23,9 @@ import org.dvt01.notes.recyclerview.NotesListAdapter
 private const val TAG = "NotesListFragment"
 private const val ARG_NOTE_NAME = "requestNote"
 
-const val ACTION_OPEN_NOTE = "org.obebeokeke.notes.open_note"
-const val NOTE_NAME = "org.obebeokeke.notes.note_name"
-const val NOTE_TEXT = "org.obebeokeke.notes.note_text"
+const val ACTION_OPEN_NOTE = "org.dvt01.notes.open_note"
+const val NOTE_NAME = "org.dvt01.notes.note_name"
+const val NOTE_TEXT = "org.dvt01.notes.note_text"
 
 class NotesListFragment : Fragment() {
 

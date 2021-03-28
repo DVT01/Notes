@@ -9,7 +9,7 @@ android {
     buildToolsVersion "30.0.3"
 
     defaultConfig {
-        applicationId "org.obebeokeke.notes"
+        applicationId "org.dvt01.notes"
         minSdkVersion 23
         targetSdkVersion 30
         versionCode 1
