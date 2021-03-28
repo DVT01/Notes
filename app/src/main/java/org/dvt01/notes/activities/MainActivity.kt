@@ -1,4 +1,4 @@
-package org.obebeokeke.notes.activities
+package org.dvt01.notes.activities
 
 import android.content.BroadcastReceiver
 import android.content.Context
@@ -8,10 +8,10 @@ import android.os.Bundle
 import android.util.Log
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.FragmentResultListener
-import org.obebeokeke.notes.R
-import org.obebeokeke.notes.fragments.NoteFragment
-import org.obebeokeke.notes.fragments.NotesListFragment
-import org.obebeokeke.notes.fragments.SettingsFragment
+import org.dvt01.notes.R
+import org.dvt01.notes.fragments.NoteFragment
+import org.dvt01.notes.fragments.NotesListFragment
+import org.dvt01.notes.fragments.SettingsFragment
 
 private const val TAG = "MainActivity"
 private const val REQUEST_NOTE = "request_note"

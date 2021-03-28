@@ -1,8 +1,8 @@
-package org.obebeokeke.notes.database
+package org.dvt01.notes.database
 
 import androidx.room.Database
 import androidx.room.RoomDatabase
-import org.obebeokeke.notes.model.Note
+import org.dvt01.notes.model.Note
 
 @Database(entities = [ Note::class ], version = 1)
 abstract class NotesDatabase : RoomDatabase() {

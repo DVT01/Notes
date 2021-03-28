@@ -1,4 +1,4 @@
-package org.obebeokeke.notes.recyclerview
+package org.dvt01.notes.recyclerview
 
 import android.content.BroadcastReceiver
 import android.content.Context
@@ -13,11 +13,11 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.Transformations
 import androidx.recyclerview.widget.RecyclerView
-import org.obebeokeke.notes.R
-import org.obebeokeke.notes.fragments.ACTION_OPEN_NOTE
-import org.obebeokeke.notes.fragments.NOTE_NAME
-import org.obebeokeke.notes.fragments.NOTE_TEXT
-import org.obebeokeke.notes.model.Note
+import org.dvt01.notes.R
+import org.dvt01.notes.fragments.ACTION_OPEN_NOTE
+import org.dvt01.notes.fragments.NOTE_NAME
+import org.dvt01.notes.fragments.NOTE_TEXT
+import org.dvt01.notes.model.Note
 
 private const val TAG = "NotesListAdapter"
 const val ACTION_DESELECT_NOTES = "org.obebeokeke.notes.deselect_notes"

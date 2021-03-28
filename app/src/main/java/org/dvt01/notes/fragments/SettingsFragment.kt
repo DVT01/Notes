@@ -1,11 +1,11 @@
-package org.obebeokeke.notes.fragments
+package org.dvt01.notes.fragments
 
 import android.content.SharedPreferences
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatDelegate
 import androidx.preference.PreferenceFragmentCompat
 import androidx.preference.SwitchPreferenceCompat
-import org.obebeokeke.notes.R
+import org.dvt01.notes.R
 
 private const val TAG = "SettingsFragment"
 

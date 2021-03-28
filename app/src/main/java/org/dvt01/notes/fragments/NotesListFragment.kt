@@ -1,4 +1,4 @@
-package org.obebeokeke.notes.fragments
+package org.dvt01.notes.fragments
 
 import android.content.BroadcastReceiver
 import android.content.Context
@@ -14,11 +14,11 @@ import androidx.fragment.app.setFragmentResult
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import org.obebeokeke.notes.R
-import org.obebeokeke.notes.activities.ACTION_OPEN_SETTINGS
-import org.obebeokeke.notes.model.Note
-import org.obebeokeke.notes.recyclerview.ACTION_DESELECT_NOTES
-import org.obebeokeke.notes.recyclerview.NotesListAdapter
+import org.dvt01.notes.R
+import org.dvt01.notes.activities.ACTION_OPEN_SETTINGS
+import org.dvt01.notes.model.Note
+import org.dvt01.notes.recyclerview.ACTION_DESELECT_NOTES
+import org.dvt01.notes.recyclerview.NotesListAdapter
 
 private const val TAG = "NotesListFragment"
 private const val ARG_NOTE_NAME = "requestNote"

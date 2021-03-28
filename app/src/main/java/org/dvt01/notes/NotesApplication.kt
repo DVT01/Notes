@@ -1,4 +1,4 @@
-package org.obebeokeke.notes
+package org.dvt01.notes
 
 import android.app.Application
 import androidx.appcompat.app.AppCompatDelegate

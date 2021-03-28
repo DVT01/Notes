@@ -1,17 +1,15 @@
-package org.obebeokeke.notes.fragments
+package org.dvt01.notes.fragments
 
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
-import android.util.Log
 import android.view.*
 import android.widget.EditText
 import androidx.appcompat.app.AppCompatActivity
-import androidx.core.widget.addTextChangedListener
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
-import org.obebeokeke.notes.R
-import org.obebeokeke.notes.model.Note
+import org.dvt01.notes.R
+import org.dvt01.notes.model.Note
 
 private const val TAG = "NoteFragment"
 private const val ARG_NOTE_NAME = "note_name"

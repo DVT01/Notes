@@ -1,11 +1,11 @@
-package org.obebeokeke.notes.fragments
+package org.dvt01.notes.fragments
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.Transformations
 import androidx.lifecycle.ViewModel
-import org.obebeokeke.notes.NotesRepository
-import org.obebeokeke.notes.model.Note
+import org.dvt01.notes.NotesRepository
+import org.dvt01.notes.model.Note
 
 class NoteViewModel : ViewModel() {
 
