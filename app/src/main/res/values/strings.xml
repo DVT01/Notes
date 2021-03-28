@@ -22,4 +22,6 @@
     <string name="theme_category">Theme</string>
     <string name="dark_mode_key">dark_mode</string>
     <string name="dark_mode">Dark Mode</string>
+    <string name="select_all">Select all</string>
+    <string name="deselect_all">Deselect All</string>
 </resources>

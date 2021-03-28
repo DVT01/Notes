@@ -18,11 +18,13 @@ import org.dvt01.notes.R
 import org.dvt01.notes.activities.ACTION_OPEN_SETTINGS
 import org.dvt01.notes.model.Note
 import org.dvt01.notes.recyclerview.ACTION_DESELECT_NOTES
+import org.dvt01.notes.recyclerview.ACTION_SELECT_NOTES
 import org.dvt01.notes.recyclerview.NotesListAdapter
 
 private const val TAG = "NotesListFragment"
 private const val ARG_NOTE_NAME = "requestNote"
 
+const val ACTION_REPLACE_SELECT_ALL_TEXT = "org.dvt01.notes.replace_select_all_text"
 const val ACTION_OPEN_NOTE = "org.dvt01.notes.open_note"
 const val NOTE_NAME = "org.dvt01.notes.note_name"
 const val NOTE_TEXT = "org.dvt01.notes.note_text"
@@ -98,7 +100,6 @@ class NotesListFragment : Fragment() {
                 actionModeStarted = true
 
             } else if (notesSelected.isEmpty() && actionModeStarted) {
-                actionMode.getActionMode().finish()
                 actionModeStarted = false
             }
         }
@@ -194,6 +195,24 @@ class NotesListFragment : Fragment() {
 
         private lateinit var actionMode: ActionMode
         var notesSelected: List<Note> = emptyList()
+            set(value) {
+                field = value
+
+                if (value.isEmpty() && ::actionMode.isInitialized) {
+                    actionMode.finish()
+                }
+            }
+
+        private val replaceSelectAllNotesText: BroadcastReceiver by lazy {
+            object : BroadcastReceiver() {
+                override fun onReceive(context: Context, intent: Intent) {
+                    Log.i(TAG, "Received action to replace select all button text")
+
+                    val selectNotes = actionMode.menu.findItem(R.id.select_all_notes)
+                    selectNotes.title = getString(R.string.select_all)
+                }
+            }
+        }
 
         override fun onCreateActionMode(mode: ActionMode, menu: Menu): Boolean {
             val inflater = mode.menuInflater
@@ -203,6 +222,10 @@ class NotesListFragment : Fragment() {
 
         override fun onPrepareActionMode(mode: ActionMode, menu: Menu): Boolean {
             actionMode = mode
+
+            val replaceSelectAllNotesTextFilter = IntentFilter(ACTION_REPLACE_SELECT_ALL_TEXT)
+            requireContext().registerReceiver(replaceSelectAllNotesText, replaceSelectAllNotesTextFilter)
+
             return true
         }
 
@@ -215,29 +238,30 @@ class NotesListFragment : Fragment() {
                     notesSelected.forEach {
                         notesListViewModel.deleteNote(it)
                     }
+
                     mode.finish()
                 }
+                R.id.select_all_notes -> {
+
+                    val selectNotes = mode.menu.findItem(R.id.select_all_notes)
+
+                    if (selectNotes.title == getString(R.string.deselect_all)) {
+                        requireContext().sendBroadcast(Intent(ACTION_DESELECT_NOTES))
+                    } else {
+                        requireContext().sendBroadcast(Intent(ACTION_SELECT_NOTES))
+                        selectNotes.title = getString(R.string.deselect_all)
+                    }
+                }
             }
+
             return true
         }
 
         override fun onDestroyActionMode(mode: ActionMode) {
-            for (i in 0 until notesRecyclerView.childCount) {
-                val a = notesRecyclerView.findViewHolderForAdapterPosition(i)
-                a?.let {
-                    it.itemView.isActivated = false
-                }
+            with(requireContext()) {
+                sendBroadcast(Intent(ACTION_DESELECT_NOTES))
+                unregisterReceiver(replaceSelectAllNotesText)
             }
-
-            requireContext().sendBroadcast(
-                Intent().apply {
-                    action = ACTION_DESELECT_NOTES
-                }
-            )
-        }
-
-        fun getActionMode(): ActionMode {
-            return actionMode
         }
     }
 
