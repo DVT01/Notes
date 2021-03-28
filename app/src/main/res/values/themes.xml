@@ -1,31 +1,33 @@
 <resources xmlns:tools="http://schemas.android.com/tools">
-    <!-- Dark application theme. -->
-    <style name="Theme.Notes.Dark" parent="Theme.MaterialComponents">
+    <!-- Light application theme. -->
+    <style name="Theme.Notes" parent="Theme.MaterialComponents.DayNight">
         <!-- Primary brand color. -->
-        <item name="colorPrimary">@color/primaryColorDark</item>
-        <item name="colorPrimaryVariant">@color/primaryDarkColorDark</item>+
-        <item name="colorOnPrimary">@color/primaryTextColorDark</item>
+        <item name="colorPrimary">@color/colorPrimary</item>
+        <item name="colorPrimaryVariant">@color/colorPrimaryLight</item>
+        <item name="colorOnPrimary">@color/colorOnPrimary</item>
         <!-- Secondary brand color. -->
-        <item name="colorSecondary">@color/secondaryColorDark</item>
-        <item name="colorOnSecondary">@color/secondaryTextColorDark</item>
+        <item name="colorSecondary">@color/colorSecondary</item>
+        <item name="colorOnSecondary">@color/colorOnSecondary</item>
         <!-- Status bar color. -->
         <item name="android:statusBarColor" tools:targetApi="l">?attr/colorPrimaryVariant</item>
         <!-- Text Attributes -->
         <item name="android:textColor">?attr/colorOnPrimary</item>
-        <item name="android:textColorHint">@color/primaryTextHintColorDark</item>
+        <item name="android:textColorHint">@color/colorOnPrimaryDark</item>
         <!-- Other -->
         <item name="backgroundColor">@color/background</item>
         <item name="colorSurface">@color/surface</item>
-        <item name="colorOnSurface">@color/surfaceColor</item>
+        <item name="colorOnSurface">@color/onSurface</item>
         <item name="alertDialogTheme">@style/NoteCreation.Dialog</item>
     </style>
+
     <style name="NoteCreation.Dialog" parent="Theme.MaterialComponents.Dialog.MinWidth">
-        <item name="android:textColor">?attr/colorOnSurface</item>
-        <item name="android:background">?attr/colorSurface</item>
+        <item name="android:textColor">@color/onSurface</item>
+        <item name="android:background">@color/surface</item>
         <item name="buttonBarNegativeButtonStyle">@style/NoteCreation.Dialog.Button</item>
         <item name="buttonBarPositiveButtonStyle">@style/NoteCreation.Dialog.Button</item>
     </style>
+
     <style name="NoteCreation.Dialog.Button" parent="Widget.MaterialComponents.Button.TextButton.Dialog">
-        <item name="android:textColor">@color/primaryColorDark</item>
+        <item name="android:textColor">@color/colorPrimary</item>
     </style>
 </resources>

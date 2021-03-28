@@ -3,14 +3,14 @@
     <color name="colorPrimary">#04d4f0</color>
     <color name="colorPrimaryLight">#6affff</color>
     <color name="colorPrimaryDark">#00a2bd</color>
-    <color name="colorOnPrimary">#000000</color>
-    <color name="colorOnPrimaryDark">#66000000</color>
+    <color name="colorOnPrimary">#FFFFFF</color>
+    <color name="colorOnPrimaryDark">#75FFFFFF</color>
     <color name="colorSecondary">#059dc0</color>
     <color name="colorSecondaryLight">#5ccef3</color>
     <color name="colorSecondaryDark">#006e90</color>
-    <color name="colorOnSecondary">#000000</color>
-    <color name="background">#FFFFFF</color>
-    <color name="surface">#FFFFFF</color>
-    <color name="onSurface">#121212</color>
-    <color name="colorIcon">#000000</color>
+    <color name="colorOnSecondary">#FFFFFF</color>
+    <color name="background">#000000</color>
+    <color name="surface">#121212</color>
+    <color name="onSurface">#FFFFFF</color>
+    <color name="colorIcon">#FFFFFF</color>
 </resources>

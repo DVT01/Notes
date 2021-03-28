@@ -15,12 +15,13 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import org.obebeokeke.notes.R
+import org.obebeokeke.notes.activities.ACTION_OPEN_SETTINGS
 import org.obebeokeke.notes.model.Note
 import org.obebeokeke.notes.recyclerview.ACTION_DESELECT_NOTES
 import org.obebeokeke.notes.recyclerview.NotesListAdapter
 
 private const val TAG = "NotesListFragment"
-private const val ARG_NOTE_NAME = "requestKey"
+private const val ARG_NOTE_NAME = "requestNote"
 
 const val ACTION_OPEN_NOTE = "org.obebeokeke.notes.open_note"
 const val NOTE_NAME = "org.obebeokeke.notes.note_name"
@@ -122,6 +123,10 @@ class NotesListFragment : Fragment() {
                 showNoteCreationDialog()
                 true
             }
+            R.id.open_settings -> {
+                openSettings()
+                true
+            }
             else -> super.onOptionsItemSelected(item)
         }
     }
@@ -173,11 +178,16 @@ class NotesListFragment : Fragment() {
     }
 
     private fun openNote(note: Note) {
-        val requestKey = requireArguments().getString(ARG_NOTE_NAME, "")
-        val resultBundle = Bundle().apply {
-            putString(requestKey, note.name)
+        val requestNoteKey = requireArguments().getString(ARG_NOTE_NAME, "")
+        val resultNoteBundle = Bundle().apply {
+            putString(requestNoteKey, note.name)
         }
-        setFragmentResult(requestKey, resultBundle)
+        setFragmentResult(requestNoteKey, resultNoteBundle)
+    }
+
+    private fun openSettings() {
+        val openSettingsIntent = Intent(ACTION_OPEN_SETTINGS)
+        requireContext().sendBroadcast(openSettingsIntent)
     }
 
     private inner class NotesListActionMode : ActionMode.Callback {
@@ -232,9 +242,9 @@ class NotesListFragment : Fragment() {
     }
 
     companion object {
-        fun newInstance(requestKey: String): NotesListFragment {
+        fun newInstance(openNoteRequest: String): NotesListFragment {
             val args = Bundle().apply {
-                putString(ARG_NOTE_NAME, requestKey)
+                putString(ARG_NOTE_NAME, openNoteRequest)
             }
             return NotesListFragment().apply {
                 arguments = args

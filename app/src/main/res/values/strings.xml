@@ -1,11 +1,25 @@
 <resources>
     <string name="app_name">Notes</string>
-    <string name="note_text_hint">Write something</string>
+
+    <!-- NotesListFragment Menu -->
     <string name="new_note">New Note</string>
+
+    <!-- NoteFragment -->
     <string name="save_note">Save</string>
+    <string name="note_text_hint">Write something</string>
+
+    <!-- Action Mode -->
+    <string name="delete">Delete</string>
+
+    <!-- Create Note Dialog -->
     <string name="new_note_name">Note\'s name</string>
+    <string name="note_already_exists">Note already exists</string>
     <string name="create_new_note">Create</string>
     <string name="cancel_new_note">Cancel</string>
-    <string name="delete_note">Delete</string>
-    <string name="note_already_exists">Note already exists</string>
+
+    <!-- Settings -->
+    <string name="settings">Settings</string>
+    <string name="theme_category">Theme</string>
+    <string name="dark_mode_key">dark_mode</string>
+    <string name="dark_mode">Dark Mode</string>
 </resources>
