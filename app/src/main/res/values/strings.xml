@@ -1,9 +1,13 @@
 <resources>
     <string name="app_name">Notes</string>
 
-    <!-- NotesListFragment Menu -->
+    <!-- NotesListFragment -->
     <string name="new_note">New Note</string>
     <string name="empty_list">You don\'t have any notes saved</string>
+    <plurals name="note_count">
+        <item quantity="one">%d note saved</item>
+        <item quantity="other">%d notes saved</item>
+    </plurals>
 
     <!-- NoteFragment -->
     <string name="save_note">Save</string>

@@ -10,6 +10,7 @@ import android.view.*
 import android.widget.EditText
 import android.widget.TextView
 import androidx.appcompat.app.AlertDialog
+import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.setFragmentResult
 import androidx.lifecycle.ViewModelProvider
@@ -84,6 +85,11 @@ class NotesListFragment : Fragment() {
 
         notesListViewModel.notesLiveData.observe(viewLifecycleOwner) { notes ->
             Log.i(TAG, "Received ${notes.size} notes.")
+
+            val actionBar = (requireActivity() as AppCompatActivity).supportActionBar
+            actionBar?.subtitle =
+                resources.getQuantityString(R.plurals.note_count, notes.size, notes.size)
+
             updateUI(notes)
         }
     }
@@ -99,8 +105,6 @@ class NotesListFragment : Fragment() {
                 notesSelected.mapIndexed { index, note -> "Note ${index + 1}: ${note.name}" }
             Log.i(TAG, "Selected: $notesNames")
 
-            actionMode.notesSelected = notesSelected
-
             if (notesSelected.isNotEmpty() && !actionModeStarted) {
                 requireActivity().startActionMode(actionMode)
                 actionModeStarted = true
@@ -108,6 +112,8 @@ class NotesListFragment : Fragment() {
             } else if (notesSelected.isEmpty() && actionModeStarted) {
                 actionModeStarted = false
             }
+
+            actionMode.notesSelected = notesSelected
         }
 
         val intentFilter = IntentFilter(ACTION_OPEN_NOTE)
@@ -117,6 +123,9 @@ class NotesListFragment : Fragment() {
     override fun onStop() {
         super.onStop()
         requireContext().unregisterReceiver(selectNoteFromAdapter)
+
+        val actionBar = (requireActivity() as AppCompatActivity).supportActionBar
+        actionBar?.subtitle = ""
     }
 
     override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
@@ -212,8 +221,12 @@ class NotesListFragment : Fragment() {
             set(value) {
                 field = value
 
-                if (value.isEmpty() && ::actionMode.isInitialized) {
-                    actionMode.finish()
+                if (::actionMode.isInitialized) {
+                    if (value.isEmpty()) {
+                        actionMode.finish()
+                    } else {
+                        actionMode.title = "${value.size}/${adapter.notes.size}"
+                    }
                 }
             }
 
