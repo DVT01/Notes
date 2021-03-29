@@ -3,6 +3,7 @@
 
     <!-- NotesListFragment Menu -->
     <string name="new_note">New Note</string>
+    <string name="empty_list">You don\'t have any notes saved</string>
 
     <!-- NoteFragment -->
     <string name="save_note">Save</string>

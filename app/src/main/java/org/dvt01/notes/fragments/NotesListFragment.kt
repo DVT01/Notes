@@ -8,6 +8,7 @@ import android.os.Bundle
 import android.util.Log
 import android.view.*
 import android.widget.EditText
+import android.widget.TextView
 import androidx.appcompat.app.AlertDialog
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.setFragmentResult
@@ -31,6 +32,7 @@ const val NOTE_TEXT = "org.dvt01.notes.note_text"
 
 class NotesListFragment : Fragment() {
 
+    private lateinit var emptyNotesTextView: TextView
     private lateinit var notesRecyclerView: RecyclerView
     private var adapter: NotesListAdapter = NotesListAdapter(emptyList())
 
@@ -72,6 +74,8 @@ class NotesListFragment : Fragment() {
         notesRecyclerView.layoutManager = LinearLayoutManager(context)
         notesRecyclerView.adapter = adapter
 
+        emptyNotesTextView = view.findViewById(R.id.empty_list)
+
         return view
     }
 
@@ -91,7 +95,9 @@ class NotesListFragment : Fragment() {
         var actionModeStarted = false
 
         adapter.selectedItemsLiveData.observe(viewLifecycleOwner) { notesSelected ->
-            Log.i(TAG, "Selected: $notesSelected")
+            val notesNames =
+                notesSelected.mapIndexed { index, note -> "Note ${index + 1}: ${note.name}" }
+            Log.i(TAG, "Selected: $notesNames")
 
             actionMode.notesSelected = notesSelected
 
@@ -135,6 +141,14 @@ class NotesListFragment : Fragment() {
     private fun updateUI(notes: List<Note>) {
         adapter.notes = notes
         notesRecyclerView.adapter = adapter
+
+        if (notes.isEmpty()) {
+            emptyNotesTextView.visibility = View.VISIBLE
+            notesRecyclerView.visibility = View.GONE
+        } else {
+            emptyNotesTextView.visibility = View.GONE
+            notesRecyclerView.visibility = View.VISIBLE
+        }
     }
 
     private fun showNoteCreationDialog() {
@@ -224,7 +238,10 @@ class NotesListFragment : Fragment() {
             actionMode = mode
 
             val replaceSelectAllNotesTextFilter = IntentFilter(ACTION_REPLACE_SELECT_ALL_TEXT)
-            requireContext().registerReceiver(replaceSelectAllNotesText, replaceSelectAllNotesTextFilter)
+            requireContext().registerReceiver(
+                replaceSelectAllNotesText,
+                replaceSelectAllNotesTextFilter
+            )
 
             return true
         }
