@@ -4,7 +4,6 @@ import android.content.SharedPreferences
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatDelegate
 import androidx.preference.PreferenceFragmentCompat
-import androidx.preference.SwitchPreferenceCompat
 import org.dvt01.notes.R
 
 private const val TAG = "SettingsFragment"
@@ -12,12 +11,8 @@ private const val TAG = "SettingsFragment"
 class SettingsFragment : PreferenceFragmentCompat(),
     SharedPreferences.OnSharedPreferenceChangeListener {
 
-    private var darkMode: SwitchPreferenceCompat? = null
-
     override fun onCreatePreferences(savedInstanceState: Bundle?, rootKey: String?) {
         setPreferencesFromResource(R.xml.settings, rootKey)
-
-        darkMode = findPreference(getString(R.string.dark_mode_key))
     }
 
     override fun onStart() {
