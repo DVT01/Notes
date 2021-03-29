@@ -3,6 +3,7 @@ package org.dvt01.notes
 import android.app.Application
 import androidx.appcompat.app.AppCompatDelegate
 import androidx.preference.PreferenceManager
+import org.dvt01.notes.fragments.DARK_MODE_KEY
 
 class NotesApplication : Application() {
 
@@ -11,7 +12,7 @@ class NotesApplication : Application() {
         NotesRepository.initialize(this)
 
         val settingsSharedPreferences = PreferenceManager.getDefaultSharedPreferences(this)
-        val darkModeIsOn = settingsSharedPreferences.getBoolean(getString(R.string.dark_mode_key), true)
+        val darkModeIsOn = settingsSharedPreferences.getBoolean(DARK_MODE_KEY, true)
 
         if (darkModeIsOn) {
             AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES)
