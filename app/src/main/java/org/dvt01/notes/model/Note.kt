@@ -7,4 +7,7 @@ import androidx.room.PrimaryKey
 data class Note(
     @PrimaryKey var name: String,
     var text: String
-)
+) {
+    val fileName: String
+        get() = "${name}.txt"
+}

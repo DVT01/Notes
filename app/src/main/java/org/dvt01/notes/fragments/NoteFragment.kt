@@ -3,13 +3,18 @@ package org.dvt01.notes.fragments
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
+import android.util.Log
 import android.view.*
 import android.widget.EditText
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import org.dvt01.notes.R
 import org.dvt01.notes.model.Note
+import java.io.FileNotFoundException
+import java.io.FileOutputStream
+import java.io.IOException
 
 private const val TAG = "NoteFragment"
 private const val ARG_NOTE_NAME = "note_name"
@@ -18,6 +23,27 @@ class NoteFragment : Fragment() {
 
     private lateinit var note: Note
     private lateinit var textField: EditText
+
+    private val exportNoteLauncher = registerForActivityResult(
+        ActivityResultContracts.CreateDocument()
+    ) { noteDirUri ->
+        Log.i(TAG, "Export request for ${note.name}")
+
+        try {
+            requireContext().contentResolver.openFileDescriptor(noteDirUri, "w")?.use {
+                FileOutputStream(it.fileDescriptor).use { fileStream ->
+                    fileStream.write(note.text.toByteArray())
+                }
+            }
+        } catch (error: Exception) {
+            when (error) {
+                is NullPointerException, is FileNotFoundException, is IOException -> {
+                    Log.e(TAG, "Failed to export note: ${note.name}", error)
+                }
+                else -> throw error
+            }
+        }
+    }
 
     private val noteViewModel: NoteViewModel by lazy {
         ViewModelProvider(this).get(NoteViewModel::class.java)
@@ -95,6 +121,10 @@ class NoteFragment : Fragment() {
         return when (item.itemId) {
             R.id.save_note -> {
                 noteViewModel.saveNote(note)
+                true
+            }
+            R.id.export_note -> {
+                exportNoteLauncher.launch(note.fileName)
                 true
             }
             else -> super.onOptionsItemSelected(item)

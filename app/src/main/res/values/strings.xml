@@ -12,6 +12,7 @@
     <!-- NoteFragment -->
     <string name="save_note">Save</string>
     <string name="note_text_hint">Write something</string>
+    <string name="export_note">Export to file</string>
 
     <!-- Action Mode -->
     <string name="delete">Delete</string>
