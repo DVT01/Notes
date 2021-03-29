@@ -8,6 +8,9 @@ import org.dvt01.notes.R
 
 private const val TAG = "SettingsFragment"
 
+const val DARK_MODE_KEY = "dark_mode"
+const val SORT_MODE_KEY = "sort_mode"
+
 class SettingsFragment : PreferenceFragmentCompat(),
     SharedPreferences.OnSharedPreferenceChangeListener {
 
@@ -27,7 +30,7 @@ class SettingsFragment : PreferenceFragmentCompat(),
 
     override fun onSharedPreferenceChanged(sharedPreferences: SharedPreferences, key: String) {
         when (key) {
-            getString(R.string.dark_mode_key) -> {
+            DARK_MODE_KEY -> {
                 val darkModeIsOn = sharedPreferences.getBoolean(key, true)
 
                 if (darkModeIsOn) {
