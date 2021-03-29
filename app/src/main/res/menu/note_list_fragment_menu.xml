@@ -6,6 +6,19 @@
         android:icon="@drawable/ic_new_note"
         android:title="@string/new_note"
         app:showAsAction="always|withText" />
+    <item android:title="@string/sort_order">
+        <menu>
+            <group android:checkableBehavior="single">
+                <item
+                    android:id="@+id/ascending"
+                    android:checked="true"
+                    android:title="@string/ascending" />
+                <item
+                    android:id="@+id/descending"
+                    android:title="@string/descending" />
+            </group>
+        </menu>
+    </item>
     <item
         android:id="@+id/open_settings"
         android:title="@string/settings"

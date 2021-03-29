@@ -1,19 +1,19 @@
 package org.dvt01.notes.fragments
 
-import android.content.BroadcastReceiver
-import android.content.Context
-import android.content.Intent
-import android.content.IntentFilter
+import android.content.*
 import android.os.Bundle
 import android.util.Log
 import android.view.*
 import android.widget.EditText
 import android.widget.TextView
+import androidx.annotation.IdRes
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.content.edit
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.setFragmentResult
 import androidx.lifecycle.ViewModelProvider
+import androidx.preference.PreferenceManager
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import org.dvt01.notes.R
@@ -35,6 +35,10 @@ class NotesListFragment : Fragment() {
 
     private lateinit var emptyNotesTextView: TextView
     private lateinit var notesRecyclerView: RecyclerView
+    private lateinit var ascendingSortMenuItem: MenuItem
+    private lateinit var descendingSortMenuItem: MenuItem
+    private lateinit var sortOrder: Sort
+
     private var adapter: NotesListAdapter = NotesListAdapter(emptyList())
 
     private val notesListViewModel: NotesListViewModel by lazy {
@@ -54,10 +58,36 @@ class NotesListFragment : Fragment() {
             }
         }
     }
+    private val settingsSharedPreferences: SharedPreferences by lazy {
+        PreferenceManager.getDefaultSharedPreferences(requireContext())
+    }
+
+    enum class Sort(@IdRes val id: Int) {
+        Ascending(R.id.ascending),
+        Descending(R.id.descending);
+
+        companion object {
+            fun getEnumById(@IdRes id: Int): Sort? {
+                values().forEach {
+                    if (it.id == id) {
+                        return it
+                    }
+                }
+                return null
+            }
+        }
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setHasOptionsMenu(true)
+
+        sortOrder = Sort.valueOf(
+            settingsSharedPreferences.getString(
+                SORT_MODE_KEY,
+                Sort.Ascending.name
+            ).toString()
+        )
     }
 
     override fun onCreateView(
@@ -131,6 +161,11 @@ class NotesListFragment : Fragment() {
     override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
         super.onCreateOptionsMenu(menu, inflater)
         inflater.inflate(R.menu.note_list_fragment_menu, menu)
+
+        ascendingSortMenuItem = menu.findItem(R.id.ascending)
+        descendingSortMenuItem = menu.findItem(R.id.descending)
+
+        checkSortOrder()
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
@@ -143,12 +178,30 @@ class NotesListFragment : Fragment() {
                 openSettings()
                 true
             }
+            in Sort.values().map { it.id } -> {
+                sortOrder = Sort.getEnumById(item.itemId)!!
+                checkSortOrder()
+
+                settingsSharedPreferences.edit {
+                    putString(SORT_MODE_KEY, sortOrder.name)
+                }
+                updateUI()
+                true
+            }
             else -> super.onOptionsItemSelected(item)
         }
     }
 
-    private fun updateUI(notes: List<Note>) {
-        adapter.notes = notes
+    private fun updateUI(notes: List<Note> = adapter.notes) {
+        adapter.notes = when (sortOrder) {
+            Sort.Ascending -> {
+                notes.sortedBy { it.name }
+            }
+            Sort.Descending -> {
+                notes.sortedByDescending { it.name }
+            }
+        }
+
         notesRecyclerView.adapter = adapter
 
         if (notes.isEmpty()) {
@@ -157,6 +210,14 @@ class NotesListFragment : Fragment() {
         } else {
             emptyNotesTextView.visibility = View.GONE
             notesRecyclerView.visibility = View.VISIBLE
+        }
+    }
+
+    private fun checkSortOrder() {
+        if (sortOrder.id == ascendingSortMenuItem.itemId) {
+            ascendingSortMenuItem.isChecked = true
+        } else {
+            descendingSortMenuItem.isChecked = true
         }
     }
 

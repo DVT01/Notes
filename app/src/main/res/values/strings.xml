@@ -9,6 +9,12 @@
         <item quantity="other">%d notes saved</item>
     </plurals>
 
+    <!-- note_list_fragment_menu -->
+    <string name="settings">Settings</string>
+    <string name="sort_order">Sort order</string>
+    <string name="ascending">Ascending</string>
+    <string name="descending">Descending</string>
+
     <!-- NoteFragment -->
     <string name="save_note">Save</string>
     <string name="note_text_hint">Write something</string>
@@ -24,9 +30,7 @@
     <string name="cancel_new_note">Cancel</string>
 
     <!-- Settings -->
-    <string name="settings">Settings</string>
     <string name="theme_category">Theme</string>
-    <string name="dark_mode_key">dark_mode</string>
     <string name="dark_mode">Dark Mode</string>
     <string name="select_all">Select all</string>
     <string name="deselect_all">Deselect All</string>
