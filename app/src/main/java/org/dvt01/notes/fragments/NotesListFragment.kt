@@ -16,6 +16,7 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.preference.PreferenceManager
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.google.android.material.floatingactionbutton.FloatingActionButton
 import org.dvt01.notes.R
 import org.dvt01.notes.activities.ACTION_OPEN_SETTINGS
 import org.dvt01.notes.model.Note
@@ -38,6 +39,7 @@ class NotesListFragment : Fragment() {
     private lateinit var ascendingSortMenuItem: MenuItem
     private lateinit var descendingSortMenuItem: MenuItem
     private lateinit var sortOrder: Sort
+    private lateinit var addNoteFab: FloatingActionButton
 
     private var adapter: NotesListAdapter = NotesListAdapter(emptyList())
 
@@ -106,6 +108,7 @@ class NotesListFragment : Fragment() {
         notesRecyclerView.adapter = adapter
 
         emptyNotesTextView = view.findViewById(R.id.empty_list)
+        addNoteFab = view.findViewById(R.id.new_note_fab)
 
         return view
     }
@@ -121,6 +124,10 @@ class NotesListFragment : Fragment() {
                 resources.getQuantityString(R.plurals.note_count, notes.size, notes.size)
 
             updateUI(notes)
+        }
+
+        addNoteFab.setOnClickListener {
+            showNoteCreationDialog()
         }
     }
 
@@ -170,10 +177,6 @@ class NotesListFragment : Fragment() {
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         return when (item.itemId) {
-            R.id.new_note -> {
-                showNoteCreationDialog()
-                true
-            }
             R.id.open_settings -> {
                 openSettings()
                 true
