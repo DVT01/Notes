@@ -10,6 +10,7 @@ import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
+import androidx.preference.PreferenceManager
 import org.dvt01.notes.R
 import org.dvt01.notes.model.Note
 import java.io.FileNotFoundException
@@ -69,6 +70,12 @@ class NoteFragment : Fragment() {
         )
 
         textField = view.findViewById(R.id.note_text)
+
+        val settingsSharedPreferences =
+            PreferenceManager.getDefaultSharedPreferences(requireContext())
+        val fontSizePercentage =
+            settingsSharedPreferences.getString(FONT_SIZE_KEY, "100")!!.toFloat().div(100)
+        textField.textSize = textField.textSize * fontSizePercentage
 
         return view
     }
