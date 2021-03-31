@@ -2,10 +2,12 @@ package org.dvt01.notes.fragments
 
 import android.content.*
 import android.os.Bundle
+import android.provider.OpenableColumns
 import android.util.Log
 import android.view.*
 import android.widget.EditText
 import android.widget.TextView
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.annotation.IdRes
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
@@ -23,6 +25,8 @@ import org.dvt01.notes.model.Note
 import org.dvt01.notes.recyclerview.ACTION_DESELECT_NOTES
 import org.dvt01.notes.recyclerview.ACTION_SELECT_NOTES
 import org.dvt01.notes.recyclerview.NotesListAdapter
+import java.io.BufferedReader
+import java.io.InputStreamReader
 
 private const val TAG = "NotesListFragment"
 private const val ARG_NOTE_NAME = "requestNote"
@@ -42,6 +46,32 @@ class NotesListFragment : Fragment() {
     private lateinit var addNoteFab: FloatingActionButton
 
     private var adapter: NotesListAdapter = NotesListAdapter(emptyList())
+    private val importNoteLauncher = registerForActivityResult(
+        ActivityResultContracts.OpenDocument()
+    ) { noteDirUri ->
+        Log.i(TAG, "Import request for Uri: $noteDirUri")
+
+        val contentResolver = requireContext().contentResolver
+
+        val fileText: String = StringBuilder().let { stringBuilder ->
+            contentResolver.openInputStream(noteDirUri)?.use { inputStream ->
+                BufferedReader(InputStreamReader(inputStream)).use { reader ->
+                    reader.readLines().forEach { fileLine ->
+                        stringBuilder.appendLine(fileLine)
+                    }
+                }
+            }
+            stringBuilder.toString()
+        }
+
+        val fileName = contentResolver.query(noteDirUri, null, null, null, null)?.use { cursor ->
+            val nameIndex = cursor.getColumnIndex(OpenableColumns.DISPLAY_NAME)
+            cursor.moveToFirst()
+            cursor.getString(nameIndex).removeSuffix(".txt")
+        } ?: ""
+
+        notesListViewModel.insertNote(Note(fileName, fileText))
+    }
 
     private val notesListViewModel: NotesListViewModel by lazy {
         ViewModelProvider(this).get(NotesListViewModel::class.java)
@@ -179,6 +209,10 @@ class NotesListFragment : Fragment() {
         return when (item.itemId) {
             R.id.open_settings -> {
                 openSettings()
+                true
+            }
+            R.id.import_note -> {
+                importNoteLauncher.launch(arrayOf("text/plain"))
                 true
             }
             in Sort.values().map { it.id } -> {

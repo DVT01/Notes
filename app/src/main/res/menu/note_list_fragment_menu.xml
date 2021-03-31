@@ -15,6 +15,10 @@
         </menu>
     </item>
     <item
+        android:id="@+id/import_note"
+        android:title="@string/import_note"
+        app:showAsAction="ifRoom" />
+    <item
         android:id="@+id/open_settings"
         android:title="@string/settings"
         app:showAsAction="never" />

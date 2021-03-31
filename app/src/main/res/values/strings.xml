@@ -14,6 +14,7 @@
     <string name="sort_order">Sort order</string>
     <string name="ascending">Ascending</string>
     <string name="descending">Descending</string>
+    <string name="import_note">Import from file</string>
 
     <!-- NoteFragment -->
     <string name="save_note">Save</string>
