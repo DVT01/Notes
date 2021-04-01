@@ -10,4 +10,8 @@
         android:id="@+id/export_note"
         android:title="@string/export_note"
         app:showAsAction="never" />
+    <item
+        android:id="@+id/share_note"
+        android:title="@string/share_note"
+        app:showAsAction="never" />
 </menu>

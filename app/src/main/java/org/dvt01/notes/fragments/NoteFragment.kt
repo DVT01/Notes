@@ -1,5 +1,6 @@
 package org.dvt01.notes.fragments
 
+import android.content.Intent
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
@@ -8,17 +9,20 @@ import android.view.*
 import android.widget.EditText
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.content.FileProvider
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.preference.PreferenceManager
 import org.dvt01.notes.R
 import org.dvt01.notes.model.Note
+import java.io.File
 import java.io.FileNotFoundException
 import java.io.FileOutputStream
 import java.io.IOException
 
 private const val TAG = "NoteFragment"
 private const val ARG_NOTE_NAME = "note_name"
+private const val PROVIDER_AUTHORITY = "org.dvt01.notes.fileprovider"
 
 class NoteFragment : Fragment() {
 
@@ -134,18 +138,52 @@ class NoteFragment : Fragment() {
                 exportNoteLauncher.launch(note.fileName)
                 true
             }
+            R.id.share_note -> {
+                shareNote()
+                true
+            }
             else -> super.onOptionsItemSelected(item)
         }
     }
 
-    override fun onDetach() {
-        super.onDetach()
+    override fun onDestroy() {
+        super.onDestroy()
         (activity as AppCompatActivity).supportActionBar?.title = getString(R.string.app_name)
+        requireContext().deleteFile(note.fileName)
     }
 
     private fun updateUI() {
         (activity as AppCompatActivity).supportActionBar?.title = note.name
         textField.setText(note.text)
+    }
+
+    private fun shareNote() {
+        val noteFile = File(requireContext().filesDir, note.fileName)
+
+        noteFile.outputStream().use { fileOutputStream ->
+            fileOutputStream.write(note.text.toByteArray())
+        }
+
+        val noteUri = FileProvider.getUriForFile(
+            requireContext(),
+            PROVIDER_AUTHORITY,
+            noteFile
+        )
+
+        val contentResolver = requireContext().contentResolver
+
+        val sendNoteIntent = Intent(Intent.ACTION_SEND).apply {
+            addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION)
+            putExtra(Intent.EXTRA_STREAM, noteUri)
+            type = contentResolver.getType(noteUri)
+        }
+
+        val noteChooserIntent = Intent.createChooser(
+            sendNoteIntent,
+            getString(R.string.send_note)
+        )
+
+        startActivity(noteChooserIntent)
     }
 
     companion object {
