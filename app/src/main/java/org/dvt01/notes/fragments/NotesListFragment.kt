@@ -51,6 +51,10 @@ class NotesListFragment : Fragment() {
     ) { noteDirUri ->
         Log.i(TAG, "Import request for Uri: $noteDirUri")
 
+        if (noteDirUri == null) {
+            return@registerForActivityResult
+        }
+
         val contentResolver = requireContext().contentResolver
 
         val fileText: String = StringBuilder().let { stringBuilder ->
