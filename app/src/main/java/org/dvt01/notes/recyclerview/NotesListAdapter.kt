@@ -8,7 +8,7 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.TextView
+import androidx.appcompat.widget.AppCompatTextView
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.Transformations
@@ -63,7 +63,7 @@ class NotesListAdapter(
 
         private lateinit var note: Note
 
-        private val noteNameTextView: TextView = itemView.findViewById(R.id.note_name)
+        private val noteNameTextView: AppCompatTextView = itemView.findViewById(R.id.note_name)
         private val selectedItemsValue: MutableList<Note>
             get() = selectedItems.value ?: mutableListOf()
 

@@ -5,16 +5,16 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:layout_marginHorizontal="6dp"
-    android:layout_marginVertical="3dp"
+    android:layout_marginTop="8dp"
     app:cardBackgroundColor="@drawable/list_item_note_background"
     app:cardCornerRadius="4dp">
 
-    <TextView
+    <androidx.appcompat.widget.AppCompatTextView
         android:id="@+id/note_name"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:padding="5dp"
-        android:textSize="15sp"
+        android:textSize="16sp"
         tools:text="This is a note's name" />
 
 </androidx.cardview.widget.CardView>

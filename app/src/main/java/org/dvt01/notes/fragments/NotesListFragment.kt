@@ -5,12 +5,12 @@ import android.os.Bundle
 import android.provider.OpenableColumns
 import android.util.Log
 import android.view.*
-import android.widget.EditText
-import android.widget.TextView
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.annotation.IdRes
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
+import androidx.appcompat.widget.AppCompatEditText
+import androidx.appcompat.widget.AppCompatTextView
 import androidx.core.content.edit
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.setFragmentResult
@@ -38,7 +38,7 @@ const val NOTE_TEXT = "org.dvt01.notes.note_text"
 
 class NotesListFragment : Fragment() {
 
-    private lateinit var emptyNotesTextView: TextView
+    private lateinit var emptyNotesTextView: AppCompatTextView
     private lateinit var notesRecyclerView: RecyclerView
     private lateinit var ascendingSortMenuItem: MenuItem
     private lateinit var descendingSortMenuItem: MenuItem
@@ -264,7 +264,7 @@ class NotesListFragment : Fragment() {
 
     private fun showNoteCreationDialog() {
         val dialogView = layoutInflater.inflate(R.layout.dialog_note_name, null)
-        val noteNameEditText = dialogView.findViewById<EditText>(R.id.note_name)
+        val noteNameEditText: AppCompatEditText = dialogView.findViewById(R.id.note_name)
 
         val alertDialog = AlertDialog.Builder(requireContext())
             .setView(dialogView)

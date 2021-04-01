@@ -6,9 +6,9 @@ import android.text.Editable
 import android.text.TextWatcher
 import android.util.Log
 import android.view.*
-import android.widget.EditText
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AppCompatActivity
+import androidx.appcompat.widget.AppCompatEditText
 import androidx.core.content.FileProvider
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
@@ -27,7 +27,7 @@ private const val PROVIDER_AUTHORITY = "org.dvt01.notes.fileprovider"
 class NoteFragment : Fragment() {
 
     private lateinit var note: Note
-    private lateinit var textField: EditText
+    private lateinit var textField: AppCompatEditText
 
     private val exportNoteLauncher = registerForActivityResult(
         ActivityResultContracts.CreateDocument()
