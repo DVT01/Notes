@@ -32,7 +32,7 @@ class SettingsFragment : PreferenceFragmentCompat(),
     override fun onSharedPreferenceChanged(sharedPreferences: SharedPreferences, key: String) {
         when (key) {
             DARK_MODE_KEY -> {
-                val darkModeIsOn = sharedPreferences.getBoolean(key, true)
+                val darkModeIsOn = sharedPreferences.getBoolean(key, false)
 
                 if (darkModeIsOn) {
                     AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES)

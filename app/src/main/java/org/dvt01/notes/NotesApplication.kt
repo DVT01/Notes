@@ -12,7 +12,7 @@ class NotesApplication : Application() {
         NotesRepository.initialize(this)
 
         val settingsSharedPreferences = PreferenceManager.getDefaultSharedPreferences(this)
-        val darkModeIsOn = settingsSharedPreferences.getBoolean(DARK_MODE_KEY, true)
+        val darkModeIsOn = settingsSharedPreferences.getBoolean(DARK_MODE_KEY, false)
 
         if (darkModeIsOn) {
             AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES)
