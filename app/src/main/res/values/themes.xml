@@ -3,7 +3,7 @@
     <style name="Theme.Notes" parent="Theme.MaterialComponents.DayNight">
         <!-- Primary brand color. -->
         <item name="colorPrimary">@color/colorPrimary</item>
-        <item name="colorPrimaryVariant">@color/colorPrimaryLight</item>
+        <item name="colorPrimaryVariant">@color/colorPrimaryDark</item>
         <item name="colorOnPrimary">@color/colorOnPrimary</item>
         <!-- Secondary brand color. -->
         <item name="colorSecondary">@color/colorSecondary</item>
@@ -21,6 +21,7 @@
     </style>
 
     <style name="NoteCreation.Dialog" parent="Theme.MaterialComponents.Dialog.MinWidth">
+        <item name="colorAccent">@color/colorPrimaryDark</item>
         <item name="textColorAlertDialogListItem">@color/onSurface</item>
         <item name="android:textColor">@color/onSurface</item>
         <item name="android:background">@color/surface</item>
