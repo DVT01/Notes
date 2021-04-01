@@ -21,6 +21,7 @@
     </style>
 
     <style name="NoteCreation.Dialog" parent="Theme.MaterialComponents.Dialog.MinWidth">
+        <item name="textColorAlertDialogListItem">@color/onSurface</item>
         <item name="android:textColor">@color/onSurface</item>
         <item name="android:background">@color/surface</item>
         <item name="buttonBarNegativeButtonStyle">@style/NoteCreation.Dialog.Button</item>
