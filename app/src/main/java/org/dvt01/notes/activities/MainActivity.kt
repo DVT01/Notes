@@ -8,6 +8,7 @@ import android.os.Bundle
 import android.util.Log
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.FragmentResultListener
+import androidx.fragment.app.commit
 import org.dvt01.notes.R
 import org.dvt01.notes.fragments.NoteFragment
 import org.dvt01.notes.fragments.NotesListFragment
@@ -26,11 +27,10 @@ class MainActivity : AppCompatActivity(), FragmentResultListener {
                 Log.i(TAG, "Received request to open settings")
 
                 val settingsFragment = SettingsFragment()
-                supportFragmentManager
-                    .beginTransaction()
-                    .replace(R.id.fragment_container_view, settingsFragment)
-                    .addToBackStack(null)
-                    .commit()
+                supportFragmentManager.commit {
+                    replace(R.id.fragment_container_view, settingsFragment)
+                    addToBackStack(null)
+                }
             }
         }
     }
@@ -52,10 +52,9 @@ class MainActivity : AppCompatActivity(), FragmentResultListener {
 
         if (currentFragment == null) {
             val fragment = NotesListFragment.newInstance(REQUEST_NOTE)
-            supportFragmentManager
-                .beginTransaction()
-                .add(R.id.fragment_container_view, fragment)
-                .commit()
+            supportFragmentManager.commit {
+                add(R.id.fragment_container_view, fragment)
+            }
         }
     }
 
@@ -70,11 +69,10 @@ class MainActivity : AppCompatActivity(), FragmentResultListener {
                 val noteName = result.getString(REQUEST_NOTE, "")
 
                 val fragment = NoteFragment.newInstance(noteName)
-                supportFragmentManager
-                    .beginTransaction()
-                    .replace(R.id.fragment_container_view, fragment)
-                    .addToBackStack(null)
-                    .commit()
+                supportFragmentManager.commit {
+                    replace(R.id.fragment_container_view, fragment)
+                    addToBackStack(null)
+                }
             }
         }
     }
