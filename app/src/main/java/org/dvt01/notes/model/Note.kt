@@ -5,9 +5,11 @@ import androidx.room.PrimaryKey
 
 @Entity
 data class Note(
-    @PrimaryKey var name: String,
+    var name: String,
     var text: String
 ) {
+    @PrimaryKey(autoGenerate = true)
+    var id: Int = 0
     val fileName: String
         get() = "${name}.txt"
 }
