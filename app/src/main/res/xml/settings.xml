@@ -10,13 +10,13 @@
 
     </PreferenceCategory>
 
-    <PreferenceCategory android:title="Editor">
+    <PreferenceCategory android:title="@string/editor_category">
         <ListPreference
             android:defaultValue="100"
             android:entries="@array/font_size"
             android:entryValues="@array/font_size_values"
             android:key="font_size"
-            android:title="Font size" />
+            android:title="@string/font_size" />
     </PreferenceCategory>
 
 </PreferenceScreen>

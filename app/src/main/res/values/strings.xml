@@ -37,4 +37,6 @@
     <string name="dark_mode">Dark Mode</string>
     <string name="select_all">Select all</string>
     <string name="deselect_all">Deselect All</string>
+    <string name="editor_category">Editor</string>
+    <string name="font_size">Font Size</string>
 </resources>
