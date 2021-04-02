@@ -7,9 +7,7 @@ import android.util.Log
 import android.view.*
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.annotation.IdRes
-import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
-import androidx.appcompat.widget.AppCompatEditText
 import androidx.appcompat.widget.AppCompatTextView
 import androidx.core.content.edit
 import androidx.fragment.app.Fragment
@@ -33,6 +31,7 @@ private const val ARG_NOTE_NAME = "requestNote"
 
 const val ACTION_REPLACE_SELECT_ALL_TEXT = "org.dvt01.notes.replace_select_all_text"
 const val ACTION_OPEN_NOTE = "org.dvt01.notes.open_note"
+const val ACTION_CREATE_NOTE = "org.dvt01.notes.create_note"
 const val NOTE_NAME = "org.dvt01.notes.note_name"
 const val NOTE_TEXT = "org.dvt01.notes.note_text"
 
@@ -91,6 +90,18 @@ class NotesListFragment : Fragment() {
                 openNote(
                     Note(noteName, noteText)
                 )
+            }
+        }
+    }
+    private val createNote: BroadcastReceiver by lazy {
+        object : BroadcastReceiver() {
+            override fun onReceive(context: Context, intent: Intent) {
+                val noteName = intent.getStringExtra(NOTE_NAME) ?: ""
+
+                Note(noteName, "").also {
+                    notesListViewModel.insertNote(it)
+                    openNote(it)
+                }
             }
         }
     }
@@ -161,7 +172,9 @@ class NotesListFragment : Fragment() {
         }
 
         addNoteFab.setOnClickListener {
-            showNoteCreationDialog()
+            NoteNameDialog
+                .newInstance(NoteNameDialog.DialogType.CREATE)
+                .show(childFragmentManager, null)
         }
     }
 
@@ -187,13 +200,22 @@ class NotesListFragment : Fragment() {
             actionMode.notesSelected = notesSelected
         }
 
-        val intentFilter = IntentFilter(ACTION_OPEN_NOTE)
-        requireContext().registerReceiver(selectNoteFromAdapter, intentFilter)
+        val selectNoteIntentFilter = IntentFilter(ACTION_OPEN_NOTE)
+        val createNoteIntentFilter = IntentFilter(ACTION_CREATE_NOTE)
+
+        requireContext().apply {
+            registerReceiver(selectNoteFromAdapter, selectNoteIntentFilter)
+            registerReceiver(createNote, createNoteIntentFilter)
+        }
     }
 
     override fun onStop() {
         super.onStop()
-        requireContext().unregisterReceiver(selectNoteFromAdapter)
+
+        requireContext().apply {
+            unregisterReceiver(selectNoteFromAdapter)
+            unregisterReceiver(createNote)
+        }
 
         val actionBar = (requireActivity() as AppCompatActivity).supportActionBar
         actionBar?.subtitle = ""
@@ -260,47 +282,6 @@ class NotesListFragment : Fragment() {
         } else {
             descendingSortMenuItem.isChecked = true
         }
-    }
-
-    private fun showNoteCreationDialog() {
-        val dialogView = layoutInflater.inflate(R.layout.dialog_note_name, null)
-        val noteNameEditText: AppCompatEditText = dialogView.findViewById(R.id.note_name)
-
-        val alertDialog = AlertDialog.Builder(requireContext())
-            .setView(dialogView)
-            .setTitle(R.string.new_note)
-            .setPositiveButton(R.string.create_new_note, null)
-            .setNegativeButton(R.string.cancel_note, null)
-            .create()
-
-        alertDialog.setOnShowListener {
-            val positiveButton = alertDialog.getButton(AlertDialog.BUTTON_POSITIVE)
-            val negativeButton = alertDialog.getButton(AlertDialog.BUTTON_NEGATIVE)
-
-            positiveButton.setOnClickListener {
-                val noteName = noteNameEditText.text.toString()
-
-                Log.i(TAG, "Note name: $noteName")
-
-                val notes = notesListViewModel.notesLiveData.value?.map { it.name } ?: emptyList()
-                if (notes.contains(noteName)) {
-                    noteNameEditText.setText("")
-                    noteNameEditText.hint = getString(R.string.note_already_exists)
-                } else if (noteName.isNotBlank()) {
-                    alertDialog.dismiss()
-
-                    val note = Note(noteName, "")
-                    notesListViewModel.insertNote(note)
-                    openNote(note)
-                }
-            }
-
-            negativeButton.setOnClickListener {
-                alertDialog.cancel()
-            }
-        }
-
-        alertDialog.show()
     }
 
     private fun openNote(note: Note) {

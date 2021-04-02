@@ -1,13 +1,15 @@
 package org.dvt01.notes.fragments
 
+import android.content.BroadcastReceiver
+import android.content.Context
 import android.content.Intent
+import android.content.IntentFilter
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
 import android.util.Log
 import android.view.*
 import androidx.activity.result.contract.ActivityResultContracts
-import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.AppCompatEditText
 import androidx.core.content.FileProvider
@@ -25,6 +27,8 @@ import java.io.IOException
 private const val TAG = "NoteFragment"
 private const val ARG_NOTE_NAME = "note_name"
 private const val PROVIDER_AUTHORITY = "org.dvt01.notes.fileprovider"
+
+const val ACTION_RENAME_NOTE = "org.dvt01.notes.rename_note"
 
 class NoteFragment : Fragment() {
 
@@ -55,6 +59,20 @@ class NoteFragment : Fragment() {
     private val noteViewModel: NoteViewModel by lazy {
         ViewModelProvider(this).get(NoteViewModel::class.java)
     }
+    private val renameNote: BroadcastReceiver by lazy {
+        object : BroadcastReceiver() {
+            override fun onReceive(context: Context, intent: Intent) {
+                val noteName = intent.getStringExtra(NOTE_NAME) ?: ""
+
+                note.name = noteName
+                noteViewModel.saveNote(note)
+
+                parentFragmentManager.commit {
+                    replace(R.id.fragment_container_view, newInstance(noteName))
+                }
+            }
+        }
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -62,6 +80,11 @@ class NoteFragment : Fragment() {
 
         val noteName = requireArguments().getString(ARG_NOTE_NAME, "")
         noteViewModel.loadNote(noteName)
+
+        val renameNoteIntentFilter = IntentFilter(ACTION_RENAME_NOTE)
+        requireContext().apply {
+            registerReceiver(renameNote, renameNoteIntentFilter)
+        }
     }
 
     override fun onCreateView(
@@ -145,7 +168,10 @@ class NoteFragment : Fragment() {
                 true
             }
             R.id.rename_note -> {
-                showNoteRenameDialog()
+                NoteNameDialog
+                    .newInstance(NoteNameDialog.DialogType.RENAME)
+                    .show(childFragmentManager, null)
+
                 true
             }
             else -> super.onOptionsItemSelected(item)
@@ -156,6 +182,10 @@ class NoteFragment : Fragment() {
         super.onDestroy()
         (activity as AppCompatActivity).supportActionBar?.title = getString(R.string.app_name)
         requireContext().deleteFile(note.fileName)
+
+        requireContext().apply {
+            unregisterReceiver(renameNote)
+        }
     }
 
     private fun updateUI() {
@@ -190,53 +220,6 @@ class NoteFragment : Fragment() {
         )
 
         startActivity(noteChooserIntent)
-    }
-
-    private fun showNoteRenameDialog() {
-        val dialogView = layoutInflater.inflate(R.layout.dialog_note_name, null)
-        val noteNameEditText: AppCompatEditText = dialogView.findViewById(R.id.note_name)
-
-        val alertDialog = AlertDialog.Builder(requireContext())
-            .setView(dialogView)
-            .setTitle(R.string.rename_note)
-            .setPositiveButton(R.string.rename, null)
-            .setNegativeButton(R.string.cancel_note, null)
-            .create()
-
-        alertDialog.setOnShowListener {
-            val positiveButton = alertDialog.getButton(AlertDialog.BUTTON_POSITIVE)
-            val negativeButton = alertDialog.getButton(AlertDialog.BUTTON_NEGATIVE)
-
-            positiveButton.setOnClickListener {
-                val noteName = noteNameEditText.text.toString()
-
-                Log.i(TAG, "Note name: $noteName")
-
-                val notesLiveData = noteViewModel.notesLiveData
-                val notes = notesLiveData.value?.map { it.name } ?: emptyList()
-
-                if (notes.contains(noteName)) {
-                    noteNameEditText.setText("")
-                    noteNameEditText.hint = getString(R.string.note_already_exists)
-                } else if (noteName.isNotBlank()) {
-                    alertDialog.dismiss()
-
-                    note.name = noteName
-                    noteViewModel.saveNote(note)
-
-                    // Re-create fragment
-                    parentFragmentManager.commit {
-                        replace(R.id.fragment_container_view, newInstance(noteName))
-                    }
-                }
-            }
-
-            negativeButton.setOnClickListener {
-                alertDialog.cancel()
-            }
-        }
-
-        alertDialog.show()
     }
 
     companion object {
