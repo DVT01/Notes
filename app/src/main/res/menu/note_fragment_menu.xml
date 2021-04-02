@@ -7,6 +7,10 @@
         android:title="@string/save_note"
         app:showAsAction="always|withText" />
     <item
+        android:id="@+id/rename_note"
+        android:title="@string/rename_note"
+        app:showAsAction="never" />
+    <item
         android:id="@+id/export_note"
         android:title="@string/export_note"
         app:showAsAction="never" />

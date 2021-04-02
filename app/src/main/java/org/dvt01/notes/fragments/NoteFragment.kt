@@ -7,10 +7,12 @@ import android.text.TextWatcher
 import android.util.Log
 import android.view.*
 import androidx.activity.result.contract.ActivityResultContracts
+import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.AppCompatEditText
 import androidx.core.content.FileProvider
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.commit
 import androidx.lifecycle.ViewModelProvider
 import androidx.preference.PreferenceManager
 import org.dvt01.notes.R
@@ -142,6 +144,10 @@ class NoteFragment : Fragment() {
                 shareNote()
                 true
             }
+            R.id.rename_note -> {
+                showNoteRenameDialog()
+                true
+            }
             else -> super.onOptionsItemSelected(item)
         }
     }
@@ -184,6 +190,53 @@ class NoteFragment : Fragment() {
         )
 
         startActivity(noteChooserIntent)
+    }
+
+    private fun showNoteRenameDialog() {
+        val dialogView = layoutInflater.inflate(R.layout.dialog_note_name, null)
+        val noteNameEditText: AppCompatEditText = dialogView.findViewById(R.id.note_name)
+
+        val alertDialog = AlertDialog.Builder(requireContext())
+            .setView(dialogView)
+            .setTitle(R.string.rename_note)
+            .setPositiveButton(R.string.rename, null)
+            .setNegativeButton(R.string.cancel_note, null)
+            .create()
+
+        alertDialog.setOnShowListener {
+            val positiveButton = alertDialog.getButton(AlertDialog.BUTTON_POSITIVE)
+            val negativeButton = alertDialog.getButton(AlertDialog.BUTTON_NEGATIVE)
+
+            positiveButton.setOnClickListener {
+                val noteName = noteNameEditText.text.toString()
+
+                Log.i(TAG, "Note name: $noteName")
+
+                val notesLiveData = noteViewModel.notesLiveData
+                val notes = notesLiveData.value?.map { it.name } ?: emptyList()
+
+                if (notes.contains(noteName)) {
+                    noteNameEditText.setText("")
+                    noteNameEditText.hint = getString(R.string.note_already_exists)
+                } else if (noteName.isNotBlank()) {
+                    alertDialog.dismiss()
+
+                    note.name = noteName
+                    noteViewModel.saveNote(note)
+
+                    // Re-create fragment
+                    parentFragmentManager.commit {
+                        replace(R.id.fragment_container_view, newInstance(noteName))
+                    }
+                }
+            }
+
+            negativeButton.setOnClickListener {
+                alertDialog.cancel()
+            }
+        }
+
+        alertDialog.show()
     }
 
     companion object {

@@ -11,6 +11,7 @@ class NoteViewModel : ViewModel() {
 
     private val notesRepository = NotesRepository.get()
     private val noteNameLiveData = MutableLiveData<String>()
+    val notesLiveData = notesRepository.getAllNotes()
 
     var noteLiveData: LiveData<Note> =
         Transformations.switchMap(noteNameLiveData) { noteName ->

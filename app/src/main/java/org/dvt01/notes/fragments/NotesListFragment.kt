@@ -270,7 +270,7 @@ class NotesListFragment : Fragment() {
             .setView(dialogView)
             .setTitle(R.string.new_note)
             .setPositiveButton(R.string.create_new_note, null)
-            .setNegativeButton(R.string.cancel_new_note, null)
+            .setNegativeButton(R.string.cancel_note, null)
             .create()
 
         alertDialog.setOnShowListener {
