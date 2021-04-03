@@ -3,7 +3,7 @@
 
     <!-- NotesListFragment -->
     <string name="new_note">New Note</string>
-    <string name="empty_list">You don\'t have any notes saved</string>
+    <string name="notify_list_empty">You don\'t have any notes saved</string>
     <plurals name="note_count">
         <item quantity="one">%d note saved</item>
         <item quantity="other">%d notes saved</item>
@@ -17,29 +17,28 @@
     <string name="import_note">Import from file</string>
 
     <!-- NoteFragment -->
-    <string name="save_note">Save</string>
+    <string name="save">Save</string>
     <string name="note_text_hint">Write something</string>
     <string name="export_note">Export to file</string>
     <string name="share_note">Share note</string>
-    <string name="send_note">Send note via…</string>
+    <string name="note_chooser_text">Send note via…</string>
 
     <!-- Action Mode -->
     <string name="delete">Delete</string>
 
     <!-- Create/Rename Note Dialog -->
-    <string name="new_note_name">Note\'s name</string>
-    <string name="note_already_exists">Note already exists</string>
-    <string name="create_new_note">Create</string>
-    <string name="cancel_note">Cancel</string>
+    <string name="notes_name">Note\'s name</string>
+    <string name="note_exists">Note already exists</string>
+    <string name="create">Create</string>
+    <string name="cancel">Cancel</string>
     <string name="rename_note">Rename note</string>
     <string name="rename">Rename</string>
 
-
     <!-- Settings -->
-    <string name="theme_category">Theme</string>
+    <string name="theme">Theme</string>
     <string name="dark_mode">Dark Mode</string>
     <string name="select_all">Select all</string>
     <string name="deselect_all">Deselect All</string>
-    <string name="editor_category">Editor</string>
+    <string name="editor">Editor</string>
     <string name="font_size">Font Size</string>
 </resources>

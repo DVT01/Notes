@@ -4,7 +4,7 @@
     <item
         android:id="@+id/save_note"
         android:icon="@drawable/ic_save_note"
-        android:title="@string/save_note"
+        android:title="@string/save"
         app:showAsAction="always|withText" />
     <item
         android:id="@+id/rename_note"

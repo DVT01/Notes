@@ -9,7 +9,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginStart="20dp"
-        android:hint="@string/new_note_name"
+        android:hint="@string/notes_name"
         android:inputType="text"
         android:maxLines="1" />
 </androidx.appcompat.widget.LinearLayoutCompat>

@@ -15,7 +15,7 @@ import org.dvt01.notes.fragments.NotesListFragment
 import org.dvt01.notes.fragments.SettingsFragment
 
 private const val TAG = "MainActivity"
-private const val REQUEST_NOTE = "request_note"
+private const val REQUEST_NOTE_NAME = "note_name_request"
 
 const val ACTION_OPEN_SETTINGS = "org.dvt01.notes.open_settings"
 
@@ -46,20 +46,19 @@ class MainActivity : AppCompatActivity(), FragmentResultListener {
         setContentView(R.layout.activity_main)
 
         supportFragmentManager.setFragmentResultListener(
-            REQUEST_NOTE,
+            REQUEST_NOTE_NAME,
             this,
             this
         )
 
-        val settingsIntentFilter = IntentFilter(ACTION_OPEN_SETTINGS)
-        registerReceiver(openSettings, settingsIntentFilter)
+        registerReceiver(openSettings, IntentFilter(ACTION_OPEN_SETTINGS))
 
         val currentFragment = supportFragmentManager.findFragmentById(R.id.fragment_container_view)
 
         if (currentFragment == null) {
-            val fragment = NotesListFragment.newInstance(REQUEST_NOTE)
+            val notesListFragment = NotesListFragment.newInstance(REQUEST_NOTE_NAME)
             supportFragmentManager.commit {
-                add(R.id.fragment_container_view, fragment)
+                add(R.id.fragment_container_view, notesListFragment)
             }
         }
     }
@@ -71,10 +70,10 @@ class MainActivity : AppCompatActivity(), FragmentResultListener {
 
     override fun onFragmentResult(requestKey: String, result: Bundle) {
         when (requestKey) {
-            REQUEST_NOTE -> {
-                val noteName = result.getString(REQUEST_NOTE, "")
+            REQUEST_NOTE_NAME -> {
+                val noteName = result.getString(REQUEST_NOTE_NAME, "")
 
-                val fragment = NoteFragment.newInstance(noteName)
+                val noteFragment = NoteFragment.newInstance(noteName)
                 supportFragmentManager.commit {
                     setCustomAnimations(
                         R.anim.slide_in,
@@ -82,7 +81,7 @@ class MainActivity : AppCompatActivity(), FragmentResultListener {
                         R.anim.fade_in,
                         R.anim.slide_out
                     )
-                    replace(R.id.fragment_container_view, fragment)
+                    replace(R.id.fragment_container_view, noteFragment)
                     addToBackStack(null)
                 }
             }

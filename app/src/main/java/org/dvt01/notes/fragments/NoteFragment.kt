@@ -23,6 +23,7 @@ import java.io.File
 import java.io.FileNotFoundException
 import java.io.FileOutputStream
 import java.io.IOException
+import java.util.*
 
 private const val TAG = "NoteFragment"
 private const val ARG_NOTE_NAME = "note_name"
@@ -33,7 +34,7 @@ const val ACTION_RENAME_NOTE = "org.dvt01.notes.rename_note"
 class NoteFragment : Fragment() {
 
     private lateinit var note: Note
-    private lateinit var textField: AppCompatEditText
+    private lateinit var noteTextEditText: AppCompatEditText
 
     private val exportNoteLauncher = registerForActivityResult(
         ActivityResultContracts.CreateDocument()
@@ -41,13 +42,16 @@ class NoteFragment : Fragment() {
         Log.i(TAG, "Export request for ${note.name}")
 
         try {
-            requireContext().contentResolver.openFileDescriptor(noteDirUri, "w")?.use {
-                FileOutputStream(it.fileDescriptor).use { fileStream ->
-                    fileStream.write(note.text.toByteArray())
+            requireContext().contentResolver.run {
+                openFileDescriptor(noteDirUri, "w")?.use { parcelFileDescriptor ->
+                    FileOutputStream(parcelFileDescriptor.fileDescriptor).use { fileOutputStream ->
+                        fileOutputStream.write(note.text.toByteArray())
+                    }
                 }
             }
         } catch (error: Exception) {
             when (error) {
+                // Catch all expected possible errors
                 is NullPointerException, is FileNotFoundException, is IOException -> {
                     Log.e(TAG, "Failed to export note: ${note.name}", error)
                 }
@@ -62,11 +66,13 @@ class NoteFragment : Fragment() {
     private val renameNote: BroadcastReceiver by lazy {
         object : BroadcastReceiver() {
             override fun onReceive(context: Context, intent: Intent) {
-                val noteName = intent.getStringExtra(NOTE_NAME) ?: ""
+                val noteName = intent.getStringExtra(NOTE_NAME)
+                    ?: throw MissingFormatArgumentException(NOTE_NAME_REQUIRED)
 
                 note.name = noteName
                 noteViewModel.saveNote(note)
 
+                // Re-create fragment
                 parentFragmentManager.commit {
                     replace(R.id.fragment_container_view, newInstance(noteName))
                 }
@@ -78,12 +84,12 @@ class NoteFragment : Fragment() {
         super.onCreate(savedInstanceState)
         setHasOptionsMenu(true)
 
-        val noteName = requireArguments().getString(ARG_NOTE_NAME, "")
-        noteViewModel.loadNote(noteName)
+        requireArguments().getString(ARG_NOTE_NAME, "").let { noteName ->
+            noteViewModel.loadNote(noteName)
+        }
 
-        val renameNoteIntentFilter = IntentFilter(ACTION_RENAME_NOTE)
-        requireContext().apply {
-            registerReceiver(renameNote, renameNoteIntentFilter)
+        requireContext().run {
+            registerReceiver(renameNote, IntentFilter(ACTION_RENAME_NOTE))
         }
     }
 
@@ -92,19 +98,17 @@ class NoteFragment : Fragment() {
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        val view = inflater.inflate(
-            R.layout.fragment_note,
-            container,
-            false
-        )
+        val sharedPreferences = PreferenceManager
+            .getDefaultSharedPreferences(requireContext())
+        val fontSizePercentage = sharedPreferences
+            .getString(FONT_SIZE_KEY, "100")!!
+            .toFloat()
+            .div(100)
 
-        textField = view.findViewById(R.id.note_text)
+        val view = inflater.inflate(R.layout.fragment_note, container, false)
 
-        val settingsSharedPreferences =
-            PreferenceManager.getDefaultSharedPreferences(requireContext())
-        val fontSizePercentage =
-            settingsSharedPreferences.getString(FONT_SIZE_KEY, "100")!!.toFloat().div(100)
-        textField.textSize = textField.textSize * fontSizePercentage
+        noteTextEditText = view.findViewById(R.id.note_text)
+        noteTextEditText.textSize = noteTextEditText.textSize * fontSizePercentage
 
         return view
     }
@@ -121,7 +125,7 @@ class NoteFragment : Fragment() {
     override fun onStart() {
         super.onStart()
 
-        val textFieldWatcher =
+        val noteTextWatcher =
             object : TextWatcher {
                 override fun beforeTextChanged(
                     sequence: CharSequence,
@@ -145,7 +149,7 @@ class NoteFragment : Fragment() {
 
             }
 
-        textField.addTextChangedListener(textFieldWatcher)
+        noteTextEditText.addTextChangedListener(noteTextWatcher)
     }
 
     override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
@@ -171,7 +175,6 @@ class NoteFragment : Fragment() {
                 NoteNameDialog
                     .newInstance(NoteNameDialog.DialogType.RENAME)
                     .show(childFragmentManager, null)
-
                 true
             }
             else -> super.onOptionsItemSelected(item)
@@ -180,55 +183,53 @@ class NoteFragment : Fragment() {
 
     override fun onDestroy() {
         super.onDestroy()
-        (activity as AppCompatActivity).supportActionBar?.title = getString(R.string.app_name)
-        requireContext().deleteFile(note.fileName)
+        (activity as AppCompatActivity).supportActionBar?.apply {
+            title = getString(R.string.app_name)
+        }
 
         requireContext().apply {
+            deleteFile(note.fileName)
             unregisterReceiver(renameNote)
         }
     }
 
     private fun updateUI() {
-        (activity as AppCompatActivity).supportActionBar?.title = note.name
-        textField.setText(note.text)
+        (activity as AppCompatActivity).supportActionBar?.apply {
+            title = note.name
+        }
+
+        noteTextEditText.setText(note.text)
     }
 
     private fun shareNote() {
-        val noteFile = File(requireContext().filesDir, note.fileName)
-
-        noteFile.outputStream().use { fileOutputStream ->
-            fileOutputStream.write(note.text.toByteArray())
+        // Create note text file and write note text
+        val noteFile = File(requireContext().filesDir, note.fileName).apply {
+            outputStream().use { fileOutputStream ->
+                fileOutputStream.write(note.text.toByteArray())
+            }
         }
-
-        val noteUri = FileProvider.getUriForFile(
-            requireContext(),
-            PROVIDER_AUTHORITY,
-            noteFile
-        )
-
-        val contentResolver = requireContext().contentResolver
 
         val sendNoteIntent = Intent(Intent.ACTION_SEND).apply {
             addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION)
-            putExtra(Intent.EXTRA_STREAM, noteUri)
-            type = contentResolver.getType(noteUri)
+
+            FileProvider.getUriForFile(requireContext(), PROVIDER_AUTHORITY, noteFile)
+                .also { uri ->
+                    putExtra(Intent.EXTRA_STREAM, uri)
+                    type = requireContext().contentResolver.getType(uri)
+                }
         }
 
-        val noteChooserIntent = Intent.createChooser(
-            sendNoteIntent,
-            getString(R.string.send_note)
-        )
+        val noteChooserIntent = Intent.createChooser(sendNoteIntent, getString(R.string.note_chooser_text))
 
         startActivity(noteChooserIntent)
     }
 
     companion object {
         fun newInstance(noteName: String): NoteFragment {
-            val args = Bundle().apply {
-                putString(ARG_NOTE_NAME, noteName)
-            }
             return NoteFragment().apply {
-                arguments = args
+                arguments = Bundle().apply {
+                    putString(ARG_NOTE_NAME, noteName)
+                }
             }
         }
     }

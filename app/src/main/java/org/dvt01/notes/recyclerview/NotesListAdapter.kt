@@ -21,6 +21,7 @@ import org.dvt01.notes.fragments.NOTE_TEXT
 import org.dvt01.notes.model.Note
 
 private const val TAG = "NotesListAdapter"
+
 const val ACTION_DESELECT_NOTES = "org.dvt01.notes.deselect_notes"
 const val ACTION_SELECT_NOTES = "org.dvt01.notes.select_notes"
 
@@ -29,13 +30,10 @@ class NotesListAdapter(
 ) : RecyclerView.Adapter<NotesListAdapter.NoteHolder>() {
 
     private lateinit var recyclerView: RecyclerView
-    private var selectAllNotesIsOn = false
 
+    private var selectAllNotesIsOn = false
     private val selectedItems = MutableLiveData<MutableList<Note>>()
-    val selectedItemsLiveData: LiveData<List<Note>> =
-        Transformations.map(selectedItems) { newList ->
-            newList
-        }
+    val selectedItemsLiveData: LiveData<List<Note>> = Transformations.map(selectedItems) { it }
 
     private val selectAllNotes: BroadcastReceiver by lazy {
         object : BroadcastReceiver() {
@@ -74,37 +72,46 @@ class NotesListAdapter(
 
         fun bind(note: Note) {
             this.note = note
-            noteNameTextView.text = this.note.name
+            noteNameTextView.text = note.name
 
             itemView.isActivated = selectedItemsValue.contains(note)
         }
 
         override fun onClick(view: View) {
-            if (selectedItemsValue.contains(this.note)) {
-                deselectNote()
-            } else if (selectedItemsValue.isEmpty()) {
-                openNote()
-            } else if (selectedItemsValue.isNotEmpty() && !selectedItemsValue.contains(this.note)) {
-                selectNote()
+            selectedItemsValue.run {
+                // Not in selection mode
+                if (isEmpty()) {
+                    openNote()
+                    // In selection mode
+                } else if (isNotEmpty()) {
+                    when {
+                        // Note was selected
+                        contains(note) -> deselectNote()
+                        // Note was not selected
+                        !contains(note) -> selectNote()
+                    }
+                }
             }
         }
 
         override fun onLongClick(view: View): Boolean {
-            if (!selectedItemsValue.contains(this.note)) {
+            // Check if this note was selected
+            if (!selectedItemsValue.contains(note)) {
                 selectNote()
             }
             return true
         }
 
         private fun selectNote() {
-            selectedItems.value = selectedItemsValue.also { it.add(this.note) }
+            selectedItems.value = selectedItemsValue.apply { add(note) }
             itemView.isActivated = true
         }
 
         private fun deselectNote() {
-            selectedItems.value = selectedItemsValue.also { it.remove(this.note) }
+            selectedItems.value = selectedItemsValue.apply { remove(note) }
             itemView.isActivated = false
 
+            // Turn off all note selection if it was on
             if (selectAllNotesIsOn) {
                 selectAllNotesIsOn = false
 
@@ -116,8 +123,7 @@ class NotesListAdapter(
 
         private fun openNote() {
             itemView.context?.sendBroadcast(
-                Intent().apply {
-                    action = ACTION_OPEN_NOTE
+                Intent(ACTION_OPEN_NOTE).apply {
                     putExtra(NOTE_NAME, note.name)
                     putExtra(NOTE_TEXT, note.text)
                 }
@@ -126,12 +132,10 @@ class NotesListAdapter(
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): NoteHolder {
+
         val view = LayoutInflater.from(parent.context)
-            .inflate(
-                R.layout.list_item_note,
-                parent,
-                false
-            )
+            .run { inflate(R.layout.list_item_note, parent, false) }
+
         return NoteHolder(view)
     }
 
@@ -147,28 +151,30 @@ class NotesListAdapter(
 
         this.recyclerView = recyclerView
 
-        val deselectIntentFilter = IntentFilter(ACTION_DESELECT_NOTES)
-        recyclerView.context.registerReceiver(deselectAllNotes, deselectIntentFilter)
-
-        val selectIntentFilter = IntentFilter(ACTION_SELECT_NOTES)
-        recyclerView.context.registerReceiver(selectAllNotes, selectIntentFilter)
+        recyclerView.context.run {
+            registerReceiver(deselectAllNotes, IntentFilter(ACTION_DESELECT_NOTES))
+            registerReceiver(selectAllNotes, IntentFilter(ACTION_SELECT_NOTES))
+        }
     }
 
     override fun onDetachedFromRecyclerView(recyclerView: RecyclerView) {
         super.onDetachedFromRecyclerView(recyclerView)
 
-        recyclerView.context.unregisterReceiver(deselectAllNotes)
-        recyclerView.context.unregisterReceiver(selectAllNotes)
+        recyclerView.context.run {
+            unregisterReceiver(deselectAllNotes)
+            unregisterReceiver(selectAllNotes)
+        }
     }
 
     fun selectAllNotes(selectAll: Boolean) {
         selectAllNotesIsOn = selectAll
 
         for (viewHolderIndex in 0 until recyclerView.childCount) {
-            val viewHolder = recyclerView.getChildViewHolder(
-                recyclerView.getChildAt(viewHolderIndex)
-            )
-            viewHolder.itemView.isActivated = selectAll
+            recyclerView.run {
+                getChildViewHolder(getChildAt(viewHolderIndex)).apply {
+                    itemView.isActivated = selectAll
+                }
+            }
         }
         notifyDataSetChanged()
     }

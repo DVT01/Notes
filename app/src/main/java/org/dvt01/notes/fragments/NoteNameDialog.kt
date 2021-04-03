@@ -4,11 +4,13 @@ import android.app.Dialog
 import android.content.Intent
 import android.os.Bundle
 import android.util.Log
+import androidx.annotation.StringRes
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.widget.AppCompatEditText
 import androidx.fragment.app.DialogFragment
 import androidx.fragment.app.activityViewModels
 import org.dvt01.notes.R
+import java.util.*
 
 private const val TAG = "NoteNameDialog"
 private const val ARG_DIALOG_TYPE = "dialog_type"
@@ -24,15 +26,18 @@ class NoteNameDialog : DialogFragment() {
     override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
         val dialogView = layoutInflater.inflate(R.layout.dialog_note_name, null)
         val noteNameEditText: AppCompatEditText = dialogView.findViewById(R.id.note_name)
-        val argDialogType = requireArguments().getString(ARG_DIALOG_TYPE) ?: ""
 
-        val dialogTitle: Int
-        val positiveButtonText: Int
+        val argDialogType = requireArguments().getString(ARG_DIALOG_TYPE)
+            ?: throw MissingFormatArgumentException("Get an instance using newInstance function")
+
+        @StringRes val dialogTitle: Int
+        @StringRes val positiveButtonText: Int
         val broadcastIntent: Intent
+
         when (DialogType.valueOf(argDialogType)) {
             DialogType.CREATE -> {
                 dialogTitle = R.string.new_note
-                positiveButtonText = R.string.create_new_note
+                positiveButtonText = R.string.create
                 broadcastIntent = Intent(ACTION_CREATE_NOTE)
             }
             DialogType.RENAME -> {
@@ -46,7 +51,7 @@ class NoteNameDialog : DialogFragment() {
             .setView(dialogView)
             .setTitle(dialogTitle)
             .setPositiveButton(positiveButtonText, null)
-            .setNegativeButton(R.string.cancel_note, null)
+            .setNegativeButton(R.string.cancel, null)
             .create()
 
         alertDialog.setOnShowListener {
@@ -59,15 +64,18 @@ class NoteNameDialog : DialogFragment() {
                 Log.i(TAG, "Note name: $noteName")
 
                 val notes = notesListViewModel.notesLiveData.value?.map { it.name } ?: emptyList()
+
                 if (notes.contains(noteName)) {
-                    noteNameEditText.setText("")
-                    noteNameEditText.hint = getString(R.string.note_already_exists)
+                    noteNameEditText.apply {
+                        setText("")
+                        hint = getString(R.string.note_exists)
+                    }
                 } else if (noteName.isNotBlank()) {
                     alertDialog.dismiss()
 
-                    broadcastIntent.let {
-                        it.putExtra(NOTE_NAME, noteName)
-                        requireContext().sendBroadcast(it)
+                    broadcastIntent.apply {
+                        putExtra(NOTE_NAME, noteName)
+                        requireContext().sendBroadcast(this)
                     }
                 }
             }

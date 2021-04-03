@@ -25,24 +25,28 @@ import org.dvt01.notes.recyclerview.ACTION_SELECT_NOTES
 import org.dvt01.notes.recyclerview.NotesListAdapter
 import java.io.BufferedReader
 import java.io.InputStreamReader
+import java.util.*
 
 private const val TAG = "NotesListFragment"
-private const val ARG_NOTE_NAME = "requestNote"
+private const val ARG_NOTE_NAME_REQUEST = "note_name_request_key"
 
 const val ACTION_REPLACE_SELECT_ALL_TEXT = "org.dvt01.notes.replace_select_all_text"
 const val ACTION_OPEN_NOTE = "org.dvt01.notes.open_note"
 const val ACTION_CREATE_NOTE = "org.dvt01.notes.create_note"
-const val NOTE_NAME = "org.dvt01.notes.note_name"
-const val NOTE_TEXT = "org.dvt01.notes.note_text"
+
+const val NOTE_NAME = "note_name"
+const val NOTE_NAME_REQUIRED = "Must pass the note's name in the Intent using NOTE_NAME"
+const val NOTE_TEXT = "note_text"
+const val NOTE_TEXT_REQUIRED = "Must pass the note's text in the Intent using NOTE_TEXT"
 
 class NotesListFragment : Fragment() {
 
-    private lateinit var emptyNotesTextView: AppCompatTextView
+    private lateinit var notifyEmptyDBTextView: AppCompatTextView
     private lateinit var notesRecyclerView: RecyclerView
     private lateinit var ascendingSortMenuItem: MenuItem
     private lateinit var descendingSortMenuItem: MenuItem
-    private lateinit var sortOrder: Sort
-    private lateinit var addNoteFab: FloatingActionButton
+    private lateinit var sortByOrder: SortBy
+    private lateinit var createNoteFab: FloatingActionButton
 
     private var adapter: NotesListAdapter = NotesListAdapter(emptyList())
     private val importNoteLauncher = registerForActivityResult(
@@ -50,77 +54,81 @@ class NotesListFragment : Fragment() {
     ) { noteDirUri ->
         Log.i(TAG, "Import request for Uri: $noteDirUri")
 
+        // Make sure user selected a document to import
         if (noteDirUri == null) {
             return@registerForActivityResult
         }
 
         val contentResolver = requireContext().contentResolver
 
-        val fileText: String = StringBuilder().let { stringBuilder ->
+        val fileText: String = StringBuilder().apply {
             contentResolver.openInputStream(noteDirUri)?.use { inputStream ->
                 BufferedReader(InputStreamReader(inputStream)).use { reader ->
-                    reader.readLines().forEach { fileLine ->
-                        stringBuilder.appendLine(fileLine)
+                    reader.readLines().forEach { line ->
+                        appendLine(line)
                     }
                 }
             }
-            stringBuilder.toString()
+        }.toString()
+
+        val fileName = contentResolver.query(
+            noteDirUri,
+            null,
+            null,
+            null,
+            null
+        )!!.use { cursor ->
+            val fileNameIndex = cursor.getColumnIndex(OpenableColumns.DISPLAY_NAME)
+            cursor.moveToFirst()
+            cursor.getString(fileNameIndex).removeSuffix(".txt")
         }
 
-        val fileName = contentResolver.query(noteDirUri, null, null, null, null)?.use { cursor ->
-            val nameIndex = cursor.getColumnIndex(OpenableColumns.DISPLAY_NAME)
-            cursor.moveToFirst()
-            cursor.getString(nameIndex).removeSuffix(".txt")
-        } ?: ""
-
-        notesListViewModel.insertNote(Note(fileName, fileText))
+        Note(fileName, fileText).let {
+            notesListViewModel.insertNote(it)
+        }
     }
 
     private val notesListViewModel: NotesListViewModel by lazy {
         ViewModelProvider(this).get(NotesListViewModel::class.java)
     }
-    private val selectNoteFromAdapter: BroadcastReceiver by lazy {
+    private val openSelectedNote: BroadcastReceiver by lazy {
         object : BroadcastReceiver() {
             override fun onReceive(context: Context, intent: Intent) {
                 Log.i(TAG, "Received broadcast action: ${intent.action}")
 
-                val noteName = intent.getStringExtra(NOTE_NAME) ?: ""
-                val noteText = intent.getStringExtra(NOTE_TEXT) ?: ""
+                val noteName = intent.getStringExtra(NOTE_NAME)
+                    ?: throw MissingFormatArgumentException(NOTE_NAME_REQUIRED)
+                val noteText = intent.getStringExtra(NOTE_TEXT)
+                    ?: throw MissingFormatArgumentException(NOTE_TEXT_REQUIRED)
 
-                openNote(
-                    Note(noteName, noteText)
-                )
+                openNote(Note(noteName, noteText))
             }
         }
     }
     private val createNote: BroadcastReceiver by lazy {
         object : BroadcastReceiver() {
             override fun onReceive(context: Context, intent: Intent) {
-                val noteName = intent.getStringExtra(NOTE_NAME) ?: ""
+                val noteName = intent.getStringExtra(NOTE_NAME)
+                    ?: throw MissingFormatArgumentException(NOTE_NAME_REQUIRED)
 
-                Note(noteName, "").also {
+                Note(noteName, "").let {
                     notesListViewModel.insertNote(it)
                     openNote(it)
                 }
             }
         }
     }
-    private val settingsSharedPreferences: SharedPreferences by lazy {
+    private val sharedPreferences: SharedPreferences by lazy {
         PreferenceManager.getDefaultSharedPreferences(requireContext())
     }
 
-    enum class Sort(@IdRes val id: Int) {
-        Ascending(R.id.ascending),
-        Descending(R.id.descending);
+    private enum class SortBy(@IdRes val id: Int) {
+        ASCENDING(R.id.ascending),
+        DESCENDING(R.id.descending);
 
         companion object {
-            fun getEnumById(@IdRes id: Int): Sort? {
-                values().forEach {
-                    if (it.id == id) {
-                        return it
-                    }
-                }
-                return null
+            fun getSortById(@IdRes id: Int): SortBy? {
+                return values().find { it.id == id }
             }
         }
     }
@@ -129,12 +137,9 @@ class NotesListFragment : Fragment() {
         super.onCreate(savedInstanceState)
         setHasOptionsMenu(true)
 
-        sortOrder = Sort.valueOf(
-            settingsSharedPreferences.getString(
-                SORT_MODE_KEY,
-                Sort.Ascending.name
-            ).toString()
-        )
+        sortByOrder = sharedPreferences
+            .getString(SORT_MODE_KEY, SortBy.ASCENDING.name)!!
+            .let { SortBy.valueOf(it) }
     }
 
     override fun onCreateView(
@@ -142,18 +147,15 @@ class NotesListFragment : Fragment() {
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        val view = inflater.inflate(
-            R.layout.fragment_notes_list,
-            container,
-            false
-        )
+        val view = inflater.inflate(R.layout.fragment_notes_list, container, false)
+            .apply {
+                notesRecyclerView = findViewById(R.id.notes_list)
+                notifyEmptyDBTextView = findViewById(R.id.empty_list)
+                createNoteFab = findViewById(R.id.new_note_fab)
+            }
 
-        notesRecyclerView = view.findViewById(R.id.notes_list)
         notesRecyclerView.layoutManager = LinearLayoutManager(context)
         notesRecyclerView.adapter = adapter
-
-        emptyNotesTextView = view.findViewById(R.id.empty_list)
-        addNoteFab = view.findViewById(R.id.new_note_fab)
 
         return view
     }
@@ -164,14 +166,15 @@ class NotesListFragment : Fragment() {
         notesListViewModel.notesLiveData.observe(viewLifecycleOwner) { notes ->
             Log.i(TAG, "Received ${notes.size} notes.")
 
-            val actionBar = (requireActivity() as AppCompatActivity).supportActionBar
-            actionBar?.subtitle =
-                resources.getQuantityString(R.plurals.note_count, notes.size, notes.size)
+            (requireActivity() as AppCompatActivity).supportActionBar?.apply {
+                subtitle =
+                    resources.getQuantityString(R.plurals.note_count, notes.size, notes.size)
+            }
 
             updateUI(notes)
         }
 
-        addNoteFab.setOnClickListener {
+        createNoteFab.setOnClickListener {
             NoteNameDialog
                 .newInstance(NoteNameDialog.DialogType.CREATE)
                 .show(childFragmentManager, null)
@@ -185,9 +188,10 @@ class NotesListFragment : Fragment() {
         var actionModeStarted = false
 
         adapter.selectedItemsLiveData.observe(viewLifecycleOwner) { notesSelected ->
-            val notesNames =
-                notesSelected.mapIndexed { index, note -> "Note ${index + 1}: ${note.name}" }
-            Log.i(TAG, "Selected: $notesNames")
+            val notes = notesSelected
+                .mapIndexed { index, note -> "Note ${index + 1}: ${note.name}" }
+
+            Log.i(TAG, "Selected: $notes")
 
             if (notesSelected.isNotEmpty() && !actionModeStarted) {
                 requireActivity().startActionMode(actionMode)
@@ -200,12 +204,9 @@ class NotesListFragment : Fragment() {
             actionMode.notesSelected = notesSelected
         }
 
-        val selectNoteIntentFilter = IntentFilter(ACTION_OPEN_NOTE)
-        val createNoteIntentFilter = IntentFilter(ACTION_CREATE_NOTE)
-
         requireContext().apply {
-            registerReceiver(selectNoteFromAdapter, selectNoteIntentFilter)
-            registerReceiver(createNote, createNoteIntentFilter)
+            registerReceiver(openSelectedNote, IntentFilter(ACTION_OPEN_NOTE))
+            registerReceiver(createNote, IntentFilter(ACTION_CREATE_NOTE))
         }
     }
 
@@ -213,22 +214,25 @@ class NotesListFragment : Fragment() {
         super.onStop()
 
         requireContext().apply {
-            unregisterReceiver(selectNoteFromAdapter)
+            unregisterReceiver(openSelectedNote)
             unregisterReceiver(createNote)
         }
 
-        val actionBar = (requireActivity() as AppCompatActivity).supportActionBar
-        actionBar?.subtitle = ""
+        (requireActivity() as AppCompatActivity).supportActionBar?.apply {
+            subtitle = ""
+        }
     }
 
     override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
         super.onCreateOptionsMenu(menu, inflater)
         inflater.inflate(R.menu.note_list_fragment_menu, menu)
 
-        ascendingSortMenuItem = menu.findItem(R.id.ascending)
-        descendingSortMenuItem = menu.findItem(R.id.descending)
+        menu.run {
+            ascendingSortMenuItem = findItem(R.id.ascending)
+            descendingSortMenuItem = findItem(R.id.descending)
+        }
 
-        checkSortOrder()
+        checkSortOrderMenuItem()
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
@@ -241,13 +245,14 @@ class NotesListFragment : Fragment() {
                 importNoteLauncher.launch(arrayOf("text/plain"))
                 true
             }
-            in Sort.values().map { it.id } -> {
-                sortOrder = Sort.getEnumById(item.itemId)!!
-                checkSortOrder()
+            in SortBy.values().map { it.id } -> {
+                sortByOrder = SortBy.getSortById(item.itemId)!!
+                checkSortOrderMenuItem()
 
-                settingsSharedPreferences.edit {
-                    putString(SORT_MODE_KEY, sortOrder.name)
+                sharedPreferences.edit {
+                    putString(SORT_MODE_KEY, sortByOrder.name)
                 }
+
                 updateUI()
                 true
             }
@@ -256,11 +261,11 @@ class NotesListFragment : Fragment() {
     }
 
     private fun updateUI(notes: List<Note> = adapter.notes) {
-        adapter.notes = when (sortOrder) {
-            Sort.Ascending -> {
+        adapter.notes = when (sortByOrder) {
+            SortBy.ASCENDING -> {
                 notes.sortedBy { it.name }
             }
-            Sort.Descending -> {
+            SortBy.DESCENDING -> {
                 notes.sortedByDescending { it.name }
             }
         }
@@ -268,16 +273,16 @@ class NotesListFragment : Fragment() {
         notesRecyclerView.adapter = adapter
 
         if (notes.isEmpty()) {
-            emptyNotesTextView.visibility = View.VISIBLE
+            notifyEmptyDBTextView.visibility = View.VISIBLE
             notesRecyclerView.visibility = View.GONE
         } else {
-            emptyNotesTextView.visibility = View.GONE
+            notifyEmptyDBTextView.visibility = View.GONE
             notesRecyclerView.visibility = View.VISIBLE
         }
     }
 
-    private fun checkSortOrder() {
-        if (sortOrder.id == ascendingSortMenuItem.itemId) {
+    private fun checkSortOrderMenuItem() {
+        if (sortByOrder.id == ascendingSortMenuItem.itemId) {
             ascendingSortMenuItem.isChecked = true
         } else {
             descendingSortMenuItem.isChecked = true
@@ -285,16 +290,15 @@ class NotesListFragment : Fragment() {
     }
 
     private fun openNote(note: Note) {
-        val requestNoteKey = requireArguments().getString(ARG_NOTE_NAME, "")
-        val resultNoteBundle = Bundle().apply {
-            putString(requestNoteKey, note.name)
+        requireArguments().getString(ARG_NOTE_NAME_REQUEST, "").let { noteNameKey ->
+            setFragmentResult(noteNameKey, Bundle().apply {
+                putString(noteNameKey, note.name)
+            })
         }
-        setFragmentResult(requestNoteKey, resultNoteBundle)
     }
 
     private fun openSettings() {
-        val openSettingsIntent = Intent(ACTION_OPEN_SETTINGS)
-        requireContext().sendBroadcast(openSettingsIntent)
+        requireContext().sendBroadcast(Intent(ACTION_OPEN_SETTINGS))
     }
 
     private inner class NotesListActionMode : ActionMode.Callback {
@@ -313,31 +317,32 @@ class NotesListFragment : Fragment() {
                 }
             }
 
+        // Gets called when all notes were selected and then one note was deselected
         private val replaceSelectAllNotesText: BroadcastReceiver by lazy {
             object : BroadcastReceiver() {
                 override fun onReceive(context: Context, intent: Intent) {
                     Log.i(TAG, "Received action to replace select all button text")
 
-                    val selectNotes = actionMode.menu.findItem(R.id.select_all_notes)
-                    selectNotes.title = getString(R.string.select_all)
+                    actionMode.menu.findItem(R.id.select_all_notes).apply {
+                        title = getString(R.string.select_all)
+                    }
                 }
             }
         }
 
         override fun onCreateActionMode(mode: ActionMode, menu: Menu): Boolean {
-            val inflater = mode.menuInflater
-            inflater.inflate(R.menu.note_list_fragment_action_mode, menu)
+            mode.menuInflater.apply {
+                inflate(R.menu.note_list_fragment_action_mode, menu)
+            }
             return true
         }
 
         override fun onPrepareActionMode(mode: ActionMode, menu: Menu): Boolean {
             actionMode = mode
 
-            val replaceSelectAllNotesTextFilter = IntentFilter(ACTION_REPLACE_SELECT_ALL_TEXT)
-            requireContext().registerReceiver(
-                replaceSelectAllNotesText,
-                replaceSelectAllNotesTextFilter
-            )
+            IntentFilter(ACTION_REPLACE_SELECT_ALL_TEXT).let {
+                requireContext().registerReceiver(replaceSelectAllNotesText, it)
+            }
 
             return true
         }
@@ -356,13 +361,13 @@ class NotesListFragment : Fragment() {
                 }
                 R.id.select_all_notes -> {
 
-                    val selectNotes = mode.menu.findItem(R.id.select_all_notes)
+                    val selectAllNotesItem = mode.menu.findItem(R.id.select_all_notes)
 
-                    if (selectNotes.title == getString(R.string.deselect_all)) {
+                    if (selectAllNotesItem.title == getString(R.string.deselect_all)) {
                         requireContext().sendBroadcast(Intent(ACTION_DESELECT_NOTES))
                     } else {
                         requireContext().sendBroadcast(Intent(ACTION_SELECT_NOTES))
-                        selectNotes.title = getString(R.string.deselect_all)
+                        selectAllNotesItem.title = getString(R.string.deselect_all)
                     }
                 }
             }
@@ -371,7 +376,7 @@ class NotesListFragment : Fragment() {
         }
 
         override fun onDestroyActionMode(mode: ActionMode) {
-            with(requireContext()) {
+            requireContext().run {
                 sendBroadcast(Intent(ACTION_DESELECT_NOTES))
                 unregisterReceiver(replaceSelectAllNotesText)
             }
@@ -379,12 +384,11 @@ class NotesListFragment : Fragment() {
     }
 
     companion object {
-        fun newInstance(openNoteRequest: String): NotesListFragment {
-            val args = Bundle().apply {
-                putString(ARG_NOTE_NAME, openNoteRequest)
-            }
+        fun newInstance(noteNameRequest: String): NotesListFragment {
             return NotesListFragment().apply {
-                arguments = args
+                arguments = Bundle().apply {
+                    putString(ARG_NOTE_NAME_REQUEST, noteNameRequest)
+                }
             }
         }
     }

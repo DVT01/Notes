@@ -59,9 +59,7 @@ class NotesRepository private constructor(context: Context) {
 
         fun get(): NotesRepository {
             return INSTANCE
-                ?: throw IllegalStateException(
-                    "CrimeRepository must be initialized"
-                )
+                ?: throw IllegalStateException("CrimeRepository must be initialized")
         }
     }
 }
