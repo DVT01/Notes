@@ -1,9 +1,9 @@
-package org.dvt01.notes
+package org.supersoniclegend.notes
 
 import android.app.Application
 import androidx.appcompat.app.AppCompatDelegate
 import androidx.preference.PreferenceManager
-import org.dvt01.notes.fragments.DARK_MODE_KEY
+import org.supersoniclegend.notes.fragments.DARK_MODE_KEY
 
 class NotesApplication : Application() {
 

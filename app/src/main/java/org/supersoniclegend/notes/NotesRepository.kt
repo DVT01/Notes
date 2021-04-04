@@ -1,10 +1,10 @@
-package org.dvt01.notes
+package org.supersoniclegend.notes
 
 import android.content.Context
 import androidx.lifecycle.LiveData
 import androidx.room.Room
-import org.dvt01.notes.database.NotesDatabase
-import org.dvt01.notes.model.Note
+import org.supersoniclegend.notes.database.NotesDatabase
+import org.supersoniclegend.notes.model.Note
 import java.lang.IllegalStateException
 import java.util.concurrent.Executors
 

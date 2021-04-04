@@ -1,8 +1,8 @@
-package org.dvt01.notes.fragments
+package org.supersoniclegend.notes.fragments
 
 import androidx.lifecycle.ViewModel
-import org.dvt01.notes.NotesRepository
-import org.dvt01.notes.model.Note
+import org.supersoniclegend.notes.NotesRepository
+import org.supersoniclegend.notes.model.Note
 
 class NotesListViewModel : ViewModel() {
 

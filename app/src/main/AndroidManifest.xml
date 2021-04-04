@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="org.dvt01.notes">
+    package="org.supersoniclegend.notes">
 
     <application
         android:name=".NotesApplication"
@@ -19,7 +19,7 @@
         </activity>
         <provider
             android:name="androidx.core.content.FileProvider"
-            android:authorities="org.dvt01.notes.fileprovider"
+            android:authorities="org.supersoniclegend.notes.fileprovider"
             android:exported="false"
             android:grantUriPermissions="true">
             <meta-data

@@ -1,4 +1,4 @@
-package org.dvt01.notes.fragments
+package org.supersoniclegend.notes.fragments
 
 import android.content.BroadcastReceiver
 import android.content.Context
@@ -17,8 +17,8 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.commit
 import androidx.lifecycle.ViewModelProvider
 import androidx.preference.PreferenceManager
-import org.dvt01.notes.R
-import org.dvt01.notes.model.Note
+import org.supersoniclegend.notes.R
+import org.supersoniclegend.notes.model.Note
 import java.io.File
 import java.io.FileNotFoundException
 import java.io.FileOutputStream
@@ -27,9 +27,9 @@ import java.util.*
 
 private const val TAG = "NoteFragment"
 private const val ARG_NOTE_NAME = "note_name"
-private const val PROVIDER_AUTHORITY = "org.dvt01.notes.fileprovider"
+private const val PROVIDER_AUTHORITY = "org.supersoniclegend.notes.fileprovider"
 
-const val ACTION_RENAME_NOTE = "org.dvt01.notes.rename_note"
+const val ACTION_RENAME_NOTE = "org.supersoniclegend.notes.rename_note"
 
 class NoteFragment : Fragment() {
 

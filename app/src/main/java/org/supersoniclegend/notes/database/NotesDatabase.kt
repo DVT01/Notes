@@ -1,8 +1,8 @@
-package org.dvt01.notes.database
+package org.supersoniclegend.notes.database
 
 import androidx.room.Database
 import androidx.room.RoomDatabase
-import org.dvt01.notes.model.Note
+import org.supersoniclegend.notes.model.Note
 
 @Database(entities = [ Note::class ], version = 1)
 abstract class NotesDatabase : RoomDatabase() {

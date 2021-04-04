@@ -1,4 +1,4 @@
-package org.dvt01.notes.recyclerview
+package org.supersoniclegend.notes.recyclerview
 
 import android.content.BroadcastReceiver
 import android.content.Context
@@ -13,17 +13,17 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.Transformations
 import androidx.recyclerview.widget.RecyclerView
-import org.dvt01.notes.R
-import org.dvt01.notes.fragments.ACTION_OPEN_NOTE
-import org.dvt01.notes.fragments.ACTION_REPLACE_SELECT_ALL_TEXT
-import org.dvt01.notes.fragments.NOTE_NAME
-import org.dvt01.notes.fragments.NOTE_TEXT
-import org.dvt01.notes.model.Note
+import org.supersoniclegend.notes.R
+import org.supersoniclegend.notes.fragments.ACTION_OPEN_NOTE
+import org.supersoniclegend.notes.fragments.ACTION_REPLACE_SELECT_ALL_TEXT
+import org.supersoniclegend.notes.fragments.NOTE_NAME
+import org.supersoniclegend.notes.fragments.NOTE_TEXT
+import org.supersoniclegend.notes.model.Note
 
 private const val TAG = "NotesListAdapter"
 
-const val ACTION_DESELECT_NOTES = "org.dvt01.notes.deselect_notes"
-const val ACTION_SELECT_NOTES = "org.dvt01.notes.select_notes"
+const val ACTION_DESELECT_NOTES = "org.supersoniclegend.notes.deselect_notes"
+const val ACTION_SELECT_NOTES = "org.supersoniclegend.notes.select_notes"
 
 class NotesListAdapter(
     var notes: List<Note>

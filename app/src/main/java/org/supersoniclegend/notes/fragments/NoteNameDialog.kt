@@ -1,4 +1,4 @@
-package org.dvt01.notes.fragments
+package org.supersoniclegend.notes.fragments
 
 import android.app.Dialog
 import android.content.Intent
@@ -9,7 +9,7 @@ import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.widget.AppCompatEditText
 import androidx.fragment.app.DialogFragment
 import androidx.fragment.app.activityViewModels
-import org.dvt01.notes.R
+import org.supersoniclegend.notes.R
 import java.util.*
 
 private const val TAG = "NoteNameDialog"

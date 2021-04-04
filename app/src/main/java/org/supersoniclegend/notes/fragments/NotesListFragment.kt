@@ -1,4 +1,4 @@
-package org.dvt01.notes.fragments
+package org.supersoniclegend.notes.fragments
 
 import android.content.*
 import android.os.Bundle
@@ -17,12 +17,12 @@ import androidx.preference.PreferenceManager
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.floatingactionbutton.FloatingActionButton
-import org.dvt01.notes.R
-import org.dvt01.notes.activities.ACTION_OPEN_SETTINGS
-import org.dvt01.notes.model.Note
-import org.dvt01.notes.recyclerview.ACTION_DESELECT_NOTES
-import org.dvt01.notes.recyclerview.ACTION_SELECT_NOTES
-import org.dvt01.notes.recyclerview.NotesListAdapter
+import org.supersoniclegend.notes.R
+import org.supersoniclegend.notes.activities.ACTION_OPEN_SETTINGS
+import org.supersoniclegend.notes.model.Note
+import org.supersoniclegend.notes.recyclerview.ACTION_DESELECT_NOTES
+import org.supersoniclegend.notes.recyclerview.ACTION_SELECT_NOTES
+import org.supersoniclegend.notes.recyclerview.NotesListAdapter
 import java.io.BufferedReader
 import java.io.InputStreamReader
 import java.util.*
@@ -30,9 +30,9 @@ import java.util.*
 private const val TAG = "NotesListFragment"
 private const val ARG_NOTE_NAME_REQUEST = "note_name_request_key"
 
-const val ACTION_REPLACE_SELECT_ALL_TEXT = "org.dvt01.notes.replace_select_all_text"
-const val ACTION_OPEN_NOTE = "org.dvt01.notes.open_note"
-const val ACTION_CREATE_NOTE = "org.dvt01.notes.create_note"
+const val ACTION_REPLACE_SELECT_ALL_TEXT = "org.supersoniclegend.notes.replace_select_all_text"
+const val ACTION_OPEN_NOTE = "org.supersoniclegend.notes.open_note"
+const val ACTION_CREATE_NOTE = "org.supersoniclegend.notes.create_note"
 
 const val NOTE_NAME = "note_name"
 const val NOTE_NAME_REQUIRED = "Must pass the note's name in the Intent using NOTE_NAME"

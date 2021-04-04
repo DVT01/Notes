@@ -1,4 +1,4 @@
-package org.dvt01.notes.model
+package org.supersoniclegend.notes.model
 
 import androidx.room.Entity
 import androidx.room.PrimaryKey

@@ -1,10 +1,10 @@
-package org.dvt01.notes.fragments
+package org.supersoniclegend.notes.fragments
 
 import android.content.SharedPreferences
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatDelegate
 import androidx.preference.PreferenceFragmentCompat
-import org.dvt01.notes.R
+import org.supersoniclegend.notes.R
 
 private const val TAG = "SettingsFragment"
 

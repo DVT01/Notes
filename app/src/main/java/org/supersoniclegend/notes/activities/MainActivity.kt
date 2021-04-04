@@ -1,4 +1,4 @@
-package org.dvt01.notes.activities
+package org.supersoniclegend.notes.activities
 
 import android.content.BroadcastReceiver
 import android.content.Context
@@ -9,15 +9,15 @@ import android.util.Log
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.FragmentResultListener
 import androidx.fragment.app.commit
-import org.dvt01.notes.R
-import org.dvt01.notes.fragments.NoteFragment
-import org.dvt01.notes.fragments.NotesListFragment
-import org.dvt01.notes.fragments.SettingsFragment
+import org.supersoniclegend.notes.R
+import org.supersoniclegend.notes.fragments.NoteFragment
+import org.supersoniclegend.notes.fragments.NotesListFragment
+import org.supersoniclegend.notes.fragments.SettingsFragment
 
 private const val TAG = "MainActivity"
 private const val REQUEST_NOTE_NAME = "note_name_request"
 
-const val ACTION_OPEN_SETTINGS = "org.dvt01.notes.open_settings"
+const val ACTION_OPEN_SETTINGS = "org.supersoniclegend.notes.open_settings"
 
 class MainActivity : AppCompatActivity(), FragmentResultListener {
 

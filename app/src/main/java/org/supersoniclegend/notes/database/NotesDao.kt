@@ -1,8 +1,8 @@
-package org.dvt01.notes.database
+package org.supersoniclegend.notes.database
 
 import androidx.lifecycle.LiveData
 import androidx.room.*
-import org.dvt01.notes.model.Note
+import org.supersoniclegend.notes.model.Note
 
 @Dao
 interface NotesDao {
