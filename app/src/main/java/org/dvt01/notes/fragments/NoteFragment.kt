@@ -33,9 +33,9 @@ const val ACTION_RENAME_NOTE = "org.dvt01.notes.rename_note"
 
 class NoteFragment : Fragment() {
 
-    private lateinit var note: Note
     private lateinit var noteTextEditText: AppCompatEditText
 
+    private var note = Note("", "")
     private val exportNoteLauncher = registerForActivityResult(
         ActivityResultContracts.CreateDocument()
     ) { noteDirUri ->
@@ -117,6 +117,8 @@ class NoteFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
 
         noteViewModel.noteLiveData.observe(viewLifecycleOwner) { note ->
+            Log.i(TAG, "Loaded note (Name: ${note.name})")
+
             this.note = note
             updateUI()
         }
@@ -219,7 +221,10 @@ class NoteFragment : Fragment() {
                 }
         }
 
-        val noteChooserIntent = Intent.createChooser(sendNoteIntent, getString(R.string.note_chooser_text))
+        val noteChooserIntent = Intent.createChooser(
+            sendNoteIntent,
+            getString(R.string.note_chooser_text)
+        )
 
         startActivity(noteChooserIntent)
     }
