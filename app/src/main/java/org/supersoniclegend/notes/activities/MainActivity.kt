@@ -72,6 +72,7 @@ class MainActivity : AppCompatActivity(), FragmentResultListener {
         when (requestKey) {
             REQUEST_NOTE_NAME -> {
                 val noteName = result.getString(REQUEST_NOTE_NAME, "")
+                Log.i(TAG, "Request to open note: $noteName")
 
                 val noteFragment = NoteFragment.newInstance(noteName)
                 supportFragmentManager.commit {

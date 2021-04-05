@@ -14,7 +14,6 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.AppCompatEditText
 import androidx.core.content.FileProvider
 import androidx.fragment.app.Fragment
-import androidx.fragment.app.commit
 import androidx.lifecycle.ViewModelProvider
 import androidx.preference.PreferenceManager
 import org.supersoniclegend.notes.R
@@ -70,11 +69,10 @@ class NoteFragment : Fragment() {
                     ?: throw MissingFormatArgumentException(NOTE_NAME_REQUIRED)
 
                 note.name = noteName
-                noteViewModel.saveNote(note)
 
-                // Re-create fragment
-                parentFragmentManager.commit {
-                    replace(R.id.fragment_container_view, newInstance(noteName))
+                noteViewModel.run {
+                    saveNote(note)
+                    loadNote(note.name)
                 }
             }
         }
@@ -117,6 +115,8 @@ class NoteFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
 
         noteViewModel.noteLiveData.observe(viewLifecycleOwner) { note ->
+            if (note == null) return@observe
+
             Log.i(TAG, "Loaded note (Name: ${note.name})")
 
             this.note = note

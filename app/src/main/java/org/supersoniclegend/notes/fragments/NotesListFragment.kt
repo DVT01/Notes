@@ -189,7 +189,7 @@ class NotesListFragment : Fragment() {
 
         adapter.selectedItemsLiveData.observe(viewLifecycleOwner) { notesSelected ->
             val notes = notesSelected
-                .mapIndexed { index, note -> "Note ${index + 1}: ${note.name}" }
+                .mapIndexed { index, note -> "Note #${index + 1} -> ${note.name}" }
 
             Log.i(TAG, "Selected: $notes")
 
@@ -290,6 +290,8 @@ class NotesListFragment : Fragment() {
     }
 
     private fun openNote(note: Note) {
+        Log.i(TAG, "Opening note: ${note.name}")
+
         requireArguments().getString(ARG_NOTE_NAME_REQUEST, "").let { noteNameKey ->
             setFragmentResult(noteNameKey, Bundle().apply {
                 putString(noteNameKey, note.name)
