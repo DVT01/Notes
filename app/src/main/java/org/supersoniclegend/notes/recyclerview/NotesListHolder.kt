@@ -102,10 +102,12 @@ class NotesListHolder(
         }
 
         override fun onDoubleTap(event: MotionEvent): Boolean {
-            if (noteNameTextView.maxLines == 3) {
-                noteNameTextView.maxLines = Int.MAX_VALUE
-            } else {
-                noteNameTextView.maxLines = 3
+            if (selectedItemsValue.isEmpty()) {
+                if (noteNameTextView.maxLines == 3) {
+                    noteNameTextView.maxLines = Int.MAX_VALUE
+                } else {
+                    noteNameTextView.maxLines = 3
+                }
             }
             return true
         }
