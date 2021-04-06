@@ -8,6 +8,7 @@ import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
 import android.util.Log
+import android.util.TypedValue
 import android.view.*
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AppCompatActivity
@@ -106,7 +107,10 @@ class NoteFragment : Fragment() {
         val view = inflater.inflate(R.layout.fragment_note, container, false)
 
         noteTextEditText = view.findViewById(R.id.note_text)
-        noteTextEditText.textSize = noteTextEditText.textSize * fontSizePercentage
+        noteTextEditText.setTextSize(
+            TypedValue.COMPLEX_UNIT_PX,
+            noteTextEditText.textSize * fontSizePercentage
+        )
 
         return view
     }
