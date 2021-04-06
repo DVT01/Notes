@@ -164,27 +164,25 @@ class NoteFragment : Fragment() {
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
-        return when (item.itemId) {
+        when (item.itemId) {
             R.id.save_note -> {
                 noteViewModel.saveNote(note)
-                true
             }
             R.id.export_note -> {
                 exportNoteLauncher.launch(note.fileName)
-                true
             }
             R.id.share_note -> {
                 shareNote()
-                true
             }
             R.id.rename_note -> {
                 NoteNameDialog
                     .newInstance(NoteNameDialog.DialogType.RENAME)
                     .show(childFragmentManager, null)
-                true
             }
-            else -> super.onOptionsItemSelected(item)
+            else -> return super.onOptionsItemSelected(item)
         }
+
+        return true
     }
 
     override fun onDestroy() {

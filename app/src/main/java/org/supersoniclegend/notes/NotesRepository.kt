@@ -5,7 +5,6 @@ import androidx.lifecycle.LiveData
 import androidx.room.Room
 import org.supersoniclegend.notes.database.NotesDatabase
 import org.supersoniclegend.notes.model.Note
-import java.lang.IllegalStateException
 import java.util.concurrent.Executors
 
 private const val DATABASE_NAME = "notes-database"
