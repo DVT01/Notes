@@ -1,8 +1,13 @@
 package org.supersoniclegend.notes.recyclerview
 
+import android.annotation.SuppressLint
 import android.content.Intent
+import android.util.Log
+import android.view.GestureDetector
+import android.view.MotionEvent
 import android.view.View
 import androidx.appcompat.widget.AppCompatTextView
+import androidx.core.view.GestureDetectorCompat
 import androidx.lifecycle.MutableLiveData
 import androidx.recyclerview.widget.RecyclerView
 import org.supersoniclegend.notes.R
@@ -12,11 +17,14 @@ import org.supersoniclegend.notes.fragments.NOTE_NAME
 import org.supersoniclegend.notes.fragments.NOTE_TEXT
 import org.supersoniclegend.notes.model.Note
 
+private const val TAG = "NotesListHolder"
+
+@SuppressLint("ClickableViewAccessibility")
 class NotesListHolder(
     view: View,
     private val selectedItems: MutableLiveData<MutableList<Note>>,
     private var selectAllNotesIsOn: Boolean
-) : RecyclerView.ViewHolder(view), View.OnClickListener, View.OnLongClickListener {
+) : RecyclerView.ViewHolder(view) {
 
     private lateinit var note: Note
 
@@ -25,8 +33,9 @@ class NotesListHolder(
         get() = selectedItems.value ?: mutableListOf()
 
     init {
-        itemView.setOnClickListener(this)
-        itemView.setOnLongClickListener(this)
+        GestureDetectorCompat(itemView.context, GestureListener()).apply {
+            itemView.setOnTouchListener { _, event -> onTouchEvent(event) }
+        }
     }
 
     fun bind(note: Note) {
@@ -34,31 +43,6 @@ class NotesListHolder(
         noteNameTextView.text = note.name
 
         itemView.isActivated = selectedItemsValue.contains(note)
-    }
-
-    override fun onClick(view: View) {
-        selectedItemsValue.run {
-            // Not in selection mode
-            if (isEmpty()) {
-                openNote()
-                // In selection mode
-            } else if (isNotEmpty()) {
-                when {
-                    // Note was selected
-                    contains(note) -> deselectNote()
-                    // Note was not selected
-                    !contains(note) -> selectNote()
-                }
-            }
-        }
-    }
-
-    override fun onLongClick(view: View): Boolean {
-        // Check if this note was selected
-        if (!selectedItemsValue.contains(note)) {
-            selectNote()
-        }
-        return true
     }
 
     private fun selectNote() {
@@ -87,5 +71,43 @@ class NotesListHolder(
                 putExtra(NOTE_TEXT, note.text)
             }
         )
+    }
+
+    private inner class GestureListener : GestureDetector.SimpleOnGestureListener() {
+        override fun onDown(event: MotionEvent): Boolean = true
+
+        override fun onSingleTapConfirmed(event: MotionEvent): Boolean {
+            Log.i(TAG, "Confirmed")
+            selectedItemsValue.run {
+                // Not in selection mode
+                if (isEmpty()) {
+                    openNote()
+                    // In selection mode
+                } else if (isNotEmpty()) {
+                    when {
+                        // Note was selected
+                        contains(note) -> deselectNote()
+                        // Note was not selected
+                        !contains(note) -> selectNote()
+                    }
+                }
+            }
+            return true
+        }
+
+        override fun onLongPress(event: MotionEvent) {
+            if (!selectedItemsValue.contains(note)) {
+                selectNote()
+            }
+        }
+
+        override fun onDoubleTap(event: MotionEvent): Boolean {
+            if (noteNameTextView.maxLines == 3) {
+                noteNameTextView.maxLines = Int.MAX_VALUE
+            } else {
+                noteNameTextView.maxLines = 3
+            }
+            return true
+        }
     }
 }
