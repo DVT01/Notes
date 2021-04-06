@@ -188,10 +188,7 @@ class NotesListFragment : Fragment() {
         var actionModeStarted = false
 
         adapter.selectedItemsLiveData.observe(viewLifecycleOwner) { notesSelected ->
-            val notes = notesSelected
-                .mapIndexed { index, note -> "Note #${index + 1} -> ${note.name}" }
-
-            Log.i(TAG, "Selected: $notes")
+            Log.i(TAG, "Selected ${notesSelected.size} notes")
 
             if (notesSelected.isNotEmpty() && !actionModeStarted) {
                 requireActivity().startActionMode(actionMode)
