@@ -312,6 +312,14 @@ class NotesListFragment : Fragment() {
                         actionMode.finish()
                     } else {
                         actionMode.title = "${value.size}/${adapter.notes.size}"
+
+                        actionMode.menu.findItem(R.id.select_all_notes).apply {
+                            title = if (value.size == adapter.notes.size) {
+                                getString(R.string.deselect_all)
+                            } else {
+                                getString(R.string.select_all)
+                            }
+                        }
                     }
                 }
             }
