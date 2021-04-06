@@ -17,6 +17,11 @@
             android:entryValues="@array/font_size_values"
             android:key="font_size"
             android:title="@string/font_size" />
+
+        <SwitchPreferenceCompat
+            android:defaultValue="true"
+            android:key="back_behaviour"
+            android:title="@string/back_behaviour" />
     </PreferenceCategory>
 
 </PreferenceScreen>

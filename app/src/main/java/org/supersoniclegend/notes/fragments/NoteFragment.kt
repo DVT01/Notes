@@ -1,15 +1,13 @@
 package org.supersoniclegend.notes.fragments
 
-import android.content.BroadcastReceiver
-import android.content.Context
-import android.content.Intent
-import android.content.IntentFilter
+import android.content.*
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
 import android.util.Log
 import android.util.TypedValue
 import android.view.*
+import androidx.activity.OnBackPressedCallback
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.AppCompatEditText
@@ -34,8 +32,11 @@ const val ACTION_RENAME_NOTE = "org.supersoniclegend.notes.rename_note"
 class NoteFragment : Fragment() {
 
     private lateinit var noteTextEditText: AppCompatEditText
+    private lateinit var sharedPreferences: SharedPreferences
 
     private var note = Note("", "")
+    private var fontSizePercentage: Float = 1f
+    private var changeBackBehavior: Boolean = true
     private val exportNoteLauncher = registerForActivityResult(
         ActivityResultContracts.CreateDocument()
     ) { noteDirUri ->
@@ -97,12 +98,14 @@ class NoteFragment : Fragment() {
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        val sharedPreferences = PreferenceManager
+        sharedPreferences = PreferenceManager
             .getDefaultSharedPreferences(requireContext())
-        val fontSizePercentage = sharedPreferences
+        fontSizePercentage = sharedPreferences
             .getString(FONT_SIZE_KEY, "100")!!
             .toFloat()
             .div(100)
+        changeBackBehavior = sharedPreferences
+            .getBoolean(BACK_KEY_SAVE_BEHAVIOUR, true)
 
         val view = inflater.inflate(R.layout.fragment_note, container, false)
 
@@ -110,6 +113,16 @@ class NoteFragment : Fragment() {
         noteTextEditText.setTextSize(
             TypedValue.COMPLEX_UNIT_PX,
             noteTextEditText.textSize * fontSizePercentage
+        )
+
+        requireActivity().onBackPressedDispatcher.addCallback(viewLifecycleOwner,
+            object : OnBackPressedCallback(changeBackBehavior) {
+                override fun handleOnBackPressed() {
+                    noteViewModel.saveNote(note)
+                    remove()
+                    requireActivity().onBackPressed()
+                }
+            }
         )
 
         return view
@@ -161,6 +174,8 @@ class NoteFragment : Fragment() {
     override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
         super.onCreateOptionsMenu(menu, inflater)
         inflater.inflate(R.menu.note_fragment_menu, menu)
+
+        menu.findItem(R.id.save_note).isVisible = !changeBackBehavior
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
