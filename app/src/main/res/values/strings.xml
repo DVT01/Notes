@@ -23,6 +23,7 @@
     <string name="share_note">Share note</string>
     <string name="note_chooser_text">Send note via…</string>
     <string name="note_saved">Note Saved</string>
+    <string name="note_has_not_changed">Note was not modified</string>
 
     <!-- Action Mode -->
     <string name="delete">Delete</string>

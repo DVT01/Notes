@@ -260,9 +260,14 @@ class NoteFragment : Fragment() {
     }
 
     private fun saveNote() {
-        noteViewModel.saveNote(note)
+        if (note.text != savedNoteText) {
+            noteViewModel.saveNote(note)
 
-        Snackbar.make(requireView(), R.string.note_saved, Snackbar.LENGTH_SHORT).show()
+            Snackbar.make(requireView(), R.string.note_saved, Snackbar.LENGTH_SHORT).show()
+        } else if (!changeBackBehavior) {
+            Snackbar.make(requireView(), R.string.note_has_not_changed, Snackbar.LENGTH_SHORT)
+                .show()
+        }
     }
 
     companion object {
