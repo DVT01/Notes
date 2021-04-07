@@ -1,6 +1,7 @@
 package org.supersoniclegend.notes.fragments
 
 import android.content.*
+import android.content.res.Configuration
 import android.os.Bundle
 import android.provider.OpenableColumns
 import android.util.Log
@@ -14,6 +15,7 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.setFragmentResult
 import androidx.lifecycle.ViewModelProvider
 import androidx.preference.PreferenceManager
+import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.floatingactionbutton.FloatingActionButton
@@ -154,7 +156,12 @@ class NotesListFragment : Fragment() {
                 createNoteFab = findViewById(R.id.new_note_fab)
             }
 
-        notesRecyclerView.layoutManager = LinearLayoutManager(context)
+        if (resources.configuration.orientation == Configuration.ORIENTATION_LANDSCAPE) {
+            notesRecyclerView.layoutManager = GridLayoutManager(context, 2)
+        } else {
+            notesRecyclerView.layoutManager = LinearLayoutManager(context)
+        }
+
         notesRecyclerView.adapter = adapter
 
         return view
