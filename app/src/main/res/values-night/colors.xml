@@ -13,4 +13,5 @@
     <color name="surface">#121212</color>
     <color name="onSurface">#FFFFFF</color>
     <color name="colorIcon">#FFFFFF</color>
+    <color name="listPreferenceRadioButtonUnselected">#FFFFFF</color>
 </resources>
