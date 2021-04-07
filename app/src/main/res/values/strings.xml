@@ -22,6 +22,7 @@
     <string name="export_note">Export to file</string>
     <string name="share_note">Share note</string>
     <string name="note_chooser_text">Send note via…</string>
+    <string name="note_saved">Note Saved</string>
 
     <!-- Action Mode -->
     <string name="delete">Delete</string>

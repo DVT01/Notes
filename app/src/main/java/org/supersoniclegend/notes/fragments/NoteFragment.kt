@@ -15,6 +15,7 @@ import androidx.core.content.FileProvider
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.preference.PreferenceManager
+import com.google.android.material.snackbar.Snackbar
 import org.supersoniclegend.notes.R
 import org.supersoniclegend.notes.model.Note
 import java.io.File
@@ -119,7 +120,7 @@ class NoteFragment : Fragment() {
         requireActivity().onBackPressedDispatcher.addCallback(viewLifecycleOwner,
             object : OnBackPressedCallback(changeBackBehavior) {
                 override fun handleOnBackPressed() {
-                    noteViewModel.saveNote(note)
+                    saveNote()
                     remove()
                     requireActivity().onBackPressed()
                 }
@@ -193,7 +194,7 @@ class NoteFragment : Fragment() {
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         when (item.itemId) {
             R.id.save_note -> {
-                noteViewModel.saveNote(note)
+                saveNote()
             }
             R.id.export_note -> {
                 exportNoteLauncher.launch(note.fileName)
@@ -256,6 +257,12 @@ class NoteFragment : Fragment() {
         )
 
         startActivity(noteChooserIntent)
+    }
+
+    private fun saveNote() {
+        noteViewModel.saveNote(note)
+
+        Snackbar.make(requireView(), R.string.note_saved, Snackbar.LENGTH_SHORT).show()
     }
 
     companion object {
