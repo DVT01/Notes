@@ -33,6 +33,7 @@ class NoteFragment : Fragment() {
 
     private lateinit var noteTextEditText: AppCompatEditText
     private lateinit var sharedPreferences: SharedPreferences
+    private lateinit var savedNoteText: String
 
     private var note = Note("", "")
     private var fontSizePercentage: Float = 1f
@@ -136,7 +137,11 @@ class NoteFragment : Fragment() {
 
             Log.i(TAG, "Loaded note (Name: ${note.name})")
 
-            this.note = note
+            note.let {
+                this.note = it
+                savedNoteText = it.text
+            }
+
             updateUI()
         }
     }
@@ -164,6 +169,13 @@ class NoteFragment : Fragment() {
                 }
 
                 override fun afterTextChanged(sequence: Editable) {
+                    (activity as AppCompatActivity).supportActionBar?.apply {
+                        title = if (note.text == savedNoteText) {
+                            note.name
+                        } else {
+                            "*${note.name}"
+                        }
+                    }
                 }
 
             }
