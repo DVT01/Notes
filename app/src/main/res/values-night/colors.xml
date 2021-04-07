@@ -9,8 +9,8 @@
     <color name="colorSecondaryLight">#5ccef3</color>
     <color name="colorSecondaryDark">#006e90</color>
     <color name="colorOnSecondary">#FFFFFF</color>
-    <color name="background">#000000</color>
-    <color name="surface">#121212</color>
+    <color name="background">#252525</color>
+    <color name="surface">#000000</color>
     <color name="onSurface">#FFFFFF</color>
     <color name="colorIcon">#FFFFFF</color>
     <color name="listPreferenceRadioButtonUnselected">#FFFFFF</color>
