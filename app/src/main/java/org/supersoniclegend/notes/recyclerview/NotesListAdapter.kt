@@ -10,6 +10,8 @@ import android.view.ViewGroup
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.Transformations
+import androidx.recyclerview.widget.DiffUtil
+import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import org.supersoniclegend.notes.R
 import org.supersoniclegend.notes.model.Note
@@ -19,9 +21,7 @@ private const val TAG = "NotesListAdapter"
 const val ACTION_DESELECT_NOTES = "org.supersoniclegend.notes.deselect_notes"
 const val ACTION_SELECT_NOTES = "org.supersoniclegend.notes.select_notes"
 
-class NotesListAdapter(
-    var notes: List<Note>
-) : RecyclerView.Adapter<NotesListHolder>() {
+class NotesListAdapter : ListAdapter<Note, NotesListHolder>(NoteComparator()) {
 
     private lateinit var recyclerView: RecyclerView
 
@@ -34,7 +34,7 @@ class NotesListAdapter(
             override fun onReceive(context: Context, intent: Intent) {
                 Log.i(TAG, "Receive broadcast to select all notes")
 
-                selectedItems.value = notes.toMutableList()
+                selectedItems.value = currentList.toMutableList()
                 selectAllNotes(true)
             }
         }
@@ -59,11 +59,9 @@ class NotesListAdapter(
     }
 
     override fun onBindViewHolder(holder: NotesListHolder, position: Int) {
-        val note = notes[position]
+        val note = getItem(position)
         holder.bind(note)
     }
-
-    override fun getItemCount(): Int = notes.size
 
     override fun onAttachedToRecyclerView(recyclerView: RecyclerView) {
         super.onAttachedToRecyclerView(recyclerView)
@@ -96,5 +94,15 @@ class NotesListAdapter(
             }
         }
         notifyDataSetChanged()
+    }
+
+    class NoteComparator : DiffUtil.ItemCallback<Note>() {
+        override fun areItemsTheSame(oldItem: Note, newItem: Note): Boolean {
+            return oldItem.id == newItem.id
+        }
+
+        override fun areContentsTheSame(oldItem: Note, newItem: Note): Boolean {
+            return oldItem == newItem
+        }
     }
 }

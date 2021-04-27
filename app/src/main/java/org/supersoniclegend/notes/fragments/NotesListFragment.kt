@@ -50,7 +50,7 @@ class NotesListFragment : Fragment() {
     private lateinit var sortByOrder: SortBy
     private lateinit var createNoteFab: FloatingActionButton
 
-    private var adapter: NotesListAdapter = NotesListAdapter(emptyList())
+    private var adapter: NotesListAdapter = NotesListAdapter()
     private val importNoteLauncher = registerForActivityResult(
         ActivityResultContracts.OpenDocument()
     ) { noteDirUri ->
@@ -264,17 +264,17 @@ class NotesListFragment : Fragment() {
         }
     }
 
-    private fun updateUI(notes: List<Note> = adapter.notes) {
-        adapter.notes = when (sortByOrder) {
-            SortBy.ASCENDING -> {
-                notes.sortedBy { it.name }
+    private fun updateUI(notes: List<Note> = adapter.currentList) {
+        adapter.submitList(
+            when (sortByOrder) {
+                SortBy.ASCENDING -> {
+                    notes.sortedBy { it.name }
+                }
+                SortBy.DESCENDING -> {
+                    notes.sortedByDescending { it.name }
+                }
             }
-            SortBy.DESCENDING -> {
-                notes.sortedByDescending { it.name }
-            }
-        }
-
-        notesRecyclerView.adapter = adapter
+        )
 
         if (notes.isEmpty()) {
             notifyEmptyDBTextView.visibility = View.VISIBLE
@@ -318,10 +318,10 @@ class NotesListFragment : Fragment() {
                     if (value.isEmpty()) {
                         actionMode.finish()
                     } else {
-                        actionMode.title = "${value.size}/${adapter.notes.size}"
+                        actionMode.title = "${value.size}/${adapter.currentList.size}"
 
                         actionMode.menu.findItem(R.id.select_all_notes).apply {
-                            title = if (value.size == adapter.notes.size) {
+                            title = if (value.size == adapter.currentList.size) {
                                 getString(R.string.deselect_all)
                             } else {
                                 getString(R.string.select_all)
