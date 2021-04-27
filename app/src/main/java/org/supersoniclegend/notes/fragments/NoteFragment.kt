@@ -204,7 +204,7 @@ class NoteFragment : Fragment() {
             }
             R.id.rename_note -> {
                 NoteNameDialog
-                    .newInstance(NoteNameDialog.DialogType.RENAME)
+                    .newInstance(NoteNameDialog.DialogType.RENAME, note.name)
                     .show(childFragmentManager, null)
             }
             else -> return super.onOptionsItemSelected(item)

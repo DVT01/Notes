@@ -14,6 +14,7 @@ import java.util.*
 
 private const val TAG = "NoteNameDialog"
 private const val ARG_DIALOG_TYPE = "dialog_type"
+private const val ARG_NOTE_NAME = "note_name"
 
 class NoteNameDialog : DialogFragment() {
 
@@ -24,17 +25,21 @@ class NoteNameDialog : DialogFragment() {
     }
 
     override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
-        val dialogView = layoutInflater.inflate(R.layout.dialog_note_name, null)
-        val noteNameEditText: AppCompatEditText = dialogView.findViewById(R.id.note_name)
-
-        val argDialogType = requireArguments().getString(ARG_DIALOG_TYPE)
+        val dialogType = requireArguments().getString(ARG_DIALOG_TYPE)
             ?: throw MissingFormatArgumentException("Get an instance using newInstance function")
+        val noteName = requireArguments().getString(ARG_NOTE_NAME)
+            ?: throw MissingFormatArgumentException("Get an instance using newInstance function")
+
+        val dialogView = layoutInflater.inflate(R.layout.dialog_note_name, null)
+        val noteNameEditText = dialogView.findViewById<AppCompatEditText>(R.id.note_name).apply {
+            setText(noteName)
+        }
 
         @StringRes val dialogTitle: Int
         @StringRes val positiveButtonText: Int
         val broadcastIntent: Intent
 
-        when (DialogType.valueOf(argDialogType)) {
+        when (DialogType.valueOf(dialogType)) {
             DialogType.CREATE -> {
                 dialogTitle = R.string.new_note
                 positiveButtonText = R.string.create
@@ -89,10 +94,11 @@ class NoteNameDialog : DialogFragment() {
     }
 
     companion object {
-        fun newInstance(dialogType: DialogType): NoteNameDialog {
+        fun newInstance(dialogType: DialogType, noteName: String): NoteNameDialog {
             return NoteNameDialog().apply {
                 arguments = Bundle().apply {
                     putString(ARG_DIALOG_TYPE, dialogType.name)
+                    putString(ARG_NOTE_NAME, noteName)
                 }
             }
         }

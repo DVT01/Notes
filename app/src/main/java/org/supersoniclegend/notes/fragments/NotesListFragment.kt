@@ -183,7 +183,7 @@ class NotesListFragment : Fragment() {
 
         createNoteFab.setOnClickListener {
             NoteNameDialog
-                .newInstance(NoteNameDialog.DialogType.CREATE)
+                .newInstance(NoteNameDialog.DialogType.CREATE, "")
                 .show(childFragmentManager, null)
         }
     }
