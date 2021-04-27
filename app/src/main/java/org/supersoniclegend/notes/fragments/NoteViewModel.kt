@@ -4,8 +4,8 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.Transformations
 import androidx.lifecycle.ViewModel
-import org.supersoniclegend.notes.NotesRepository
 import org.supersoniclegend.notes.model.Note
+import org.supersoniclegend.notes.model.NotesRepository
 
 class NoteViewModel : ViewModel() {
 

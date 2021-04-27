@@ -4,8 +4,9 @@ import android.app.Application
 import androidx.appcompat.app.AppCompatDelegate
 import androidx.preference.PreferenceManager
 import org.supersoniclegend.notes.fragments.DARK_MODE_KEY
+import org.supersoniclegend.notes.model.NotesRepository
 
-class NotesApplication : Application() {
+class App : Application() {
 
     override fun onCreate() {
         super.onCreate()
