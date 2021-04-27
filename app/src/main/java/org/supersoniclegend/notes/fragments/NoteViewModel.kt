@@ -12,7 +12,7 @@ class NoteViewModel : ViewModel() {
 
     val noteLiveData: LiveData<Note> =
         Transformations.switchMap(noteNameLiveData) { noteName ->
-            notesRepository.getNote(noteName)
+            notesRepository.getNote(noteName).asLiveData()
         }
 
     fun loadNote(noteName: String) {

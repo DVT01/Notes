@@ -1,8 +1,8 @@
 package org.supersoniclegend.notes.model
 
 import android.content.Context
-import androidx.lifecycle.LiveData
 import androidx.room.Room
+import kotlinx.coroutines.flow.Flow
 import org.supersoniclegend.notes.database.NotesDatabase
 
 private const val DATABASE_NAME = "notes-database"
@@ -29,11 +29,11 @@ class NotesRepository private constructor(context: Context) {
         notesDao.deleteNote(note)
     }
 
-    fun getAllNotes(): LiveData<List<Note>> {
+    fun getAllNotes(): Flow<List<Note>> {
         return notesDao.getAllNotes()
     }
 
-    fun getNote(noteName: String): LiveData<Note> {
+    fun getNote(noteName: String): Flow<Note> {
         return notesDao.getNote(noteName)
     }
 

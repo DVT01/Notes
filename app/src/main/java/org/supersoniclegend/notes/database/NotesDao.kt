@@ -1,7 +1,7 @@
 package org.supersoniclegend.notes.database
 
-import androidx.lifecycle.LiveData
 import androidx.room.*
+import kotlinx.coroutines.flow.Flow
 import org.supersoniclegend.notes.model.Note
 
 @Dao
@@ -17,8 +17,8 @@ interface NotesDao {
     suspend fun deleteNote(note: Note)
 
     @Query("SELECT * FROM note")
-    fun getAllNotes(): LiveData<List<Note>>
+    fun getAllNotes(): Flow<List<Note>>
 
     @Query("SELECT * FROM note WHERE name=(:noteName)")
-    fun getNote(noteName: String): LiveData<Note>
+    fun getNote(noteName: String): Flow<Note>
 }
