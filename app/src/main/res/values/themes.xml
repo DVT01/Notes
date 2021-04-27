@@ -1,5 +1,5 @@
 <resources xmlns:tools="http://schemas.android.com/tools">
-    <!-- Light application theme. -->
+
     <style name="Theme.Notes" parent="Theme.MaterialComponents.DayNight">
         <!-- Primary brand color. -->
         <item name="colorPrimary">@color/colorPrimary</item>
@@ -20,12 +20,11 @@
         <item name="alertDialogTheme">@style/NoteCreation.Dialog</item>
     </style>
 
-    <style name="NoteCreation.Dialog" parent="Theme.MaterialComponents.Dialog.MinWidth">
+    <style name="NoteCreation.Dialog" parent="Theme.MaterialComponents.DayNight.Dialog.MinWidth">
         <item name="colorAccent">@color/colorPrimaryDark</item>
         <item name="textColorAlertDialogListItem">@color/onSurface</item>
         <item name="android:textColor">@color/onSurface</item>
         <item name="android:textColorSecondary">@color/listPreferenceRadioButtonUnselected</item>
-        <item name="android:background">@color/surface</item>
         <item name="buttonBarNegativeButtonStyle">@style/NoteCreation.Dialog.Button</item>
         <item name="buttonBarPositiveButtonStyle">@style/NoteCreation.Dialog.Button</item>
     </style>
