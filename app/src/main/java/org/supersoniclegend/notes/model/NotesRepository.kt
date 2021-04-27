@@ -1,4 +1,4 @@
-package org.supersoniclegend.notes
+package org.supersoniclegend.notes.model
 
 import android.content.Context
 import androidx.lifecycle.LiveData
