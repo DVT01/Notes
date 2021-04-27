@@ -4,8 +4,6 @@ import android.content.Context
 import androidx.lifecycle.LiveData
 import androidx.room.Room
 import org.supersoniclegend.notes.database.NotesDatabase
-import org.supersoniclegend.notes.model.Note
-import java.util.concurrent.Executors
 
 private const val DATABASE_NAME = "notes-database"
 
@@ -18,24 +16,17 @@ class NotesRepository private constructor(context: Context) {
     ).build()
 
     private val notesDao = database.notesDao()
-    private val executor = Executors.newSingleThreadExecutor()
 
-    fun insertNote(note: Note) {
-        executor.execute {
-            notesDao.insertNote(note)
-        }
+    suspend fun insertNote(note: Note) {
+        notesDao.insertNote(note)
     }
 
-    fun updateNote(note: Note) {
-        executor.execute {
-            notesDao.updateNote(note)
-        }
+    suspend fun updateNote(note: Note) {
+        notesDao.updateNote(note)
     }
 
-    fun deleteNote(note: Note) {
-        executor.execute {
-            notesDao.deleteNote(note)
-        }
+    suspend fun deleteNote(note: Note) {
+        notesDao.deleteNote(note)
     }
 
     fun getAllNotes(): LiveData<List<Note>> {

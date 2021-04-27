@@ -1,9 +1,7 @@
 package org.supersoniclegend.notes.fragments
 
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.Transformations
-import androidx.lifecycle.ViewModel
+import androidx.lifecycle.*
+import kotlinx.coroutines.launch
 import org.supersoniclegend.notes.model.Note
 import org.supersoniclegend.notes.model.NotesRepository
 
@@ -22,6 +20,8 @@ class NoteViewModel : ViewModel() {
     }
 
     fun saveNote(note: Note) {
-        notesRepository.updateNote(note)
+        viewModelScope.launch {
+            notesRepository.updateNote(note)
+        }
     }
 }
