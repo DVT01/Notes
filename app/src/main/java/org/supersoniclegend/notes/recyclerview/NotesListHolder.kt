@@ -8,7 +8,6 @@ import android.view.MotionEvent
 import android.view.View
 import androidx.appcompat.widget.AppCompatTextView
 import androidx.core.view.GestureDetectorCompat
-import androidx.lifecycle.MutableLiveData
 import androidx.recyclerview.widget.RecyclerView
 import org.supersoniclegend.notes.R
 import org.supersoniclegend.notes.fragments.ACTION_OPEN_NOTE
@@ -20,17 +19,11 @@ import org.supersoniclegend.notes.model.Note
 private const val TAG = "NotesListHolder"
 
 @SuppressLint("ClickableViewAccessibility")
-class NotesListHolder(
-    view: View,
-    private val selectedItems: MutableLiveData<MutableList<Note>>,
-    private var selectAllNotesIsOn: Boolean
-) : RecyclerView.ViewHolder(view) {
+class NotesListHolder(view: View) : RecyclerView.ViewHolder(view) {
 
     private lateinit var note: Note
 
     private val noteNameTextView: AppCompatTextView = itemView.findViewById(R.id.note_name)
-    private val selectedItemsValue: MutableList<Note>
-        get() = selectedItems.value ?: mutableListOf()
 
     init {
         GestureDetectorCompat(itemView.context, GestureListener()).apply {
@@ -42,21 +35,29 @@ class NotesListHolder(
         this.note = note
         noteNameTextView.text = note.name
 
-        itemView.isActivated = selectedItemsValue.contains(note)
+        itemView.isActivated = NotesListDataHolder.selectedItemsValue.contains(note)
     }
 
     private fun selectNote() {
-        selectedItems.value = selectedItemsValue.apply { add(note) }
+        NotesListDataHolder.changeLiveDataValue(NotesListDataHolder.selectedItemsValue.apply {
+            add(
+                note
+            )
+        })
         itemView.isActivated = true
     }
 
     private fun deselectNote() {
-        selectedItems.value = selectedItemsValue.apply { remove(note) }
+        NotesListDataHolder.changeLiveDataValue(NotesListDataHolder.selectedItemsValue.apply {
+            remove(
+                note
+            )
+        })
         itemView.isActivated = false
 
         // Turn off all note selection if it was on
-        if (selectAllNotesIsOn) {
-            selectAllNotesIsOn = false
+        if (NotesListDataHolder.selectAllNotesIsOn) {
+            NotesListDataHolder.selectAllNotesIsOn = false
 
             itemView.context?.run {
                 sendBroadcast(Intent(ACTION_REPLACE_SELECT_ALL_TEXT))
@@ -78,7 +79,7 @@ class NotesListHolder(
 
         override fun onSingleTapConfirmed(event: MotionEvent): Boolean {
             Log.i(TAG, "Confirmed")
-            selectedItemsValue.run {
+            NotesListDataHolder.selectedItemsValue.run {
                 // Not in selection mode
                 if (isEmpty()) {
                     openNote()
@@ -96,13 +97,13 @@ class NotesListHolder(
         }
 
         override fun onLongPress(event: MotionEvent) {
-            if (!selectedItemsValue.contains(note)) {
+            if (!NotesListDataHolder.selectedItemsValue.contains(note)) {
                 selectNote()
             }
         }
 
         override fun onDoubleTap(event: MotionEvent): Boolean {
-            if (selectedItemsValue.isEmpty()) {
+            if (NotesListDataHolder.selectedItemsValue.isEmpty()) {
                 if (noteNameTextView.maxLines == 3) {
                     noteNameTextView.maxLines = Int.MAX_VALUE
                 } else {

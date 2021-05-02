@@ -7,9 +7,6 @@ import android.content.IntentFilter
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.ViewGroup
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.Transformations
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
@@ -25,16 +22,12 @@ class NotesListAdapter : ListAdapter<Note, NotesListHolder>(NoteComparator()) {
 
     private lateinit var recyclerView: RecyclerView
 
-    private var selectAllNotesIsOn = false
-    private val selectedItems = MutableLiveData<MutableList<Note>>()
-    val selectedItemsLiveData: LiveData<List<Note>> = Transformations.map(selectedItems) { it }
-
     private val selectAllNotes: BroadcastReceiver by lazy {
         object : BroadcastReceiver() {
             override fun onReceive(context: Context, intent: Intent) {
                 Log.i(TAG, "Receive broadcast to select all notes")
 
-                selectedItems.value = currentList.toMutableList()
+                NotesListDataHolder.changeLiveDataValue(currentList.toMutableList())
                 selectAllNotes(true)
             }
         }
@@ -44,7 +37,7 @@ class NotesListAdapter : ListAdapter<Note, NotesListHolder>(NoteComparator()) {
             override fun onReceive(context: Context, intent: Intent) {
                 Log.i(TAG, "Receive broadcast to deselect all notes")
 
-                selectedItems.value = mutableListOf()
+                NotesListDataHolder.changeLiveDataValue(mutableListOf())
                 selectAllNotes(false)
             }
         }
@@ -55,7 +48,7 @@ class NotesListAdapter : ListAdapter<Note, NotesListHolder>(NoteComparator()) {
         val view = LayoutInflater.from(parent.context)
             .inflate(R.layout.list_item_note, parent, false)
 
-        return NotesListHolder(view, selectedItems, selectAllNotesIsOn)
+        return NotesListHolder(view)
     }
 
     override fun onBindViewHolder(holder: NotesListHolder, position: Int) {
@@ -84,7 +77,7 @@ class NotesListAdapter : ListAdapter<Note, NotesListHolder>(NoteComparator()) {
     }
 
     fun selectAllNotes(selectAll: Boolean) {
-        selectAllNotesIsOn = selectAll
+        NotesListDataHolder.selectAllNotesIsOn = selectAll
 
         for (viewHolderIndex in 0 until recyclerView.childCount) {
             recyclerView.run {

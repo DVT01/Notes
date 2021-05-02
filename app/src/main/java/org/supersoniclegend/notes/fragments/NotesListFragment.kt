@@ -25,6 +25,7 @@ import org.supersoniclegend.notes.model.Note
 import org.supersoniclegend.notes.recyclerview.ACTION_DESELECT_NOTES
 import org.supersoniclegend.notes.recyclerview.ACTION_SELECT_NOTES
 import org.supersoniclegend.notes.recyclerview.NotesListAdapter
+import org.supersoniclegend.notes.recyclerview.NotesListDataHolder
 import java.io.BufferedReader
 import java.io.InputStreamReader
 import java.util.*
@@ -194,7 +195,7 @@ class NotesListFragment : Fragment() {
         val actionMode = NotesListActionMode()
         var actionModeStarted = false
 
-        adapter.selectedItemsLiveData.observe(viewLifecycleOwner) { notesSelected ->
+        NotesListDataHolder.selectedItemsLiveData.observe(viewLifecycleOwner) { notesSelected ->
             Log.i(TAG, "Selected ${notesSelected.size} notes")
 
             if (notesSelected.isNotEmpty() && !actionModeStarted) {
