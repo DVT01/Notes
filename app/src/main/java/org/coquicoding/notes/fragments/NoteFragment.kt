@@ -1,4 +1,4 @@
-package org.supersoniclegend.notes.fragments
+package org.coquicoding.notes.fragments
 
 import android.content.*
 import android.os.Bundle
@@ -16,8 +16,8 @@ import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.preference.PreferenceManager
 import com.google.android.material.snackbar.Snackbar
-import org.supersoniclegend.notes.R
-import org.supersoniclegend.notes.model.Note
+import org.coquicoding.notes.R
+import org.coquicoding.notes.model.Note
 import java.io.File
 import java.io.FileNotFoundException
 import java.io.FileOutputStream
@@ -26,9 +26,9 @@ import java.util.*
 
 private const val TAG = "NoteFragment"
 private const val ARG_NOTE_NAME = "note_name"
-private const val PROVIDER_AUTHORITY = "org.supersoniclegend.notes.fileprovider"
+private const val PROVIDER_AUTHORITY = "org.coquicoding.notes.fileprovider"
 
-const val ACTION_RENAME_NOTE = "org.supersoniclegend.notes.rename_note"
+const val ACTION_RENAME_NOTE = "org.coquicoding.notes.rename_note"
 
 class NoteFragment : Fragment() {
 

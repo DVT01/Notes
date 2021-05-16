@@ -1,4 +1,4 @@
-package org.supersoniclegend.notes.recyclerview
+package org.coquicoding.notes.recyclerview
 
 import android.content.BroadcastReceiver
 import android.content.Context
@@ -10,13 +10,13 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
-import org.supersoniclegend.notes.R
-import org.supersoniclegend.notes.model.Note
+import org.coquicoding.notes.R
+import org.coquicoding.notes.model.Note
 
 private const val TAG = "NotesListAdapter"
 
-const val ACTION_DESELECT_NOTES = "org.supersoniclegend.notes.deselect_notes"
-const val ACTION_SELECT_NOTES = "org.supersoniclegend.notes.select_notes"
+const val ACTION_DESELECT_NOTES = "org.coquicoding.notes.deselect_notes"
+const val ACTION_SELECT_NOTES = "org.coquicoding.notes.select_notes"
 
 class NotesListAdapter : ListAdapter<Note, NotesListHolder>(NoteComparator()) {
 

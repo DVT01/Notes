@@ -1,4 +1,4 @@
-package org.supersoniclegend.notes.recyclerview
+package org.coquicoding.notes.recyclerview
 
 import android.annotation.SuppressLint
 import android.content.Intent
@@ -9,12 +9,12 @@ import android.view.View
 import androidx.appcompat.widget.AppCompatTextView
 import androidx.core.view.GestureDetectorCompat
 import androidx.recyclerview.widget.RecyclerView
-import org.supersoniclegend.notes.R
-import org.supersoniclegend.notes.fragments.ACTION_OPEN_NOTE
-import org.supersoniclegend.notes.fragments.ACTION_REPLACE_SELECT_ALL_TEXT
-import org.supersoniclegend.notes.fragments.NOTE_NAME
-import org.supersoniclegend.notes.fragments.NOTE_TEXT
-import org.supersoniclegend.notes.model.Note
+import org.coquicoding.notes.R
+import org.coquicoding.notes.fragments.ACTION_OPEN_NOTE
+import org.coquicoding.notes.fragments.ACTION_REPLACE_SELECT_ALL_TEXT
+import org.coquicoding.notes.fragments.NOTE_NAME
+import org.coquicoding.notes.fragments.NOTE_TEXT
+import org.coquicoding.notes.model.Note
 
 private const val TAG = "NotesListHolder"
 

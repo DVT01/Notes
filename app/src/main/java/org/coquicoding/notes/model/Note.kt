@@ -1,4 +1,4 @@
-package org.supersoniclegend.notes.model
+package org.coquicoding.notes.model
 
 import androidx.room.Entity
 import androidx.room.PrimaryKey

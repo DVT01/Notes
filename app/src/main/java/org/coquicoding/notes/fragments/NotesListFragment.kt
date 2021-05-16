@@ -1,4 +1,4 @@
-package org.supersoniclegend.notes.fragments
+package org.coquicoding.notes.fragments
 
 import android.content.*
 import android.content.res.Configuration
@@ -20,10 +20,10 @@ import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.floatingactionbutton.FloatingActionButton
-import org.supersoniclegend.notes.R
-import org.supersoniclegend.notes.activities.ACTION_OPEN_SETTINGS
-import org.supersoniclegend.notes.model.Note
-import org.supersoniclegend.notes.recyclerview.*
+import org.coquicoding.notes.R
+import org.coquicoding.notes.activities.ACTION_OPEN_SETTINGS
+import org.coquicoding.notes.model.Note
+import org.coquicoding.notes.recyclerview.*
 import java.io.BufferedReader
 import java.io.InputStreamReader
 import java.util.*
@@ -31,9 +31,9 @@ import java.util.*
 private const val TAG = "NotesListFragment"
 private const val ARG_NOTE_NAME_REQUEST = "note_name_request_key"
 
-const val ACTION_REPLACE_SELECT_ALL_TEXT = "org.supersoniclegend.notes.replace_select_all_text"
-const val ACTION_OPEN_NOTE = "org.supersoniclegend.notes.open_note"
-const val ACTION_CREATE_NOTE = "org.supersoniclegend.notes.create_note"
+const val ACTION_REPLACE_SELECT_ALL_TEXT = "org.coquicoding.notes.replace_select_all_text"
+const val ACTION_OPEN_NOTE = "org.coquicoding.notes.open_note"
+const val ACTION_CREATE_NOTE = "org.coquicoding.notes.create_note"
 
 const val NOTE_NAME = "note_name"
 const val NOTE_NAME_REQUIRED = "Must pass the note's name in the Intent using NOTE_NAME"

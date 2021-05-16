@@ -1,9 +1,9 @@
-package org.supersoniclegend.notes.recyclerview
+package org.coquicoding.notes.recyclerview
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.Transformations
-import org.supersoniclegend.notes.model.Note
+import org.coquicoding.notes.model.Note
 
 object NotesListDataHolder {
 

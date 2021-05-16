@@ -1,8 +1,8 @@
-package org.supersoniclegend.notes.database
+package org.coquicoding.notes.database
 
 import androidx.room.*
 import kotlinx.coroutines.flow.Flow
-import org.supersoniclegend.notes.model.Note
+import org.coquicoding.notes.model.Note
 
 @Dao
 interface NotesDao {

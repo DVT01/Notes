@@ -1,10 +1,10 @@
-package org.supersoniclegend.notes.fragments
+package org.coquicoding.notes.fragments
 
 import android.content.SharedPreferences
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatDelegate
 import androidx.preference.PreferenceFragmentCompat
-import org.supersoniclegend.notes.R
+import org.coquicoding.notes.R
 
 private const val TAG = "SettingsFragment"
 

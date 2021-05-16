@@ -1,10 +1,10 @@
-package org.supersoniclegend.notes
+package org.coquicoding.notes
 
 import android.app.Application
 import androidx.appcompat.app.AppCompatDelegate
 import androidx.preference.PreferenceManager
-import org.supersoniclegend.notes.fragments.DARK_MODE_KEY
-import org.supersoniclegend.notes.model.NotesRepository
+import org.coquicoding.notes.fragments.DARK_MODE_KEY
+import org.coquicoding.notes.model.NotesRepository
 
 class App : Application() {
 

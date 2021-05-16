@@ -1,4 +1,4 @@
-package org.supersoniclegend.notes.activities
+package org.coquicoding.notes.activities
 
 import android.content.BroadcastReceiver
 import android.content.Context
@@ -9,15 +9,15 @@ import android.util.Log
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.FragmentResultListener
 import androidx.fragment.app.commit
-import org.supersoniclegend.notes.R
-import org.supersoniclegend.notes.fragments.NoteFragment
-import org.supersoniclegend.notes.fragments.NotesListFragment
-import org.supersoniclegend.notes.fragments.SettingsFragment
+import org.coquicoding.notes.R
+import org.coquicoding.notes.fragments.NoteFragment
+import org.coquicoding.notes.fragments.NotesListFragment
+import org.coquicoding.notes.fragments.SettingsFragment
 
 private const val TAG = "MainActivity"
 private const val REQUEST_NOTE_NAME = "note_name_request"
 
-const val ACTION_OPEN_SETTINGS = "org.supersoniclegend.notes.open_settings"
+const val ACTION_OPEN_SETTINGS = "org.coquicoding.notes.open_settings"
 
 class MainActivity : AppCompatActivity(), FragmentResultListener {
 

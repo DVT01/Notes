@@ -1,9 +1,9 @@
-package org.supersoniclegend.notes.model
+package org.coquicoding.notes.model
 
 import android.content.Context
 import androidx.room.Room
 import kotlinx.coroutines.flow.Flow
-import org.supersoniclegend.notes.database.NotesDatabase
+import org.coquicoding.notes.database.NotesDatabase
 
 private const val DATABASE_NAME = "notes-database"
 

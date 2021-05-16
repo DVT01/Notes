@@ -1,9 +1,9 @@
-package org.supersoniclegend.notes.fragments
+package org.coquicoding.notes.fragments
 
 import androidx.lifecycle.*
 import kotlinx.coroutines.launch
-import org.supersoniclegend.notes.model.Note
-import org.supersoniclegend.notes.model.NotesRepository
+import org.coquicoding.notes.model.Note
+import org.coquicoding.notes.model.NotesRepository
 
 class NoteViewModel : ViewModel() {
 

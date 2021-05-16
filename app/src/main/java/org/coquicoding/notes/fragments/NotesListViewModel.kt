@@ -1,12 +1,12 @@
-package org.supersoniclegend.notes.fragments
+package org.coquicoding.notes.fragments
 
 import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.asLiveData
 import androidx.lifecycle.viewModelScope
 import kotlinx.coroutines.launch
-import org.supersoniclegend.notes.model.Note
-import org.supersoniclegend.notes.model.NotesRepository
+import org.coquicoding.notes.model.Note
+import org.coquicoding.notes.model.NotesRepository
 
 private const val TAG = "NotesListViewModel"
 
