@@ -65,7 +65,7 @@ class NotesListHolder(view: View) : RecyclerView.ViewHolder(view) {
         }
     }
 
-    private fun openNote() {
+    fun openNote() {
         itemView.context?.sendBroadcast(
             Intent(ACTION_OPEN_NOTE).apply {
                 putExtra(NOTE_NAME, note.name)

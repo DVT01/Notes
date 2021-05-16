@@ -16,16 +16,14 @@ import androidx.fragment.app.setFragmentResult
 import androidx.lifecycle.ViewModelProvider
 import androidx.preference.PreferenceManager
 import androidx.recyclerview.widget.GridLayoutManager
+import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 import org.supersoniclegend.notes.R
 import org.supersoniclegend.notes.activities.ACTION_OPEN_SETTINGS
 import org.supersoniclegend.notes.model.Note
-import org.supersoniclegend.notes.recyclerview.ACTION_DESELECT_NOTES
-import org.supersoniclegend.notes.recyclerview.ACTION_SELECT_NOTES
-import org.supersoniclegend.notes.recyclerview.NotesListAdapter
-import org.supersoniclegend.notes.recyclerview.NotesListDataHolder
+import org.supersoniclegend.notes.recyclerview.*
 import java.io.BufferedReader
 import java.io.InputStreamReader
 import java.util.*
@@ -90,6 +88,31 @@ class NotesListFragment : Fragment() {
             notesListViewModel.insertNote(it)
         }
     }
+
+    private val itemTouchHelperCallback =
+        object : ItemTouchHelper.SimpleCallback(0, ItemTouchHelper.LEFT or ItemTouchHelper.RIGHT) {
+            override fun onMove(
+                recyclerView: RecyclerView,
+                viewHolder: RecyclerView.ViewHolder,
+                target: RecyclerView.ViewHolder
+            ): Boolean {
+                Log.d(TAG, "onMove: ${viewHolder.adapterPosition}")
+                return false
+            }
+
+            override fun onSwiped(viewHolder: RecyclerView.ViewHolder, direction: Int) {
+                Log.d(TAG, "onSwiped: ${viewHolder.adapterPosition}, direction: $direction")
+
+                when (direction) {
+                    ItemTouchHelper.LEFT -> {
+                        (viewHolder as NotesListHolder).openNote()
+                    }
+                    ItemTouchHelper.RIGHT -> {
+                        notesListViewModel.deleteNote(adapter.currentList[viewHolder.adapterPosition])
+                    }
+                }
+            }
+        }
 
     private val notesListViewModel: NotesListViewModel by lazy {
         ViewModelProvider(this).get(NotesListViewModel::class.java)
@@ -213,6 +236,8 @@ class NotesListFragment : Fragment() {
             registerReceiver(openSelectedNote, IntentFilter(ACTION_OPEN_NOTE))
             registerReceiver(createNote, IntentFilter(ACTION_CREATE_NOTE))
         }
+
+        ItemTouchHelper(itemTouchHelperCallback).attachToRecyclerView(notesRecyclerView)
     }
 
     override fun onStop() {
