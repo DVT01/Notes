@@ -108,7 +108,9 @@ class NotesListFragment : Fragment() {
                         (viewHolder as NotesListHolder).openNote()
                     }
                     ItemTouchHelper.RIGHT -> {
-                        notesListViewModel.deleteNote(adapter.currentList[viewHolder.adapterPosition])
+                        adapter.currentList[viewHolder.adapterPosition].let { note ->
+                            notesListViewModel.deleteNote(note)
+                        }
                     }
                 }
             }
