@@ -39,20 +39,20 @@ class NotesListHolder(view: View) : RecyclerView.ViewHolder(view) {
     }
 
     private fun selectNote() {
-        NotesListDataHolder.changeLiveDataValue(NotesListDataHolder.selectedItemsValue.apply {
-            add(
-                note
-            )
-        })
+        NotesListDataHolder.selectedItemsValue.run {
+            add(note)
+            NotesListDataHolder.changeLiveDataValue(this)
+        }
+
         itemView.isActivated = true
     }
 
     private fun deselectNote() {
-        NotesListDataHolder.changeLiveDataValue(NotesListDataHolder.selectedItemsValue.apply {
-            remove(
-                note
-            )
-        })
+        NotesListDataHolder.selectedItemsValue.run {
+            remove(note)
+            NotesListDataHolder.changeLiveDataValue(this)
+        }
+
         itemView.isActivated = false
 
         // Turn off all note selection if it was on
@@ -80,11 +80,10 @@ class NotesListHolder(view: View) : RecyclerView.ViewHolder(view) {
         override fun onSingleTapConfirmed(event: MotionEvent): Boolean {
             Log.i(TAG, "Confirmed")
             NotesListDataHolder.selectedItemsValue.run {
-                // Not in selection mode
-                if (isEmpty()) {
+
+                if (isEmpty()) { // Not in selection mode
                     openNote()
-                    // In selection mode
-                } else if (isNotEmpty()) {
+                } else if (isNotEmpty()) { // In selection mode
                     when {
                         // Note was selected
                         contains(note) -> deselectNote()
@@ -103,6 +102,7 @@ class NotesListHolder(view: View) : RecyclerView.ViewHolder(view) {
         }
 
         override fun onDoubleTap(event: MotionEvent): Boolean {
+            // Not in selection mode
             if (NotesListDataHolder.selectedItemsValue.isEmpty()) {
                 if (noteNameTextView.maxLines == 3) {
                     noteNameTextView.maxLines = Int.MAX_VALUE
