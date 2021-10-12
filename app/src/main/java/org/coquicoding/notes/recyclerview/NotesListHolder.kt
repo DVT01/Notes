@@ -78,7 +78,7 @@ class NotesListHolder(view: View) : RecyclerView.ViewHolder(view) {
         override fun onDown(event: MotionEvent): Boolean = true
 
         override fun onSingleTapConfirmed(event: MotionEvent): Boolean {
-            Log.i(TAG, "Confirmed")
+            Log.i(TAG, "Single Tap Confirmed")
             NotesListDataHolder.selectedItemsValue.run {
 
                 if (isEmpty()) { // Not in selection mode
