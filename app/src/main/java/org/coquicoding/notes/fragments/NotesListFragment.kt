@@ -21,6 +21,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 import org.coquicoding.notes.R
+import org.coquicoding.notes.activities.ACTION_OPEN_ABOUT
 import org.coquicoding.notes.activities.ACTION_OPEN_SETTINGS
 import org.coquicoding.notes.model.Note
 import org.coquicoding.notes.recyclerview.*
@@ -288,6 +289,10 @@ class NotesListFragment : Fragment() {
                 updateUI()
                 true
             }
+            R.id.about -> {
+                openAbout()
+                true
+            }
             else -> super.onOptionsItemSelected(item)
         }
     }
@@ -333,6 +338,10 @@ class NotesListFragment : Fragment() {
 
     private fun openSettings() {
         requireContext().sendBroadcast(Intent(ACTION_OPEN_SETTINGS))
+    }
+
+    private fun openAbout() {
+        requireContext().sendBroadcast(Intent(ACTION_OPEN_ABOUT))
     }
 
     private inner class NotesListActionMode : ActionMode.Callback {

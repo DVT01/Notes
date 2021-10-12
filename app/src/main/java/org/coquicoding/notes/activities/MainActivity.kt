@@ -10,6 +10,7 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.FragmentResultListener
 import androidx.fragment.app.commit
 import org.coquicoding.notes.R
+import org.coquicoding.notes.fragments.AboutFragment
 import org.coquicoding.notes.fragments.NoteFragment
 import org.coquicoding.notes.fragments.NotesListFragment
 import org.coquicoding.notes.fragments.SettingsFragment
@@ -18,6 +19,7 @@ private const val TAG = "MainActivity"
 private const val REQUEST_NOTE_NAME = "note_name_request"
 
 const val ACTION_OPEN_SETTINGS = "org.coquicoding.notes.open_settings"
+const val ACTION_OPEN_ABOUT = "org.coquicoding.notes.open_about"
 
 class MainActivity : AppCompatActivity(), FragmentResultListener {
 
@@ -26,16 +28,31 @@ class MainActivity : AppCompatActivity(), FragmentResultListener {
             override fun onReceive(context: Context, intent: Intent) {
                 Log.i(TAG, "Received request to open settings")
 
-                val settingsFragment = SettingsFragment()
-                supportFragmentManager.commit {
-                    setCustomAnimations(
-                        R.anim.fade_in,
-                        R.anim.fade_out,
-                        R.anim.fade_in,
-                        R.anim.fade_out
-                    )
-                    replace(R.id.fragment_container_view, settingsFragment)
-                    addToBackStack(null)
+                SettingsFragment().let { settings ->
+                    supportFragmentManager.commit {
+                        setCustomAnimations(
+                            R.anim.fade_in,
+                            R.anim.fade_out,
+                            R.anim.fade_in,
+                            R.anim.fade_out
+                        )
+                        replace(R.id.fragment_container_view, settings)
+                        addToBackStack(null)
+                    }
+                }
+            }
+        }
+    }
+    private val openAbout: BroadcastReceiver by lazy {
+        object : BroadcastReceiver() {
+            override fun onReceive(context: Context, intent: Intent) {
+                Log.i(TAG, "Received request to open about page")
+
+                AboutFragment().let { about ->
+                    supportFragmentManager.commit {
+                        replace(R.id.fragment_container_view, about)
+                        addToBackStack(null)
+                    }
                 }
             }
         }
@@ -52,6 +69,7 @@ class MainActivity : AppCompatActivity(), FragmentResultListener {
         )
 
         registerReceiver(openSettings, IntentFilter(ACTION_OPEN_SETTINGS))
+        registerReceiver(openAbout, IntentFilter(ACTION_OPEN_ABOUT))
 
         val currentFragment = supportFragmentManager.findFragmentById(R.id.fragment_container_view)
 
@@ -66,6 +84,7 @@ class MainActivity : AppCompatActivity(), FragmentResultListener {
     override fun onDestroy() {
         super.onDestroy()
         unregisterReceiver(openSettings)
+        unregisterReceiver(openAbout)
     }
 
     override fun onFragmentResult(requestKey: String, result: Bundle) {
