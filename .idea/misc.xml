@@ -3,7 +3,10 @@
   <component name="DesignSurface">
     <option name="filePathToZoomLevelMap">
       <map>
-        <entry key="..\:/Users/DVT/My Files/Projects/Android/Kotlin/Notes/app/src/main/res/layout/fragment_about.xml" value="0.30692640692640694" />
+        <entry key="..\:/Users/DVT/My Files/Projects/Android/Kotlin/Notes/app/src/main/res/drawable/ic_github_circle_24dp.xml" value="0.32456140350877194" />
+        <entry key="..\:/Users/DVT/My Files/Projects/Android/Kotlin/Notes/app/src/main/res/drawable/ic_github_circle_white_24dp.xml" value="0.32456140350877194" />
+        <entry key="..\:/Users/DVT/My Files/Projects/Android/Kotlin/Notes/app/src/main/res/drawable/ic_outline_assignment_turned_in_24.xml" value="0.32456140350877194" />
+        <entry key="..\:/Users/DVT/My Files/Projects/Android/Kotlin/Notes/app/src/main/res/layout/fragment_about.xml" value="0.1" />
         <entry key="..\:/Users/DVT/My Files/Projects/Android/Kotlin/Notes/app/src/main/res/menu/note_list_fragment_menu.xml" value="0.30692640692640694" />
       </map>
     </option>

@@ -12,18 +12,12 @@ import org.coquicoding.notes.R
 
 class AboutFragment : Fragment() {
 
-    private lateinit var versionTextView: AppCompatTextView
-
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-        return inflater.inflate(R.layout.fragment_about, container, false).apply {
-            versionTextView = findViewById(R.id.version)
-
-            versionTextView.text = BuildConfig.VERSION_NAME
-        }
+        return inflater.inflate(R.layout.fragment_about, container, false)
     }
 
     override fun onStart() {

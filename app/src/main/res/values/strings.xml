@@ -45,4 +45,12 @@
     <string name="editor">Editor</string>
     <string name="font_size">Font Size</string>
     <string name="back_behaviour">Automatically save note on back press</string>
+
+    <!-- About -->
+    <string name="introduction">Introduction</string>
+    <string name="fork_on_github">Fork on GitHub</string>
+    <string name="licenses">Licenses</string>
+    <string name="author">Author</string>
+    <string name="diego_velez">Diego Velez</string>
+    <string name="write_me_an_email">Write me an email</string>
 </resources>
