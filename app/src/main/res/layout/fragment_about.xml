@@ -56,7 +56,6 @@
                     <androidx.appcompat.widget.LinearLayoutCompat
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:clickable="true"
                         android:gravity="center_vertical"
                         android:minHeight="48dp"
                         android:orientation="horizontal"
@@ -71,7 +70,6 @@
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:layout_marginStart="32dp"
-                            android:layout_marginLeft="32dp"
                             android:orientation="vertical"
                             android:paddingTop="8dp"
                             android:paddingBottom="8dp">
@@ -79,18 +77,20 @@
                             <androidx.appcompat.widget.AppCompatTextView
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
-                                android:text="Version" />
+                                android:text="@string/version" />
 
                             <androidx.appcompat.widget.AppCompatTextView
+                                android:id="@+id/app_version"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
-                                android:text="0.0.0 (0)" />
+                                tools:text="0.0.0 (0)" />
 
                         </androidx.appcompat.widget.LinearLayoutCompat>
 
                     </androidx.appcompat.widget.LinearLayoutCompat>
 
                     <androidx.appcompat.widget.LinearLayoutCompat
+                        android:id="@+id/fork_on_github"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:clickable="true"
@@ -98,33 +98,8 @@
                         android:minHeight="48dp"
                         android:orientation="horizontal"
                         android:paddingLeft="16dp"
-                        android:paddingRight="16dp">
-
-                        <androidx.appcompat.widget.AppCompatImageView
-                            android:layout_width="24dp"
-                            android:layout_height="24dp"
-                            app:srcCompat="@drawable/ic_outline_assignment_turned_in_24" />
-
-                        <androidx.appcompat.widget.AppCompatTextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_marginStart="32dp"
-                            android:layout_marginLeft="32dp"
-                            android:paddingTop="8dp"
-                            android:paddingBottom="8dp"
-                            android:text="@string/introduction" />
-
-                    </androidx.appcompat.widget.LinearLayoutCompat>
-
-                    <androidx.appcompat.widget.LinearLayoutCompat
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:clickable="true"
-                        android:gravity="center_vertical"
-                        android:minHeight="48dp"
-                        android:orientation="horizontal"
-                        android:paddingLeft="16dp"
-                        android:paddingRight="16dp">
+                        android:paddingRight="16dp"
+                        tools:ignore="KeyboardInaccessibleWidget">
 
                         <androidx.appcompat.widget.AppCompatImageView
                             android:layout_width="24dp"
@@ -135,7 +110,6 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_marginStart="32dp"
-                            android:layout_marginLeft="32dp"
                             android:paddingVertical="8dp"
                             android:text="@string/fork_on_github" />
 
@@ -160,7 +134,6 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_marginStart="32dp"
-                            android:layout_marginLeft="32dp"
                             android:paddingVertical="8dp"
                             android:text="@string/licenses" />
 
@@ -195,7 +168,6 @@
                     <androidx.appcompat.widget.LinearLayoutCompat
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:clickable="true"
                         android:gravity="center_vertical"
                         android:minHeight="48dp"
                         android:orientation="horizontal"
@@ -210,7 +182,6 @@
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:layout_marginStart="32dp"
-                            android:layout_marginLeft="32dp"
                             android:orientation="vertical"
                             android:paddingVertical="8dp">
 
@@ -224,13 +195,15 @@
                     </androidx.appcompat.widget.LinearLayoutCompat>
 
                     <androidx.appcompat.widget.LinearLayoutCompat
+                        android:id="@+id/write_me_an_email"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:clickable="true"
                         android:gravity="center_vertical"
                         android:minHeight="48dp"
                         android:orientation="horizontal"
-                        android:paddingHorizontal="16dp">
+                        android:paddingHorizontal="16dp"
+                        tools:ignore="KeyboardInaccessibleWidget">
 
                         <androidx.appcompat.widget.AppCompatImageView
                             android:layout_width="24dp"
@@ -241,7 +214,6 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_marginStart="32dp"
-                            android:layout_marginLeft="32dp"
                             android:paddingVertical="8dp"
                             android:text="@string/write_me_an_email" />
 

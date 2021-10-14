@@ -9,11 +9,12 @@ android {
     buildToolsVersion "30.0.3"
 
     defaultConfig {
-        applicationId "org.coquicoding.notes"
         minSdkVersion 21
         targetSdkVersion 30
+
+        applicationId "org.coquicoding.notes"
         versionCode 1
-        versionName "1.0"
+        versionName "1.0.0"
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
     }

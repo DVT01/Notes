@@ -47,10 +47,12 @@
     <string name="back_behaviour">Automatically save note on back press</string>
 
     <!-- About -->
+    <string name="version">Version</string>
     <string name="introduction">Introduction</string>
     <string name="fork_on_github">Fork on GitHub</string>
     <string name="licenses">Licenses</string>
     <string name="author">Author</string>
     <string name="diego_velez">Diego Velez</string>
     <string name="write_me_an_email">Write me an email</string>
+    <string name="app_version">%s (%d)</string>
 </resources>
