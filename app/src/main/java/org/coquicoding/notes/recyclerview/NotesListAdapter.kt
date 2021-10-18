@@ -27,7 +27,7 @@ class NotesListAdapter : ListAdapter<Note, NotesListHolder>(NoteComparator()) {
             override fun onReceive(context: Context, intent: Intent) {
                 Log.i(TAG, "Receive broadcast to select all notes")
 
-                NotesListDataHolder.changeLiveDataValue(currentList.toMutableList())
+                NotesListDataHolder.changeLiveDataValue(currentList.map { it.id }.toMutableList())
                 selectAllNotes(true)
             }
         }

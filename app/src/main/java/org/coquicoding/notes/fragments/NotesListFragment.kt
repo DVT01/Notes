@@ -349,7 +349,7 @@ class NotesListFragment : Fragment() {
     private inner class NotesListActionMode : ActionMode.Callback {
 
         private lateinit var actionMode: ActionMode
-        var notesSelected: List<Note> = emptyList()
+        var notesSelected: List<Long> = emptyList()
             set(value) {
                 field = value
 
@@ -405,8 +405,13 @@ class NotesListFragment : Fragment() {
         ): Boolean {
             when (item.itemId) {
                 R.id.delete_note -> {
-                    notesSelected.forEach { note ->
-                        notesListViewModel.deleteNote(note)
+                    notesSelected.forEach { noteId ->
+                        // Since Room only cares about finding the PrimaryKey to delete a row,
+                        // this object only needs to have the PrimaryKey correct to delete
+                        // the correct row
+                        Note(String(), String())
+                            .apply { id = noteId }
+                            .let { notesListViewModel.deleteNote(it) }
                     }
 
                     mode.finish()

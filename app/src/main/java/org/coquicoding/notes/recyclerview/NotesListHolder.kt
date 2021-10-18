@@ -34,12 +34,12 @@ class NotesListHolder(view: View) : RecyclerView.ViewHolder(view) {
         this.note = note
         noteNameTextView.text = note.name
 
-        itemView.isActivated = NotesListDataHolder.selectedItemsValue.contains(note)
+        itemView.isActivated = NotesListDataHolder.selectedItemsValue.contains(note.id)
     }
 
     private fun selectNote() {
         NotesListDataHolder.selectedItemsValue.run {
-            add(note)
+            add(note.id)
             NotesListDataHolder.changeLiveDataValue(this)
         }
 
@@ -48,7 +48,7 @@ class NotesListHolder(view: View) : RecyclerView.ViewHolder(view) {
 
     private fun deselectNote() {
         NotesListDataHolder.selectedItemsValue.run {
-            remove(note)
+            remove(note.id)
             NotesListDataHolder.changeLiveDataValue(this)
         }
 
@@ -84,9 +84,9 @@ class NotesListHolder(view: View) : RecyclerView.ViewHolder(view) {
                 } else { // In selection mode
                     when {
                         // Note was selected
-                        contains(note) -> deselectNote()
+                        contains(note.id) -> deselectNote()
                         // Note was not selected
-                        !contains(note) -> selectNote()
+                        !contains(note.id) -> selectNote()
                     }
                 }
             }
@@ -96,7 +96,7 @@ class NotesListHolder(view: View) : RecyclerView.ViewHolder(view) {
         override fun onLongPress(event: MotionEvent) {
             Log.d(TAG, "GestureDetector: onLongPress")
 
-            if (!NotesListDataHolder.selectedItemsValue.contains(note)) {
+            if (!NotesListDataHolder.selectedItemsValue.contains(note.id)) {
                 selectNote()
             }
         }

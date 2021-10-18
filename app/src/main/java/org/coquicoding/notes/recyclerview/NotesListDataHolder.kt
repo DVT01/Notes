@@ -9,14 +9,14 @@ object NotesListDataHolder {
 
     var selectAllNotesIsOn = false
 
-    private val selectedItems = MutableLiveData<MutableList<Note>>()
+    private val selectedItems = MutableLiveData<MutableList<Long>>()
 
-    val selectedItemsLiveData: LiveData<List<Note>> = Transformations.map(selectedItems) { it }
+    val selectedItemsLiveData: LiveData<List<Long>> = Transformations.map(selectedItems) { it }
 
-    val selectedItemsValue: MutableList<Note>
+    val selectedItemsValue: MutableList<Long>
         get() = selectedItems.value ?: mutableListOf()
 
-    fun changeLiveDataValue(list: MutableList<Note>) {
+    fun changeLiveDataValue(list: MutableList<Long>) {
         selectedItems.value = list
     }
 }
