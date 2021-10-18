@@ -221,6 +221,14 @@ class NoteFragment : Fragment() {
             deleteFile(note.fileName)
             unregisterReceiver(renameNote)
         }
+
+        if (!changeBackBehavior && note.text != savedNoteText) {
+            Snackbar.make(
+                requireActivity().findViewById(R.id.fragment_container_view),
+                R.string.note_not_saved,
+                Snackbar.LENGTH_SHORT
+            ).show()
+        }
     }
 
     private fun updateUI() {
