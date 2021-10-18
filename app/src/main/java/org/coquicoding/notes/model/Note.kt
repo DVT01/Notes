@@ -7,7 +7,7 @@ import androidx.room.PrimaryKey
 data class Note(var name: String, var text: String) {
 
     @PrimaryKey(autoGenerate = true)
-    var id: Int = 0
+    var id: Long = 0
 
     val fileName: String
         get() = "$name.txt"

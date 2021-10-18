@@ -16,6 +16,9 @@ private const val TAG = "NoteNameDialog"
 private const val ARG_DIALOG_TYPE = "dialog_type"
 private const val ARG_NOTE_NAME = "note_name"
 
+private const val MISSING_ARGUMENTS_MSG =
+    "Get an instance of this class using the newInstance function"
+
 class NoteNameDialog : DialogFragment() {
 
     private val notesListViewModel: NotesListViewModel by activityViewModels()
@@ -26,13 +29,14 @@ class NoteNameDialog : DialogFragment() {
 
     override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
         val dialogType = requireArguments().getString(ARG_DIALOG_TYPE)
-            ?: throw MissingFormatArgumentException("Get an instance using newInstance function")
-        val noteName = requireArguments().getString(ARG_NOTE_NAME)
-            ?: throw MissingFormatArgumentException("Get an instance using newInstance function")
+            ?: throw MissingFormatArgumentException(MISSING_ARGUMENTS_MSG)
+
+        val initialNoteName = requireArguments().getString(ARG_NOTE_NAME)
+            ?: throw MissingFormatArgumentException(MISSING_ARGUMENTS_MSG)
 
         val dialogView = layoutInflater.inflate(R.layout.dialog_note_name, null)
         val noteNameEditText = dialogView.findViewById<AppCompatEditText>(R.id.note_name).apply {
-            setText(noteName)
+            setText(initialNoteName)
         }
 
         @StringRes val dialogTitle: Int
@@ -64,22 +68,22 @@ class NoteNameDialog : DialogFragment() {
             val negativeButton = alertDialog.getButton(AlertDialog.BUTTON_NEGATIVE)
 
             positiveButton.setOnClickListener {
-                val noteName = noteNameEditText.text.toString()
+                val confirmedNoteName = noteNameEditText.text.toString()
 
-                Log.i(TAG, "Note name: $noteName")
+                Log.i(TAG, "Note name chosen: $confirmedNoteName")
 
                 val notes = notesListViewModel.notesLiveData.value?.map { it.name } ?: emptyList()
 
-                if (notes.contains(noteName)) {
+                if (notes.contains(confirmedNoteName)) {
                     noteNameEditText.apply {
-                        setText("")
+                        setText(String())
                         hint = getString(R.string.note_exists)
                     }
-                } else if (noteName.isNotBlank()) {
+                } else if (confirmedNoteName.isNotBlank()) {
                     alertDialog.dismiss()
 
                     broadcastIntent.apply {
-                        putExtra(NOTE_NAME, noteName)
+                        putExtra(NOTE_NAME, confirmedNoteName)
                         requireContext().sendBroadcast(this)
                     }
                 }

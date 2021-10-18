@@ -17,8 +17,8 @@ class NotesRepository private constructor(context: Context) {
 
     private val notesDao = database.notesDao()
 
-    suspend fun insertNote(note: Note) {
-        notesDao.insertNote(note)
+    suspend fun insertNote(note: Note): Long {
+        return notesDao.insertNote(note)
     }
 
     suspend fun updateNote(note: Note) {
@@ -33,8 +33,8 @@ class NotesRepository private constructor(context: Context) {
         return notesDao.getAllNotes()
     }
 
-    fun getNote(noteName: String): Flow<Note> {
-        return notesDao.getNote(noteName)
+    fun getNote(id: Long): Flow<Note> {
+        return notesDao.getNote(id)
     }
 
     companion object {

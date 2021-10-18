@@ -25,7 +25,7 @@ import java.io.IOException
 import java.util.*
 
 private const val TAG = "NoteFragment"
-private const val ARG_NOTE_NAME = "note_name"
+private const val ARG_NOTE_ID = "note_id"
 private const val PROVIDER_AUTHORITY = "org.coquicoding.notes.fileprovider"
 
 const val ACTION_RENAME_NOTE = "org.coquicoding.notes.rename_note"
@@ -35,14 +35,14 @@ class NoteFragment : Fragment() {
     private lateinit var noteTextEditText: AppCompatEditText
     private lateinit var sharedPreferences: SharedPreferences
     private lateinit var savedNoteText: String
+    private lateinit var note: Note
 
-    private var note = Note("", "")
     private var fontSizePercentage: Float = 1f
     private var changeBackBehavior: Boolean = true
     private val exportNoteLauncher = registerForActivityResult(
         ActivityResultContracts.CreateDocument()
     ) { noteDirUri ->
-        Log.i(TAG, "Export request for ${note.name}")
+        Log.i(TAG, "Starting export (id: ${note.id}")
 
         try {
             requireContext().contentResolver.run {
@@ -56,7 +56,7 @@ class NoteFragment : Fragment() {
             when (error) {
                 // Catch all expected possible errors
                 is NullPointerException, is FileNotFoundException, is IOException -> {
-                    Log.e(TAG, "Failed to export note: ${note.name}", error)
+                    Log.e(TAG, "Note export failed (id: ${note.id})", error)
                 }
                 else -> throw error
             }
@@ -76,7 +76,7 @@ class NoteFragment : Fragment() {
 
                 noteViewModel.run {
                     saveNote(note)
-                    loadNote(note.name)
+                    loadNote(note.id)
                 }
             }
         }
@@ -86,8 +86,8 @@ class NoteFragment : Fragment() {
         super.onCreate(savedInstanceState)
         setHasOptionsMenu(true)
 
-        requireArguments().getString(ARG_NOTE_NAME, "").let { noteName ->
-            noteViewModel.loadNote(noteName)
+        requireArguments().getLong(ARG_NOTE_ID).let { noteId ->
+            noteViewModel.loadNote(noteId)
         }
 
         requireContext().run {
@@ -114,7 +114,7 @@ class NoteFragment : Fragment() {
         noteTextEditText = view.findViewById(R.id.note_text)
         noteTextEditText.setTextSize(
             TypedValue.COMPLEX_UNIT_PX,
-            noteTextEditText.textSize * fontSizePercentage
+            noteTextEditText.textSize.times(fontSizePercentage)
         )
 
         requireActivity().onBackPressedDispatcher.addCallback(viewLifecycleOwner,
@@ -136,12 +136,10 @@ class NoteFragment : Fragment() {
         noteViewModel.noteLiveData.observe(viewLifecycleOwner) { note ->
             if (note == null) return@observe
 
-            Log.i(TAG, "Loaded note (Name: ${note.name})")
+            Log.i(TAG, "Loaded note (id: ${note.id})")
 
-            note.let {
-                this.note = it
-                savedNoteText = it.text
-            }
+            this.note = note
+            savedNoteText = note.text
 
             updateUI()
         }
@@ -271,10 +269,10 @@ class NoteFragment : Fragment() {
     }
 
     companion object {
-        fun newInstance(noteName: String): NoteFragment {
+        fun newInstance(noteId: Long): NoteFragment {
             return NoteFragment().apply {
                 arguments = Bundle().apply {
-                    putString(ARG_NOTE_NAME, noteName)
+                    putLong(ARG_NOTE_ID, noteId)
                 }
             }
         }

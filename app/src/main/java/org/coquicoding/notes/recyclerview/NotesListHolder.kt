@@ -12,8 +12,7 @@ import androidx.recyclerview.widget.RecyclerView
 import org.coquicoding.notes.R
 import org.coquicoding.notes.fragments.ACTION_OPEN_NOTE
 import org.coquicoding.notes.fragments.ACTION_REPLACE_SELECT_ALL_TEXT
-import org.coquicoding.notes.fragments.NOTE_NAME
-import org.coquicoding.notes.fragments.NOTE_TEXT
+import org.coquicoding.notes.fragments.NOTE_ID
 import org.coquicoding.notes.model.Note
 
 private const val TAG = "NotesListHolder"
@@ -26,7 +25,7 @@ class NotesListHolder(view: View) : RecyclerView.ViewHolder(view) {
     private val noteNameTextView: AppCompatTextView = itemView.findViewById(R.id.note_name)
 
     init {
-        GestureDetectorCompat(itemView.context, GestureListener()).apply {
+        GestureDetectorCompat(itemView.context, GestureListener()).run {
             itemView.setOnTouchListener { _, event -> onTouchEvent(event) }
         }
     }
@@ -67,9 +66,8 @@ class NotesListHolder(view: View) : RecyclerView.ViewHolder(view) {
 
     fun openNote() {
         itemView.context?.sendBroadcast(
-            Intent(ACTION_OPEN_NOTE).apply {
-                putExtra(NOTE_NAME, note.name)
-                putExtra(NOTE_TEXT, note.text)
+            Intent(ACTION_OPEN_NOTE).run {
+                putExtra(NOTE_ID, note.id)
             }
         )
     }
@@ -78,12 +76,12 @@ class NotesListHolder(view: View) : RecyclerView.ViewHolder(view) {
         override fun onDown(event: MotionEvent): Boolean = true
 
         override fun onSingleTapConfirmed(event: MotionEvent): Boolean {
-            Log.i(TAG, "Single Tap Confirmed")
-            NotesListDataHolder.selectedItemsValue.run {
+            Log.d(TAG, "GestureDetector: onSingleTapConfirmed")
 
+            NotesListDataHolder.selectedItemsValue.run {
                 if (isEmpty()) { // Not in selection mode
                     openNote()
-                } else if (isNotEmpty()) { // In selection mode
+                } else { // In selection mode
                     when {
                         // Note was selected
                         contains(note) -> deselectNote()
@@ -96,12 +94,16 @@ class NotesListHolder(view: View) : RecyclerView.ViewHolder(view) {
         }
 
         override fun onLongPress(event: MotionEvent) {
+            Log.d(TAG, "GestureDetector: onLongPress")
+
             if (!NotesListDataHolder.selectedItemsValue.contains(note)) {
                 selectNote()
             }
         }
 
         override fun onDoubleTap(event: MotionEvent): Boolean {
+            Log.d(TAG, "GestureDetector: onDoubleTap")
+
             // Not in selection mode
             if (NotesListDataHolder.selectedItemsValue.isEmpty()) {
                 if (noteNameTextView.maxLines == 3) {

@@ -16,7 +16,7 @@ import org.coquicoding.notes.fragments.NotesListFragment
 import org.coquicoding.notes.fragments.SettingsFragment
 
 private const val TAG = "MainActivity"
-private const val REQUEST_NOTE_NAME = "note_name_request"
+private const val REQUEST_NOTE_ID = "note_id_request"
 
 const val ACTION_OPEN_SETTINGS = "org.coquicoding.notes.open_settings"
 const val ACTION_OPEN_ABOUT = "org.coquicoding.notes.open_about"
@@ -46,7 +46,7 @@ class MainActivity : AppCompatActivity(), FragmentResultListener {
     private val openAbout: BroadcastReceiver by lazy {
         object : BroadcastReceiver() {
             override fun onReceive(context: Context, intent: Intent) {
-                Log.i(TAG, "Received request to open about page")
+                Log.i(TAG, "Received request to open about")
 
                 AboutFragment().let { about ->
                     supportFragmentManager.commit {
@@ -63,7 +63,7 @@ class MainActivity : AppCompatActivity(), FragmentResultListener {
         setContentView(R.layout.activity_main)
 
         supportFragmentManager.setFragmentResultListener(
-            REQUEST_NOTE_NAME,
+            REQUEST_NOTE_ID,
             this,
             this
         )
@@ -74,7 +74,7 @@ class MainActivity : AppCompatActivity(), FragmentResultListener {
         val currentFragment = supportFragmentManager.findFragmentById(R.id.fragment_container_view)
 
         if (currentFragment == null) {
-            val notesListFragment = NotesListFragment.newInstance(REQUEST_NOTE_NAME)
+            val notesListFragment = NotesListFragment.newInstance(REQUEST_NOTE_ID)
             supportFragmentManager.commit {
                 add(R.id.fragment_container_view, notesListFragment)
             }
@@ -89,11 +89,11 @@ class MainActivity : AppCompatActivity(), FragmentResultListener {
 
     override fun onFragmentResult(requestKey: String, result: Bundle) {
         when (requestKey) {
-            REQUEST_NOTE_NAME -> {
-                val noteName = result.getString(REQUEST_NOTE_NAME, "")
-                Log.i(TAG, "Request to open note: $noteName")
+            REQUEST_NOTE_ID -> {
+                val noteId = result.getLong(REQUEST_NOTE_ID)
+                Log.i(TAG, "Opening note (id: $noteId)")
 
-                val noteFragment = NoteFragment.newInstance(noteName)
+                val noteFragment = NoteFragment.newInstance(noteId)
                 supportFragmentManager.commit {
                     setCustomAnimations(
                         R.anim.slide_in,

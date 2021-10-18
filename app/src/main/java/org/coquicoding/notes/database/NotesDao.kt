@@ -8,7 +8,7 @@ import org.coquicoding.notes.model.Note
 interface NotesDao {
 
     @Insert
-    suspend fun insertNote(note: Note)
+    suspend fun insertNote(note: Note): Long
 
     @Update
     suspend fun updateNote(note: Note)
@@ -19,6 +19,6 @@ interface NotesDao {
     @Query("SELECT * FROM note")
     fun getAllNotes(): Flow<List<Note>>
 
-    @Query("SELECT * FROM note WHERE name=(:noteName)")
-    fun getNote(noteName: String): Flow<Note>
+    @Query("SELECT * FROM note WHERE id=(:id)")
+    fun getNote(id: Long): Flow<Note>
 }

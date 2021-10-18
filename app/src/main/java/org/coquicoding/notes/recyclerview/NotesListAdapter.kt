@@ -81,7 +81,7 @@ class NotesListAdapter : ListAdapter<Note, NotesListHolder>(NoteComparator()) {
 
         for (viewHolderIndex in 0 until recyclerView.childCount) {
             recyclerView.run {
-                getChildViewHolder(getChildAt(viewHolderIndex)).apply {
+                getChildViewHolder(getChildAt(viewHolderIndex)).run {
                     itemView.isActivated = selectAll
                 }
             }
