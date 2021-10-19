@@ -14,7 +14,7 @@ import org.digital.construction.notes.BuildConfig
 import org.digital.construction.notes.R
 
 private const val GITHUB = "https://github.com/diego-velez/Notes"
-private const val AUTHOR_EMAIL = "DVT12@protonmail.com"
+private const val AUTHOR_EMAIL = "digital.construction.dev@gmail.com"
 
 class AboutFragment : Fragment() {
 

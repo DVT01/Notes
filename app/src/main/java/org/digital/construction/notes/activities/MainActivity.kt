@@ -7,6 +7,7 @@ import android.content.IntentFilter
 import android.os.Bundle
 import android.util.Log
 import androidx.appcompat.app.AppCompatActivity
+import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentResultListener
 import androidx.fragment.app.commit
 import org.digital.construction.notes.R
@@ -28,18 +29,7 @@ class MainActivity : AppCompatActivity(), FragmentResultListener {
             override fun onReceive(context: Context, intent: Intent) {
                 Log.i(TAG, "Received request to open settings")
 
-                SettingsFragment().let { settings ->
-                    supportFragmentManager.commit {
-                        setCustomAnimations(
-                            R.anim.fade_in,
-                            R.anim.fade_out,
-                            R.anim.fade_in,
-                            R.anim.fade_out
-                        )
-                        replace(R.id.fragment_container_view, settings)
-                        addToBackStack(null)
-                    }
-                }
+                openFragmentWithFadeAnim(SettingsFragment())
             }
         }
     }
@@ -48,12 +38,7 @@ class MainActivity : AppCompatActivity(), FragmentResultListener {
             override fun onReceive(context: Context, intent: Intent) {
                 Log.i(TAG, "Received request to open about")
 
-                AboutFragment().let { about ->
-                    supportFragmentManager.commit {
-                        replace(R.id.fragment_container_view, about)
-                        addToBackStack(null)
-                    }
-                }
+                openFragmentWithFadeAnim(AboutFragment())
             }
         }
     }
@@ -105,6 +90,19 @@ class MainActivity : AppCompatActivity(), FragmentResultListener {
                     addToBackStack(null)
                 }
             }
+        }
+    }
+
+    private fun openFragmentWithFadeAnim(fragment: Fragment) {
+        supportFragmentManager.commit {
+            setCustomAnimations(
+                R.anim.fade_in,
+                R.anim.fade_out,
+                R.anim.fade_in,
+                R.anim.fade_out
+            )
+            replace(R.id.fragment_container_view, fragment)
+            addToBackStack(null)
         }
     }
 }
