@@ -1,4 +1,4 @@
-package org.coquicoding.notes.fragments
+package org.digital.construction.notes.fragments
 
 import android.content.*
 import android.os.Bundle
@@ -16,8 +16,8 @@ import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.preference.PreferenceManager
 import com.google.android.material.snackbar.Snackbar
-import org.coquicoding.notes.R
-import org.coquicoding.notes.model.Note
+import org.digital.construction.notes.R
+import org.digital.construction.notes.model.Note
 import java.io.File
 import java.io.FileNotFoundException
 import java.io.FileOutputStream
@@ -26,9 +26,9 @@ import java.util.*
 
 private const val TAG = "NoteFragment"
 private const val ARG_NOTE_ID = "note_id"
-private const val PROVIDER_AUTHORITY = "org.coquicoding.notes.fileprovider"
+private const val PROVIDER_AUTHORITY = "org.digital.construction.notes.fileprovider"
 
-const val ACTION_RENAME_NOTE = "org.coquicoding.notes.rename_note"
+const val ACTION_RENAME_NOTE = "org.digital.construction.notes.rename_note"
 
 class NoteFragment : Fragment() {
 

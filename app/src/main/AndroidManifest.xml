@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="org.coquicoding.notes">
+    package="org.digital.construction.notes">
 
     <application
         android:name=".App"
@@ -21,7 +21,7 @@
         </activity>
         <provider
             android:name="androidx.core.content.FileProvider"
-            android:authorities="org.coquicoding.notes.fileprovider"
+            android:authorities="org.digital.construction.notes.fileprovider"
             android:exported="false"
             android:grantUriPermissions="true">
             <meta-data

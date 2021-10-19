@@ -1,4 +1,4 @@
-package org.coquicoding.notes.fragments
+package org.digital.construction.notes.fragments
 
 import android.content.Intent
 import android.net.Uri
@@ -10,8 +10,8 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.AppCompatTextView
 import androidx.appcompat.widget.LinearLayoutCompat
 import androidx.fragment.app.Fragment
-import org.coquicoding.notes.BuildConfig
-import org.coquicoding.notes.R
+import org.digital.construction.notes.BuildConfig
+import org.digital.construction.notes.R
 
 private const val GITHUB = "https://github.com/diego-velez/Notes"
 private const val AUTHOR_EMAIL = "DVT12@protonmail.com"

@@ -1,4 +1,4 @@
-package org.coquicoding.notes.recyclerview
+package org.digital.construction.notes.recyclerview
 
 import android.content.BroadcastReceiver
 import android.content.Context
@@ -10,13 +10,13 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
-import org.coquicoding.notes.R
-import org.coquicoding.notes.model.Note
+import org.digital.construction.notes.R
+import org.digital.construction.notes.model.Note
 
 private const val TAG = "NotesListAdapter"
 
-const val ACTION_DESELECT_NOTES = "org.coquicoding.notes.deselect_notes"
-const val ACTION_SELECT_NOTES = "org.coquicoding.notes.select_notes"
+const val ACTION_DESELECT_NOTES = "org.digital.construction.notes.deselect_notes"
+const val ACTION_SELECT_NOTES = "org.digital.construction.notes.select_notes"
 
 class NotesListAdapter : ListAdapter<Note, NotesListHolder>(NoteComparator()) {
 

@@ -1,10 +1,10 @@
-package org.coquicoding.notes
+package org.digital.construction.notes
 
 import android.app.Application
 import androidx.appcompat.app.AppCompatDelegate
 import androidx.preference.PreferenceManager
-import org.coquicoding.notes.fragments.DARK_MODE_KEY
-import org.coquicoding.notes.model.NotesRepository
+import org.digital.construction.notes.fragments.DARK_MODE_KEY
+import org.digital.construction.notes.model.NotesRepository
 
 class App : Application() {
 

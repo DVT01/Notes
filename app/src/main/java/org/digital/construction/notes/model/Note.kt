@@ -1,4 +1,4 @@
-package org.coquicoding.notes.model
+package org.digital.construction.notes.model
 
 import androidx.room.Entity
 import androidx.room.PrimaryKey
