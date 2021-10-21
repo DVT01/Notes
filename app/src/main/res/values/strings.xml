@@ -23,12 +23,14 @@
     <string name="export_note">Export note</string>
     <string name="share_note">Share note</string>
     <string name="note_chooser_text">Send note via…</string>
-    <string name="note_saved">Note Saved</string>
+    <string name="note_saved">Note saved</string>
     <string name="note_not_saved">Note was not saved</string>
     <string name="note_has_not_changed">Note was not modified</string>
 
     <!-- Action Mode -->
     <string name="delete">Delete</string>
+    <string name="select_all">Select all</string>
+    <string name="deselect_all">Deselect All</string>
 
     <!-- Create/Rename Note Dialog -->
     <string name="notes_name">Note\'s name</string>
@@ -41,8 +43,6 @@
     <!-- Settings -->
     <string name="theme">Theme</string>
     <string name="dark_mode">Dark Mode</string>
-    <string name="select_all">Select all</string>
-    <string name="deselect_all">Deselect All</string>
     <string name="editor">Editor</string>
     <string name="font_size">Font Size</string>
     <string name="back_behaviour">Automatically save note on back press</string>
@@ -51,9 +51,9 @@
     <string name="version">Version</string>
     <string name="fork_on_github">Fork on GitHub</string>
     <string name="author">Author</string>
-    <string name="author_name">Digital Construction</string>
+    <string name="author_name" translatable="false">Digital Construction</string>
     <string name="write_me_an_email">Write me an email</string>
-    <string name="app_version">%s (%d)</string>
+    <string name="app_version" translatable="false">%s (%d)</string>
     <string name="introduction">Introduction</string>
 
     <!-- Introduction -->
@@ -65,4 +65,5 @@
         Press the import note button at the top to import a note stored in your phone, or
         the export note button when having a note opened to save the note as a file in your phone
     </string>
+    <string name="get_started">GET STARTED</string>
 </resources>

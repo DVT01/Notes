@@ -1,0 +1,64 @@
+<resources>
+    <string name="app_name">Notas</string>
+
+    <!-- NotesListFragment -->
+    <string name="new_note">Nueva nota</string>
+    <string name="notify_list_empty">Usted no tiene ningunas notas guardadas</string>
+    <plurals name="note_count">
+        <item quantity="one">%d nota guardada</item>
+        <item quantity="other">%d notas guardadas</item>
+    </plurals>
+
+    <!-- note_list_fragment_menu -->
+    <string name="settings">Ajustes</string>
+    <string name="sort_order">Orden de clasificación</string>
+    <string name="ascending">Ascendente</string>
+    <string name="descending">Descendente</string>
+    <string name="import_note">Importar nota</string>
+    <string name="about">Información</string>
+
+    <!-- NoteFragment -->
+    <string name="save">Guardar</string>
+    <string name="note_text_hint">Escriba algo</string>
+    <string name="export_note">Exportar nota</string>
+    <string name="share_note">Enviar nota</string>
+    <string name="note_chooser_text">Enviar nota por…</string>
+    <string name="note_saved">Nota guardada</string>
+    <string name="note_not_saved">La nota no ha sido guardada</string>
+    <string name="note_has_not_changed">La nota no ha sido modificada</string>
+
+    <!-- Action Mode -->
+    <string name="delete">Borrar</string>
+    <string name="select_all">Seleccionar todo</string>
+    <string name="deselect_all">Deseleccionar todo</string>
+
+    <!-- Create/Rename Note Dialog -->
+    <string name="notes_name">Nombre de la nota</string>
+    <string name="note_exists">La nota ya existe</string>
+    <string name="create">Añadir</string>
+    <string name="cancel">Cancelar</string>
+    <string name="rename_note">Renombrar nota</string>
+    <string name="rename">Renombrar</string>
+
+    <!-- Settings -->
+    <string name="theme">Tema</string>
+    <string name="dark_mode">Modo oscuro</string>
+    <string name="editor">Editor</string>
+    <string name="font_size">Tamaño de letra</string>
+    <string name="back_behaviour">Guarde automáticamente la nota al presionar hacia atrás</string>
+
+    <!-- About -->
+    <string name="version">Versión</string>
+    <string name="fork_on_github">Copiar de GitHub</string>
+    <string name="author">Autor</string>
+    <string name="write_me_an_email">Escríbame un email</string>
+    <string name="introduction">Introducción</string>
+
+    <!-- Introduction -->
+    <string name="app_description">Bienvenido a una nueva, moderna y bella aplicación usada para escribir notas.</string>
+    <string name="swipe">Deslize para abrir o borrar notas</string>
+    <string name="swipe_description">Puede deslizar hacia la izquierda para abrir la nota, o hacia la derecha para borrarla</string>
+    <string name="import_and_export">Puede importar y exportar notas</string>
+    <string name="import_and_export_description">Puede importar notas usando el boton de importar en el tope, o exportar usando el boton de exportar cuando tenga la nota abierta</string>
+    <string name="get_started">EMPEZAR</string>
+</resources>

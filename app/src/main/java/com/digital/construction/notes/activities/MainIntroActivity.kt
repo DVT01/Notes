@@ -14,6 +14,7 @@ class MainIntroActivity : IntroActivity() {
         isButtonBackVisible = false
 
         buttonCtaTintMode = BUTTON_CTA_TINT_MODE_TEXT
+        buttonCtaLabel = getString(R.string.get_started)
 
         addSlide(
             SimpleSlide.Builder()
