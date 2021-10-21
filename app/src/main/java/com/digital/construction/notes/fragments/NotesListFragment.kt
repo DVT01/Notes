@@ -19,12 +19,12 @@ import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import com.google.android.material.floatingactionbutton.FloatingActionButton
 import com.digital.construction.notes.R
 import com.digital.construction.notes.activities.ACTION_OPEN_ABOUT
 import com.digital.construction.notes.activities.ACTION_OPEN_SETTINGS
 import com.digital.construction.notes.model.Note
 import com.digital.construction.notes.recyclerview.*
+import com.google.android.material.floatingactionbutton.FloatingActionButton
 import java.io.BufferedReader
 import java.io.InputStreamReader
 import java.util.*
@@ -89,36 +89,6 @@ class NotesListFragment : Fragment() {
             notesListViewModel.insertNote(it)
         }
     }
-
-    private val itemTouchHelperCallback =
-        object : ItemTouchHelper.SimpleCallback(
-            0,
-            ItemTouchHelper.LEFT or ItemTouchHelper.RIGHT
-        ) {
-            override fun onMove(
-                recyclerView: RecyclerView,
-                viewHolder: RecyclerView.ViewHolder,
-                target: RecyclerView.ViewHolder
-            ): Boolean {
-                Log.d(TAG, "Item moved: ${viewHolder.adapterPosition}")
-                return false
-            }
-
-            override fun onSwiped(viewHolder: RecyclerView.ViewHolder, direction: Int) {
-                Log.d(TAG, "Item swiped: ${viewHolder.adapterPosition}, direction: $direction")
-
-                when (direction) {
-                    ItemTouchHelper.LEFT -> {
-                        (viewHolder as NotesListHolder).openNote()
-                    }
-                    ItemTouchHelper.RIGHT -> {
-                        adapter.currentList[viewHolder.adapterPosition].let { note ->
-                            notesListViewModel.deleteNote(note)
-                        }
-                    }
-                }
-            }
-        }
 
     private val notesListViewModel: NotesListViewModel by lazy {
         ViewModelProvider(this).get(NotesListViewModel::class.java)
@@ -241,6 +211,49 @@ class NotesListFragment : Fragment() {
             registerReceiver(openSelectedNote, IntentFilter(ACTION_OPEN_NOTE))
             registerReceiver(createNote, IntentFilter(ACTION_CREATE_NOTE))
         }
+
+        val swipeToOpenOn = sharedPreferences.getBoolean(SWIPE_OPEN_KEY, true)
+        val swipeToDeleteOn = sharedPreferences.getBoolean(SWIPE_DELETE_KEY, true)
+
+        val swipeDirs = when {
+            swipeToDeleteOn && swipeToOpenOn -> ItemTouchHelper.LEFT or ItemTouchHelper.RIGHT
+            swipeToOpenOn -> ItemTouchHelper.LEFT
+            swipeToDeleteOn -> ItemTouchHelper.RIGHT
+            else -> 0
+        }
+
+        val itemTouchHelperCallback =
+            object : ItemTouchHelper.SimpleCallback(
+                0,
+                swipeDirs
+            ) {
+                override fun onMove(
+                    recyclerView: RecyclerView,
+                    viewHolder: RecyclerView.ViewHolder,
+                    target: RecyclerView.ViewHolder
+                ): Boolean {
+                    Log.d(TAG, "Item moved: ${viewHolder.adapterPosition}")
+                    return false
+                }
+
+                override fun onSwiped(viewHolder: RecyclerView.ViewHolder, direction: Int) {
+                    Log.d(
+                        TAG,
+                        "Item swiped: ${viewHolder.adapterPosition}, direction: $direction"
+                    )
+
+                    when (direction) {
+                        ItemTouchHelper.LEFT -> {
+                            (viewHolder as NotesListHolder).openNote()
+                        }
+                        ItemTouchHelper.RIGHT -> {
+                            adapter.currentList[viewHolder.adapterPosition].let { note ->
+                                notesListViewModel.deleteNote(note)
+                            }
+                        }
+                    }
+                }
+            }
 
         ItemTouchHelper(itemTouchHelperCallback).attachToRecyclerView(notesRecyclerView)
     }

@@ -13,6 +13,8 @@ const val SORT_MODE_KEY = "sort_mode"
 const val FONT_SIZE_KEY = "font_size"
 const val SAVE_NOTE_AUTOMATICALLY_KEY = "back_behaviour"
 const val INTRODUCTION_SEEN_KEY = "introduction_seen"
+const val SWIPE_DELETE_KEY = "swipe_delete"
+const val SWIPE_OPEN_KEY = "swipe_open"
 
 class SettingsFragment : PreferenceFragmentCompat(),
     SharedPreferences.OnSharedPreferenceChangeListener {

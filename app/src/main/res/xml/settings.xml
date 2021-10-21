@@ -24,4 +24,15 @@
             android:title="@string/back_behaviour" />
     </PreferenceCategory>
 
+    <PreferenceCategory android:title="@string/features">
+        <SwitchPreferenceCompat
+            android:defaultValue="true"
+            android:key="swipe_open"
+            android:title="@string/swipe_open" />
+        <SwitchPreferenceCompat
+            android:defaultValue="true"
+            android:key="swipe_delete"
+            android:title="@string/swipe_delete" />
+    </PreferenceCategory>
+
 </PreferenceScreen>

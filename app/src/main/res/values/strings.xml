@@ -46,6 +46,9 @@
     <string name="editor">Editor</string>
     <string name="font_size">Font Size</string>
     <string name="back_behaviour">Automatically save note on back press</string>
+    <string name="features">Features</string>
+    <string name="swipe_delete">Swipe to delete note</string>
+    <string name="swipe_open">Swipe to open note</string>
 
     <!-- About -->
     <string name="version">Version</string>

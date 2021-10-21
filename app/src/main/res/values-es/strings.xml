@@ -46,6 +46,9 @@
     <string name="editor">Editor</string>
     <string name="font_size">Tamaño de letra</string>
     <string name="back_behaviour">Guarde automáticamente la nota al presionar hacia atrás</string>
+    <string name="features">Funcionamiento</string>
+    <string name="swipe_delete">Desliza para borrar nota</string>
+    <string name="swipe_open">Desliza para abrir nota</string>
 
     <!-- About -->
     <string name="version">Versión</string>
