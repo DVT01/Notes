@@ -90,6 +90,39 @@ class NotesListFragment : Fragment() {
         }
     }
 
+    private val itemTouchHelperCallback =
+        object : ItemTouchHelper.SimpleCallback(
+            0,
+            ItemTouchHelper.LEFT or ItemTouchHelper.RIGHT
+        ) {
+            override fun onMove(
+                recyclerView: RecyclerView,
+                viewHolder: RecyclerView.ViewHolder,
+                target: RecyclerView.ViewHolder
+            ): Boolean {
+                Log.d(TAG, "Item moved: ${viewHolder.bindingAdapterPosition}")
+                return false
+            }
+
+            override fun onSwiped(viewHolder: RecyclerView.ViewHolder, direction: Int) {
+                Log.d(
+                    TAG,
+                    "Item swiped: ${viewHolder.bindingAdapterPosition}, direction: $direction"
+                )
+
+                when (direction) {
+                    ItemTouchHelper.LEFT -> {
+                        (viewHolder as NotesListHolder).openNote()
+                    }
+                    ItemTouchHelper.RIGHT -> {
+                        adapter.currentList[viewHolder.bindingAdapterPosition].let { note ->
+                            notesListViewModel.deleteNote(note)
+                        }
+                    }
+                }
+            }
+        }
+
     private val notesListViewModel: NotesListViewModel by lazy {
         ViewModelProvider(this).get(NotesListViewModel::class.java)
     }
@@ -215,45 +248,14 @@ class NotesListFragment : Fragment() {
         val swipeToOpenOn = sharedPreferences.getBoolean(SWIPE_OPEN_KEY, true)
         val swipeToDeleteOn = sharedPreferences.getBoolean(SWIPE_DELETE_KEY, true)
 
-        val swipeDirs = when {
-            swipeToDeleteOn && swipeToOpenOn -> ItemTouchHelper.LEFT or ItemTouchHelper.RIGHT
-            swipeToOpenOn -> ItemTouchHelper.LEFT
-            swipeToDeleteOn -> ItemTouchHelper.RIGHT
-            else -> 0
-        }
-
-        val itemTouchHelperCallback =
-            object : ItemTouchHelper.SimpleCallback(
-                0,
-                swipeDirs
-            ) {
-                override fun onMove(
-                    recyclerView: RecyclerView,
-                    viewHolder: RecyclerView.ViewHolder,
-                    target: RecyclerView.ViewHolder
-                ): Boolean {
-                    Log.d(TAG, "Item moved: ${viewHolder.adapterPosition}")
-                    return false
-                }
-
-                override fun onSwiped(viewHolder: RecyclerView.ViewHolder, direction: Int) {
-                    Log.d(
-                        TAG,
-                        "Item swiped: ${viewHolder.adapterPosition}, direction: $direction"
-                    )
-
-                    when (direction) {
-                        ItemTouchHelper.LEFT -> {
-                            (viewHolder as NotesListHolder).openNote()
-                        }
-                        ItemTouchHelper.RIGHT -> {
-                            adapter.currentList[viewHolder.adapterPosition].let { note ->
-                                notesListViewModel.deleteNote(note)
-                            }
-                        }
-                    }
-                }
+        itemTouchHelperCallback.setDefaultSwipeDirs(
+            when {
+                swipeToDeleteOn && swipeToOpenOn -> ItemTouchHelper.LEFT or ItemTouchHelper.RIGHT
+                swipeToOpenOn -> ItemTouchHelper.LEFT
+                swipeToDeleteOn -> ItemTouchHelper.RIGHT
+                else -> 0
             }
+        )
 
         ItemTouchHelper(itemTouchHelperCallback).attachToRecyclerView(notesRecyclerView)
     }
