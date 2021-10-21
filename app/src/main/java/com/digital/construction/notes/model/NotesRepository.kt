@@ -1,9 +1,9 @@
-package org.digital.construction.notes.model
+package com.digital.construction.notes.model
 
 import android.content.Context
 import androidx.room.Room
 import kotlinx.coroutines.flow.Flow
-import org.digital.construction.notes.database.NotesDatabase
+import com.digital.construction.notes.database.NotesDatabase
 
 private const val DATABASE_NAME = "notes-database"
 

@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="org.digital.construction.notes">
+    package="com.digital.construction.notes">
 
     <application
         android:name=".App"
@@ -25,7 +25,7 @@
 
         <provider
             android:name="androidx.core.content.FileProvider"
-            android:authorities="org.digital.construction.notes.fileprovider"
+            android:authorities="com.digital.construction.notes.fileprovider"
             android:exported="false"
             android:grantUriPermissions="true">
             <meta-data

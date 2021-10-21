@@ -1,9 +1,9 @@
-package org.digital.construction.notes.recyclerview
+package com.digital.construction.notes.recyclerview
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.Transformations
-import org.digital.construction.notes.model.Note
+import com.digital.construction.notes.model.Note
 
 object NotesListDataHolder {
 

@@ -1,8 +1,8 @@
-package org.digital.construction.notes.database
+package com.digital.construction.notes.database
 
 import androidx.room.*
 import kotlinx.coroutines.flow.Flow
-import org.digital.construction.notes.model.Note
+import com.digital.construction.notes.model.Note
 
 @Dao
 interface NotesDao {

@@ -12,7 +12,7 @@ android {
         minSdkVersion 21
         targetSdkVersion 30
 
-        applicationId "org.digital.construction.notes"
+        applicationId "com.digital.construction.notes"
         versionCode 1
         versionName "1.0.0"
 

@@ -1,4 +1,4 @@
-package org.digital.construction.notes.recyclerview
+package com.digital.construction.notes.recyclerview
 
 import android.annotation.SuppressLint
 import android.content.Intent
@@ -9,11 +9,11 @@ import android.view.View
 import androidx.appcompat.widget.AppCompatTextView
 import androidx.core.view.GestureDetectorCompat
 import androidx.recyclerview.widget.RecyclerView
-import org.digital.construction.notes.R
-import org.digital.construction.notes.fragments.ACTION_OPEN_NOTE
-import org.digital.construction.notes.fragments.ACTION_REPLACE_SELECT_ALL_TEXT
-import org.digital.construction.notes.fragments.NOTE_ID
-import org.digital.construction.notes.model.Note
+import com.digital.construction.notes.R
+import com.digital.construction.notes.fragments.ACTION_OPEN_NOTE
+import com.digital.construction.notes.fragments.ACTION_REPLACE_SELECT_ALL_TEXT
+import com.digital.construction.notes.fragments.NOTE_ID
+import com.digital.construction.notes.model.Note
 
 private const val TAG = "NotesListHolder"
 

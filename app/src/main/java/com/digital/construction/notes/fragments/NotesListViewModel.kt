@@ -1,10 +1,10 @@
-package org.digital.construction.notes.fragments
+package com.digital.construction.notes.fragments
 
 import android.util.Log
 import androidx.lifecycle.*
 import kotlinx.coroutines.launch
-import org.digital.construction.notes.model.Note
-import org.digital.construction.notes.model.NotesRepository
+import com.digital.construction.notes.model.Note
+import com.digital.construction.notes.model.NotesRepository
 
 private const val TAG = "NotesListViewModel"
 

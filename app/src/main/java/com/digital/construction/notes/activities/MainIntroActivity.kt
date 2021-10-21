@@ -1,9 +1,9 @@
-package org.digital.construction.notes.activities
+package com.digital.construction.notes.activities
 
 import android.os.Bundle
 import com.heinrichreimersoftware.materialintro.app.IntroActivity
 import com.heinrichreimersoftware.materialintro.slide.SimpleSlide
-import org.digital.construction.notes.R
+import com.digital.construction.notes.R
 
 class MainIntroActivity : IntroActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {

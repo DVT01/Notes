@@ -1,4 +1,4 @@
-package org.digital.construction.notes.fragments
+package com.digital.construction.notes.fragments
 
 import android.content.*
 import android.content.res.Configuration
@@ -20,11 +20,11 @@ import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.floatingactionbutton.FloatingActionButton
-import org.digital.construction.notes.R
-import org.digital.construction.notes.activities.ACTION_OPEN_ABOUT
-import org.digital.construction.notes.activities.ACTION_OPEN_SETTINGS
-import org.digital.construction.notes.model.Note
-import org.digital.construction.notes.recyclerview.*
+import com.digital.construction.notes.R
+import com.digital.construction.notes.activities.ACTION_OPEN_ABOUT
+import com.digital.construction.notes.activities.ACTION_OPEN_SETTINGS
+import com.digital.construction.notes.model.Note
+import com.digital.construction.notes.recyclerview.*
 import java.io.BufferedReader
 import java.io.InputStreamReader
 import java.util.*
@@ -32,9 +32,9 @@ import java.util.*
 private const val TAG = "NotesListFragment"
 private const val ARG_NOTE_ID_REQUEST = "note_id_request_key"
 
-const val ACTION_REPLACE_SELECT_ALL_TEXT = "org.digital.construction.notes.replace_select_all_text"
-const val ACTION_OPEN_NOTE = "org.digital.construction.notes.open_note"
-const val ACTION_CREATE_NOTE = "org.digital.construction.notes.create_note"
+const val ACTION_REPLACE_SELECT_ALL_TEXT = "com.digital.construction.notes.replace_select_all_text"
+const val ACTION_OPEN_NOTE = "com.digital.construction.notes.open_note"
+const val ACTION_CREATE_NOTE = "com.digital.construction.notes.create_note"
 
 const val NOTE_NAME = "note_name"
 const val NOTE_NAME_REQUIRED = "Must pass the note's name in the Intent using NOTE_NAME"

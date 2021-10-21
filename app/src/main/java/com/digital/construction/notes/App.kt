@@ -1,10 +1,10 @@
-package org.digital.construction.notes
+package com.digital.construction.notes
 
 import android.app.Application
 import androidx.appcompat.app.AppCompatDelegate
 import androidx.preference.PreferenceManager
-import org.digital.construction.notes.fragments.DARK_MODE_KEY
-import org.digital.construction.notes.model.NotesRepository
+import com.digital.construction.notes.fragments.DARK_MODE_KEY
+import com.digital.construction.notes.model.NotesRepository
 
 class App : Application() {
 

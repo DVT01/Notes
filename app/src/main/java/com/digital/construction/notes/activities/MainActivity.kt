@@ -1,4 +1,4 @@
-package org.digital.construction.notes.activities
+package com.digital.construction.notes.activities
 
 import android.content.*
 import android.os.Bundle
@@ -9,14 +9,14 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentResultListener
 import androidx.fragment.app.commit
 import androidx.preference.PreferenceManager
-import org.digital.construction.notes.R
-import org.digital.construction.notes.fragments.*
+import com.digital.construction.notes.R
+import com.digital.construction.notes.fragments.*
 
 private const val TAG = "MainActivity"
 private const val REQUEST_NOTE_ID = "note_id_request"
 
-const val ACTION_OPEN_SETTINGS = "org.digital.construction.notes.open_settings"
-const val ACTION_OPEN_ABOUT = "org.digital.construction.notes.open_about"
+const val ACTION_OPEN_SETTINGS = "com.digital.construction.notes.open_settings"
+const val ACTION_OPEN_ABOUT = "com.digital.construction.notes.open_about"
 
 class MainActivity : AppCompatActivity(), FragmentResultListener {
 

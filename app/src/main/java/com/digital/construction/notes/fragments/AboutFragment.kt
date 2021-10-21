@@ -1,4 +1,4 @@
-package org.digital.construction.notes.fragments
+package com.digital.construction.notes.fragments
 
 import android.content.Intent
 import android.net.Uri
@@ -10,9 +10,9 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.AppCompatTextView
 import androidx.appcompat.widget.LinearLayoutCompat
 import androidx.fragment.app.Fragment
-import org.digital.construction.notes.BuildConfig
-import org.digital.construction.notes.R
-import org.digital.construction.notes.activities.MainIntroActivity
+import com.digital.construction.notes.BuildConfig
+import com.digital.construction.notes.R
+import com.digital.construction.notes.activities.MainIntroActivity
 
 private const val GITHUB = "https://github.com/diego-velez/Notes"
 private const val AUTHOR_EMAIL = "digital.construction.dev@gmail.com"

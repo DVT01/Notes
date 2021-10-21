@@ -1,10 +1,10 @@
-package org.digital.construction.notes.fragments
+package com.digital.construction.notes.fragments
 
 import android.content.SharedPreferences
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatDelegate
 import androidx.preference.PreferenceFragmentCompat
-import org.digital.construction.notes.R
+import com.digital.construction.notes.R
 
 private const val TAG = "SettingsFragment"
 
