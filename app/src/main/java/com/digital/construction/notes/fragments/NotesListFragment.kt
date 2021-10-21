@@ -406,12 +406,7 @@ class NotesListFragment : Fragment() {
             when (item.itemId) {
                 R.id.delete_note -> {
                     notesSelected.forEach { noteId ->
-                        // Since Room only cares about finding the PrimaryKey to delete a row,
-                        // this object only needs to have the PrimaryKey correct to delete
-                        // the correct row
-                        Note(String(), String())
-                            .apply { id = noteId }
-                            .let { notesListViewModel.deleteNote(it) }
+                        notesListViewModel.deleteNote(noteId)
                     }
 
                     mode.finish()

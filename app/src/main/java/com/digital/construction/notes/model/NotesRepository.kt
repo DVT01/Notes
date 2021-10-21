@@ -29,6 +29,10 @@ class NotesRepository private constructor(context: Context) {
         notesDao.deleteNote(note)
     }
 
+    suspend fun deleteNote(id: Long) {
+        notesDao.deleteNote(id)
+    }
+
     fun getAllNotes(): Flow<List<Note>> {
         return notesDao.getAllNotes()
     }

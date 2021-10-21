@@ -31,4 +31,11 @@ class NotesListViewModel : ViewModel() {
             notesRepository.deleteNote(note)
         }
     }
+
+    fun deleteNote(id: Long) {
+        Log.i(TAG, "Deleting note (id: $id)")
+        viewModelScope.launch {
+            notesRepository.deleteNote(id)
+        }
+    }
 }
