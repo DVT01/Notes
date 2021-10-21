@@ -12,6 +12,7 @@ import androidx.appcompat.widget.LinearLayoutCompat
 import androidx.fragment.app.Fragment
 import org.digital.construction.notes.BuildConfig
 import org.digital.construction.notes.R
+import org.digital.construction.notes.activities.MainIntroActivity
 
 private const val GITHUB = "https://github.com/diego-velez/Notes"
 private const val AUTHOR_EMAIL = "digital.construction.dev@gmail.com"
@@ -19,6 +20,7 @@ private const val AUTHOR_EMAIL = "digital.construction.dev@gmail.com"
 class AboutFragment : Fragment() {
 
     private lateinit var appVersionTextView: AppCompatTextView
+    private lateinit var introductionLinearLayoutCompat: LinearLayoutCompat
     private lateinit var forkOnGitHubLinearLayoutCompat: LinearLayoutCompat
     private lateinit var writeEmailLinearLayoutCompat: LinearLayoutCompat
 
@@ -29,10 +31,16 @@ class AboutFragment : Fragment() {
     ): View {
         return inflater.inflate(R.layout.fragment_about, container, false).apply {
             appVersionTextView = findViewById(R.id.app_version)
+            introductionLinearLayoutCompat = findViewById(R.id.introduction)
             forkOnGitHubLinearLayoutCompat = findViewById(R.id.fork_on_github)
             writeEmailLinearLayoutCompat = findViewById(R.id.write_me_an_email)
 
-            appVersionTextView.text = getString(R.string.app_version, BuildConfig.VERSION_NAME, BuildConfig.VERSION_CODE)
+            appVersionTextView.text =
+                getString(R.string.app_version, BuildConfig.VERSION_NAME, BuildConfig.VERSION_CODE)
+
+            introductionLinearLayoutCompat.setOnClickListener {
+                startActivity(Intent(context, MainIntroActivity::class.java))
+            }
 
             forkOnGitHubLinearLayoutCompat.setOnClickListener {
                 openUrl(GITHUB)

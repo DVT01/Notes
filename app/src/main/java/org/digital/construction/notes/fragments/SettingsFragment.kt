@@ -11,7 +11,8 @@ private const val TAG = "SettingsFragment"
 const val DARK_MODE_KEY = "dark_mode"
 const val SORT_MODE_KEY = "sort_mode"
 const val FONT_SIZE_KEY = "font_size"
-const val BACK_KEY_SAVE_BEHAVIOUR = "back_behaviour"
+const val SAVE_NOTE_AUTOMATICALLY_KEY = "back_behaviour"
+const val INTRODUCTION_SEEN_KEY = "introduction_seen"
 
 class SettingsFragment : PreferenceFragmentCompat(),
     SharedPreferences.OnSharedPreferenceChangeListener {

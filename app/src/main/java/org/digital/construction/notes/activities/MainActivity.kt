@@ -1,20 +1,16 @@
 package org.digital.construction.notes.activities
 
-import android.content.BroadcastReceiver
-import android.content.Context
-import android.content.Intent
-import android.content.IntentFilter
+import android.content.*
 import android.os.Bundle
 import android.util.Log
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.content.edit
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentResultListener
 import androidx.fragment.app.commit
+import androidx.preference.PreferenceManager
 import org.digital.construction.notes.R
-import org.digital.construction.notes.fragments.AboutFragment
-import org.digital.construction.notes.fragments.NoteFragment
-import org.digital.construction.notes.fragments.NotesListFragment
-import org.digital.construction.notes.fragments.SettingsFragment
+import org.digital.construction.notes.fragments.*
 
 private const val TAG = "MainActivity"
 private const val REQUEST_NOTE_ID = "note_id_request"
@@ -23,6 +19,8 @@ const val ACTION_OPEN_SETTINGS = "org.digital.construction.notes.open_settings"
 const val ACTION_OPEN_ABOUT = "org.digital.construction.notes.open_about"
 
 class MainActivity : AppCompatActivity(), FragmentResultListener {
+
+    private lateinit var sharedPreferences: SharedPreferences
 
     private val openSettings: BroadcastReceiver by lazy {
         object : BroadcastReceiver() {
@@ -47,6 +45,8 @@ class MainActivity : AppCompatActivity(), FragmentResultListener {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
+        sharedPreferences = PreferenceManager.getDefaultSharedPreferences(this)
+
         supportFragmentManager.setFragmentResultListener(
             REQUEST_NOTE_ID,
             this,
@@ -62,6 +62,15 @@ class MainActivity : AppCompatActivity(), FragmentResultListener {
             val notesListFragment = NotesListFragment.newInstance(REQUEST_NOTE_ID)
             supportFragmentManager.commit {
                 add(R.id.fragment_container_view, notesListFragment)
+            }
+        }
+
+        sharedPreferences.getBoolean(INTRODUCTION_SEEN_KEY, false).let { introductionSeen ->
+            if (!introductionSeen) {
+                startActivity(Intent(this, MainIntroActivity::class.java))
+                sharedPreferences.edit {
+                    putBoolean(INTRODUCTION_SEEN_KEY, true)
+                }
             }
         }
     }

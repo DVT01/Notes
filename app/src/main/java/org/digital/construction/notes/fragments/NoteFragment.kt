@@ -107,7 +107,7 @@ class NoteFragment : Fragment() {
             .toFloat()
             .div(100)
         changeBackBehavior = sharedPreferences
-            .getBoolean(BACK_KEY_SAVE_BEHAVIOUR, true)
+            .getBoolean(SAVE_NOTE_AUTOMATICALLY_KEY, true)
 
         val view = inflater.inflate(R.layout.fragment_note, container, false)
 

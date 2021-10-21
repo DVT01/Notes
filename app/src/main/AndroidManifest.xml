@@ -19,6 +19,10 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+        <activity
+            android:name=".activities.MainIntroActivity"
+            android:theme="@style/Theme.Intro" />
+
         <provider
             android:name="androidx.core.content.FileProvider"
             android:authorities="org.digital.construction.notes.fileprovider"

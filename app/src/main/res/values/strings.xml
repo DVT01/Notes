@@ -14,13 +14,13 @@
     <string name="sort_order">Sort order</string>
     <string name="ascending">Ascending</string>
     <string name="descending">Descending</string>
-    <string name="import_note">Import from file</string>
+    <string name="import_note">Import note</string>
     <string name="about">About</string>
 
     <!-- NoteFragment -->
     <string name="save">Save</string>
     <string name="note_text_hint">Write something</string>
-    <string name="export_note">Export to file</string>
+    <string name="export_note">Export note</string>
     <string name="share_note">Share note</string>
     <string name="note_chooser_text">Send note via…</string>
     <string name="note_saved">Note Saved</string>
@@ -51,7 +51,18 @@
     <string name="version">Version</string>
     <string name="fork_on_github">Fork on GitHub</string>
     <string name="author">Author</string>
-    <string name="diego_velez">Diego Velez</string>
+    <string name="author_name">Digital Construction</string>
     <string name="write_me_an_email">Write me an email</string>
     <string name="app_version">%s (%d)</string>
+    <string name="introduction">Introduction</string>
+
+    <!-- Introduction -->
+    <string name="app_description">Welcome to a new, modern and beautiful app used to write down notes.</string>
+    <string name="swipe">Swipe to open or delete notes</string>
+    <string name="swipe_description">You can swipe left to open a note or swipe right to delete them</string>
+    <string name="import_and_export">You can import and export notes</string>
+    <string name="import_and_export_description">
+        Press the import note button at the top to import a note stored in your phone, or
+        the export note button when having a note opened to save the note as a file in your phone
+    </string>
 </resources>
