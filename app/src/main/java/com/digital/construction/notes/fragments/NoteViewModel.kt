@@ -1,10 +1,10 @@
 package com.digital.construction.notes.fragments
 
-import android.util.Log
 import androidx.lifecycle.*
-import kotlinx.coroutines.launch
 import com.digital.construction.notes.model.Note
 import com.digital.construction.notes.model.NotesRepository
+import kotlinx.coroutines.launch
+import timber.log.Timber
 
 private const val TAG = "NoteViewModel"
 
@@ -13,9 +13,13 @@ class NoteViewModel : ViewModel() {
     private val notesRepository = NotesRepository.get()
     private val noteNameLiveData = MutableLiveData<Long>()
 
+    init {
+        Timber.tag(TAG)
+    }
+
     val noteLiveData: LiveData<Note> =
         Transformations.switchMap(noteNameLiveData) { noteId ->
-            Log.i(TAG, "Loading note (id: $noteId)")
+            Timber.i("Loading note (id: $noteId)")
             notesRepository.getNote(noteId).asLiveData()
         }
 
@@ -25,7 +29,7 @@ class NoteViewModel : ViewModel() {
 
     fun saveNote(note: Note) {
         viewModelScope.launch {
-            Log.i(TAG, "Note saved (id: ${note.id}")
+            Timber.i("Note saved (id: ${note.id}")
             notesRepository.updateNote(note)
         }
     }

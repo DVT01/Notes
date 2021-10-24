@@ -6,8 +6,6 @@ import androidx.appcompat.app.AppCompatDelegate
 import androidx.preference.PreferenceFragmentCompat
 import com.digital.construction.notes.R
 
-private const val TAG = "SettingsFragment"
-
 const val DARK_MODE_KEY = "dark_mode"
 const val SORT_MODE_KEY = "sort_mode"
 const val FONT_SIZE_KEY = "font_size"

@@ -2,7 +2,6 @@ package com.digital.construction.notes.recyclerview
 
 import android.annotation.SuppressLint
 import android.content.Intent
-import android.util.Log
 import android.view.GestureDetector
 import android.view.MotionEvent
 import android.view.View
@@ -14,6 +13,7 @@ import com.digital.construction.notes.fragments.ACTION_OPEN_NOTE
 import com.digital.construction.notes.fragments.ACTION_REPLACE_SELECT_ALL_TEXT
 import com.digital.construction.notes.fragments.NOTE_ID
 import com.digital.construction.notes.model.Note
+import timber.log.Timber
 
 private const val TAG = "NotesListHolder"
 
@@ -73,10 +73,15 @@ class NotesListHolder(view: View) : RecyclerView.ViewHolder(view) {
     }
 
     private inner class GestureListener : GestureDetector.SimpleOnGestureListener() {
+
+        init {
+            Timber.tag(TAG)
+        }
+
         override fun onDown(event: MotionEvent): Boolean = true
 
         override fun onSingleTapConfirmed(event: MotionEvent): Boolean {
-            Log.d(TAG, "GestureDetector: onSingleTapConfirmed")
+            Timber.d("GestureDetector: onSingleTapConfirmed")
 
             NotesListDataHolder.selectedItemsValue.run {
                 if (isEmpty()) { // Not in selection mode
@@ -94,7 +99,7 @@ class NotesListHolder(view: View) : RecyclerView.ViewHolder(view) {
         }
 
         override fun onLongPress(event: MotionEvent) {
-            Log.d(TAG, "GestureDetector: onLongPress")
+            Timber.d("GestureDetector: onLongPress")
 
             if (!NotesListDataHolder.selectedItemsValue.contains(note.id)) {
                 selectNote()
@@ -102,7 +107,7 @@ class NotesListHolder(view: View) : RecyclerView.ViewHolder(view) {
         }
 
         override fun onDoubleTap(event: MotionEvent): Boolean {
-            Log.d(TAG, "GestureDetector: onDoubleTap")
+            Timber.d("GestureDetector: onDoubleTap")
 
             // Not in selection mode
             if (NotesListDataHolder.selectedItemsValue.isEmpty()) {

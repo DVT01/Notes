@@ -4,7 +4,6 @@ import android.content.*
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
-import android.util.Log
 import android.util.TypedValue
 import android.view.*
 import androidx.activity.OnBackPressedCallback
@@ -15,9 +14,10 @@ import androidx.core.content.FileProvider
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.preference.PreferenceManager
-import com.google.android.material.snackbar.Snackbar
 import com.digital.construction.notes.R
 import com.digital.construction.notes.model.Note
+import com.google.android.material.snackbar.Snackbar
+import timber.log.Timber
 import java.io.File
 import java.io.FileNotFoundException
 import java.io.FileOutputStream
@@ -42,7 +42,7 @@ class NoteFragment : Fragment() {
     private val exportNoteLauncher = registerForActivityResult(
         ActivityResultContracts.CreateDocument()
     ) { noteDirUri ->
-        Log.i(TAG, "Starting export (id: ${note.id}")
+        Timber.i("Starting export (id: ${note.id}")
 
         try {
             requireContext().contentResolver.run {
@@ -56,7 +56,7 @@ class NoteFragment : Fragment() {
             when (error) {
                 // Catch all expected possible errors
                 is NullPointerException, is FileNotFoundException, is IOException -> {
-                    Log.e(TAG, "Note export failed (id: ${note.id})", error)
+                    Timber.e(error, "Note export failed (id: ${note.id})")
                 }
                 else -> throw error
             }
@@ -85,6 +85,8 @@ class NoteFragment : Fragment() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setHasOptionsMenu(true)
+
+        Timber.tag(TAG)
 
         requireArguments().getLong(ARG_NOTE_ID).let { noteId ->
             noteViewModel.loadNote(noteId)
@@ -136,7 +138,7 @@ class NoteFragment : Fragment() {
         noteViewModel.noteLiveData.observe(viewLifecycleOwner) { note ->
             if (note == null) return@observe
 
-            Log.i(TAG, "Loaded note (id: ${note.id})")
+            Timber.i("Loaded note (id: ${note.id})")
 
             this.note = note
             savedNoteText = note.text

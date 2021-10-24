@@ -3,13 +3,13 @@ package com.digital.construction.notes.fragments
 import android.app.Dialog
 import android.content.Intent
 import android.os.Bundle
-import android.util.Log
 import androidx.annotation.StringRes
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.widget.AppCompatEditText
 import androidx.fragment.app.DialogFragment
 import androidx.fragment.app.activityViewModels
 import com.digital.construction.notes.R
+import timber.log.Timber
 import java.util.*
 
 private const val TAG = "NoteNameDialog"
@@ -25,6 +25,11 @@ class NoteNameDialog : DialogFragment() {
 
     enum class DialogType {
         CREATE, RENAME
+    }
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        Timber.tag(TAG)
     }
 
     override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
@@ -70,7 +75,7 @@ class NoteNameDialog : DialogFragment() {
             positiveButton.setOnClickListener {
                 val confirmedNoteName = noteNameEditText.text.toString()
 
-                Log.i(TAG, "Note name chosen: $confirmedNoteName")
+                Timber.i("Note name chosen: $confirmedNoteName")
 
                 val notes = notesListViewModel.notesLiveData.value?.map { it.name } ?: emptyList()
 

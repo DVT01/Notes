@@ -1,10 +1,10 @@
 package com.digital.construction.notes.fragments
 
-import android.util.Log
 import androidx.lifecycle.*
-import kotlinx.coroutines.launch
 import com.digital.construction.notes.model.Note
 import com.digital.construction.notes.model.NotesRepository
+import kotlinx.coroutines.launch
+import timber.log.Timber
 
 private const val TAG = "NotesListViewModel"
 
@@ -13,8 +13,12 @@ class NotesListViewModel : ViewModel() {
     private val notesRepository = NotesRepository.get()
     val notesLiveData = notesRepository.getAllNotes().asLiveData()
 
+    init {
+        Timber.tag(TAG)
+    }
+
     fun insertNote(note: Note): LiveData<Long> {
-        Log.i(TAG, "Adding note to DB (id: ${note.id})")
+        Timber.i("Adding note to DB (id: ${note.id})")
 
         val result = MutableLiveData<Long>()
 
@@ -26,14 +30,14 @@ class NotesListViewModel : ViewModel() {
     }
 
     fun deleteNote(note: Note) {
-        Log.i(TAG, "Deleting note (id: ${note.id})")
+        Timber.i("Deleting note (id: ${note.id})")
         viewModelScope.launch {
             notesRepository.deleteNote(note)
         }
     }
 
     fun deleteNote(id: Long) {
-        Log.i(TAG, "Deleting note (id: $id)")
+        Timber.i("Deleting note (id: $id)")
         viewModelScope.launch {
             notesRepository.deleteNote(id)
         }

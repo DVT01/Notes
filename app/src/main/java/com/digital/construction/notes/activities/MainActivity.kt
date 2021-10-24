@@ -2,7 +2,6 @@ package com.digital.construction.notes.activities
 
 import android.content.*
 import android.os.Bundle
-import android.util.Log
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.edit
 import androidx.fragment.app.Fragment
@@ -11,6 +10,7 @@ import androidx.fragment.app.commit
 import androidx.preference.PreferenceManager
 import com.digital.construction.notes.R
 import com.digital.construction.notes.fragments.*
+import timber.log.Timber
 
 private const val TAG = "MainActivity"
 private const val REQUEST_NOTE_ID = "note_id_request"
@@ -25,7 +25,7 @@ class MainActivity : AppCompatActivity(), FragmentResultListener {
     private val openSettings: BroadcastReceiver by lazy {
         object : BroadcastReceiver() {
             override fun onReceive(context: Context, intent: Intent) {
-                Log.i(TAG, "Received request to open settings")
+                Timber.i("Received request to open settings")
 
                 openFragmentWithFadeAnim(SettingsFragment())
             }
@@ -34,7 +34,7 @@ class MainActivity : AppCompatActivity(), FragmentResultListener {
     private val openAbout: BroadcastReceiver by lazy {
         object : BroadcastReceiver() {
             override fun onReceive(context: Context, intent: Intent) {
-                Log.i(TAG, "Received request to open about")
+                Timber.i("Received request to open about")
 
                 openFragmentWithFadeAnim(AboutFragment())
             }
@@ -44,6 +44,8 @@ class MainActivity : AppCompatActivity(), FragmentResultListener {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
+
+        Timber.tag(TAG)
 
         sharedPreferences = PreferenceManager.getDefaultSharedPreferences(this)
 
@@ -85,7 +87,7 @@ class MainActivity : AppCompatActivity(), FragmentResultListener {
         when (requestKey) {
             REQUEST_NOTE_ID -> {
                 val noteId = result.getLong(REQUEST_NOTE_ID)
-                Log.i(TAG, "Opening note (id: $noteId)")
+                Timber.i("Opening note (id: $noteId)")
 
                 val noteFragment = NoteFragment.newInstance(noteId)
                 supportFragmentManager.commit {

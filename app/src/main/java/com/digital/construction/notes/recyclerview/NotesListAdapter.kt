@@ -1,10 +1,10 @@
 package com.digital.construction.notes.recyclerview
 
+import android.annotation.SuppressLint
 import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
 import android.content.IntentFilter
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.DiffUtil
@@ -12,6 +12,7 @@ import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.digital.construction.notes.R
 import com.digital.construction.notes.model.Note
+import timber.log.Timber
 
 private const val TAG = "NotesListAdapter"
 
@@ -25,7 +26,7 @@ class NotesListAdapter : ListAdapter<Note, NotesListHolder>(NoteComparator()) {
     private val selectAllNotes: BroadcastReceiver by lazy {
         object : BroadcastReceiver() {
             override fun onReceive(context: Context, intent: Intent) {
-                Log.i(TAG, "Receive broadcast to select all notes")
+                Timber.i("Receive broadcast to select all notes")
 
                 NotesListDataHolder.changeLiveDataValue(currentList.map { it.id }.toMutableList())
                 selectAllNotes(true)
@@ -35,12 +36,16 @@ class NotesListAdapter : ListAdapter<Note, NotesListHolder>(NoteComparator()) {
     private val deselectAllNotes: BroadcastReceiver by lazy {
         object : BroadcastReceiver() {
             override fun onReceive(context: Context, intent: Intent) {
-                Log.i(TAG, "Receive broadcast to deselect all notes")
+                Timber.i("Receive broadcast to deselect all notes")
 
                 NotesListDataHolder.changeLiveDataValue(mutableListOf())
                 selectAllNotes(false)
             }
         }
+    }
+
+    init {
+        Timber.tag(TAG)
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): NotesListHolder {
@@ -76,6 +81,7 @@ class NotesListAdapter : ListAdapter<Note, NotesListHolder>(NoteComparator()) {
         }
     }
 
+    @SuppressLint("NotifyDataSetChanged")
     fun selectAllNotes(selectAll: Boolean) {
         NotesListDataHolder.selectAllNotesIsOn = selectAll
 

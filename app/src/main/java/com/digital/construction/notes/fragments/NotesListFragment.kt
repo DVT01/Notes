@@ -4,7 +4,6 @@ import android.content.*
 import android.content.res.Configuration
 import android.os.Bundle
 import android.provider.OpenableColumns
-import android.util.Log
 import android.view.*
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.annotation.IdRes
@@ -25,6 +24,7 @@ import com.digital.construction.notes.activities.ACTION_OPEN_SETTINGS
 import com.digital.construction.notes.model.Note
 import com.digital.construction.notes.recyclerview.*
 import com.google.android.material.floatingactionbutton.FloatingActionButton
+import timber.log.Timber
 import java.io.BufferedReader
 import java.io.InputStreamReader
 import java.util.*
@@ -59,7 +59,7 @@ class NotesListFragment : Fragment() {
             return@registerForActivityResult
         }
 
-        Log.i(TAG, "Starting import (Uri: $noteDirUri)")
+        Timber.i("Starting import (Uri: $noteDirUri)")
 
         val contentResolver = requireContext().contentResolver
 
@@ -100,15 +100,12 @@ class NotesListFragment : Fragment() {
                 viewHolder: RecyclerView.ViewHolder,
                 target: RecyclerView.ViewHolder
             ): Boolean {
-                Log.d(TAG, "Item moved: ${viewHolder.bindingAdapterPosition}")
+                Timber.d("Item moved: ${viewHolder.bindingAdapterPosition}")
                 return false
             }
 
             override fun onSwiped(viewHolder: RecyclerView.ViewHolder, direction: Int) {
-                Log.d(
-                    TAG,
-                    "Item swiped: ${viewHolder.bindingAdapterPosition}, direction: $direction"
-                )
+                Timber.d("Item swiped: ${viewHolder.bindingAdapterPosition}, direction: $direction")
 
                 when (direction) {
                     ItemTouchHelper.LEFT -> {
@@ -168,6 +165,8 @@ class NotesListFragment : Fragment() {
         super.onCreate(savedInstanceState)
         setHasOptionsMenu(true)
 
+        Timber.tag(TAG)
+
         sortByOrder = sharedPreferences
             .getString(SORT_MODE_KEY, SortBy.ASCENDING.name)!!
             .let { SortBy.valueOf(it) }
@@ -200,7 +199,7 @@ class NotesListFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
 
         notesListViewModel.notesLiveData.observe(viewLifecycleOwner) { allNotes ->
-            Log.i(TAG, "Received ${allNotes.size} notes.")
+            Timber.i("Received ${allNotes.size} notes.")
 
             (requireActivity() as AppCompatActivity).supportActionBar?.apply {
                 subtitle = resources.getQuantityString(
@@ -227,7 +226,7 @@ class NotesListFragment : Fragment() {
         var actionModeStarted = false
 
         NotesListDataHolder.selectedItemsLiveData.observe(viewLifecycleOwner) { notesSelected ->
-            Log.i(TAG, "Selected ${notesSelected.size} notes")
+            Timber.i("Selected ${notesSelected.size} notes")
 
             if (notesSelected.isNotEmpty() && !actionModeStarted) {
                 requireActivity().startActionMode(actionMode)
@@ -389,7 +388,7 @@ class NotesListFragment : Fragment() {
         private val replaceSelectAllNotesText: BroadcastReceiver by lazy {
             object : BroadcastReceiver() {
                 override fun onReceive(context: Context, intent: Intent) {
-                    Log.i(TAG, "Received broadcast to replace select all button text")
+                    Timber.i("Received broadcast to replace select all button text")
 
                     actionMode.menu.findItem(R.id.select_all_notes).apply {
                         title = getString(R.string.select_all)
