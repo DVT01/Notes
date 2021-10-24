@@ -29,7 +29,7 @@ class NoteViewModel : ViewModel() {
 
     fun saveNote(note: Note) {
         viewModelScope.launch {
-            Timber.i("Note saved (id: ${note.id}")
+            Timber.i("Note saved (id: ${note.id})")
             notesRepository.updateNote(note)
         }
     }
