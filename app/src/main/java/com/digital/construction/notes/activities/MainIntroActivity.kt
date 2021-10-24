@@ -43,5 +43,14 @@ class MainIntroActivity : IntroActivity() {
                 .backgroundDark(R.color.colorPrimaryDark)
                 .build()
         )
+
+        addSlide(
+            SimpleSlide.Builder()
+                .title(R.string.max_note_name_lines)
+                .description(R.string.max_note_name_lines_description)
+                .background(R.color.colorPrimaryDark)
+                .backgroundDark(R.color.colorPrimaryDark)
+                .build()
+        )
     }
 }

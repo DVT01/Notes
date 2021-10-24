@@ -65,9 +65,8 @@
     <string name="swipe">Swipe to open or delete notes</string>
     <string name="swipe_description">You can swipe left to open a note or swipe right to delete them</string>
     <string name="import_and_export">You can import and export notes</string>
-    <string name="import_and_export_description">
-        Press the import note button at the top to import a note stored in your phone, or
-        the export note button when having a note opened to save the note as a file in your phone
-    </string>
+    <string name="import_and_export_description">Press the import/export note button to add a note from a stored text file in your phone or save a note as a text file.</string>
+    <string name="max_note_name_lines">Double tap a note to expand its name</string>
+    <string name="max_note_name_lines_description">If a note\'s name takes more than three lines, then it will only show the first three lines, unless you double tap on the note\'s name.</string>
     <string name="get_started">GET STARTED</string>
 </resources>

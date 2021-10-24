@@ -63,6 +63,8 @@
     <string name="swipe">Deslize para abrir o borrar notas</string>
     <string name="swipe_description">Puede deslizar hacia la izquierda para abrir la nota, o hacia la derecha para borrarla</string>
     <string name="import_and_export">Puede importar y exportar notas</string>
-    <string name="import_and_export_description">Puede importar notas usando el boton de importar en el tope, o exportar usando el boton de exportar cuando tenga la nota abierta</string>
+    <string name="import_and_export_description">Presione el botón de importar/exportar notas para añadir una nota de un archivo de texto o salvar una nota como un archivo de texto.</string>
+    <string name="max_note_name_lines">Toque la nota dos veces para expandirla</string>
+    <string name="max_note_name_lines_description">Si una nota ocupa más de tres líneas pues automáticamente mostrará solamente las primeras tres líneas, a menos que toque la nota dos veces.</string>
     <string name="get_started">EMPEZAR</string>
 </resources>
