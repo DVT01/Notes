@@ -16,12 +16,14 @@ import com.digital.construction.notes.activities.MainIntroActivity
 
 private const val GITHUB = "https://github.com/diego-velez/Notes"
 private const val AUTHOR_EMAIL = "digital.construction.dev@gmail.com"
+private const val LICENSE_URL = "https://digital-construction.mit-license.org"
 
 class AboutFragment : Fragment() {
 
     private lateinit var appVersionTextView: AppCompatTextView
     private lateinit var introductionLinearLayoutCompat: LinearLayoutCompat
     private lateinit var forkOnGitHubLinearLayoutCompat: LinearLayoutCompat
+    private lateinit var licenseLinearLayoutCompat: LinearLayoutCompat
     private lateinit var writeEmailLinearLayoutCompat: LinearLayoutCompat
 
     override fun onCreateView(
@@ -33,6 +35,7 @@ class AboutFragment : Fragment() {
             appVersionTextView = findViewById(R.id.app_version)
             introductionLinearLayoutCompat = findViewById(R.id.introduction)
             forkOnGitHubLinearLayoutCompat = findViewById(R.id.fork_on_github)
+            licenseLinearLayoutCompat = findViewById(R.id.license)
             writeEmailLinearLayoutCompat = findViewById(R.id.write_me_an_email)
 
             appVersionTextView.text =
@@ -44,6 +47,10 @@ class AboutFragment : Fragment() {
 
             forkOnGitHubLinearLayoutCompat.setOnClickListener {
                 openUrl(GITHUB)
+            }
+
+            licenseLinearLayoutCompat.setOnClickListener {
+                openUrl(LICENSE_URL)
             }
 
             writeEmailLinearLayoutCompat.setOnClickListener {

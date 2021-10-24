@@ -58,6 +58,7 @@
     <string name="write_me_an_email">Write me an email</string>
     <string name="app_version" translatable="false">%s (%d)</string>
     <string name="introduction">Introduction</string>
+    <string name="license">License</string>
 
     <!-- Introduction -->
     <string name="app_description">Welcome to a new, modern and beautiful app used to write down notes.</string>

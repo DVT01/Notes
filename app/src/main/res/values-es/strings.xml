@@ -56,6 +56,7 @@
     <string name="author">Autor</string>
     <string name="write_me_an_email">Escríbame un email</string>
     <string name="introduction">Introducción</string>
+    <string name="license">Licencia</string>
 
     <!-- Introduction -->
     <string name="app_description">Bienvenido a una nueva, moderna y bella aplicación usada para escribir notas.</string>
