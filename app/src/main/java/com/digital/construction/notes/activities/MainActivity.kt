@@ -7,6 +7,8 @@ import androidx.core.content.edit
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentResultListener
 import androidx.fragment.app.commit
+import androidx.lifecycle.DefaultLifecycleObserver
+import androidx.lifecycle.LifecycleOwner
 import androidx.preference.PreferenceManager
 import com.digital.construction.notes.R
 import com.digital.construction.notes.fragments.*
@@ -55,8 +57,7 @@ class MainActivity : AppCompatActivity(), FragmentResultListener {
             this
         )
 
-        registerReceiver(openSettings, IntentFilter(ACTION_OPEN_SETTINGS))
-        registerReceiver(openAbout, IntentFilter(ACTION_OPEN_ABOUT))
+        lifecycle.addObserver(LifecycleObserver())
 
         val currentFragment = supportFragmentManager.findFragmentById(R.id.fragment_container_view)
 
@@ -75,12 +76,6 @@ class MainActivity : AppCompatActivity(), FragmentResultListener {
                 }
             }
         }
-    }
-
-    override fun onDestroy() {
-        super.onDestroy()
-        unregisterReceiver(openSettings)
-        unregisterReceiver(openAbout)
     }
 
     override fun onFragmentResult(requestKey: String, result: Bundle) {
@@ -114,6 +109,18 @@ class MainActivity : AppCompatActivity(), FragmentResultListener {
             )
             replace(R.id.fragment_container_view, fragment)
             addToBackStack(null)
+        }
+    }
+
+    internal inner class LifecycleObserver : DefaultLifecycleObserver {
+        override fun onCreate(owner: LifecycleOwner) {
+            registerReceiver(openSettings, IntentFilter(ACTION_OPEN_SETTINGS))
+            registerReceiver(openAbout, IntentFilter(ACTION_OPEN_ABOUT))
+        }
+
+        override fun onDestroy(owner: LifecycleOwner) {
+            unregisterReceiver(openSettings)
+            unregisterReceiver(openAbout)
         }
     }
 }

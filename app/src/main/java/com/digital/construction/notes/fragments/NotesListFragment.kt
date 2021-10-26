@@ -12,6 +12,8 @@ import androidx.appcompat.widget.AppCompatTextView
 import androidx.core.content.edit
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.setFragmentResult
+import androidx.lifecycle.DefaultLifecycleObserver
+import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.ViewModelProvider
 import androidx.preference.PreferenceManager
 import androidx.recyclerview.widget.GridLayoutManager
@@ -170,6 +172,8 @@ class NotesListFragment : Fragment() {
         sortByOrder = sharedPreferences
             .getString(SORT_MODE_KEY, SortBy.ASCENDING.name)!!
             .let { SortBy.valueOf(it) }
+
+        lifecycle.addObserver(LifecycleObserver())
     }
 
     override fun onCreateView(
@@ -201,13 +205,12 @@ class NotesListFragment : Fragment() {
         notesListViewModel.notesLiveData.observe(viewLifecycleOwner) { allNotes ->
             Timber.i("Received ${allNotes.size} notes.")
 
-            (requireActivity() as AppCompatActivity).supportActionBar?.apply {
-                subtitle = resources.getQuantityString(
+            (requireActivity() as AppCompatActivity).supportActionBar?.subtitle =
+                resources.getQuantityString(
                     R.plurals.note_count,
                     allNotes.size,
                     allNotes.size
                 )
-            }
 
             updateUI(allNotes)
         }
@@ -239,11 +242,6 @@ class NotesListFragment : Fragment() {
             actionMode.notesSelected = notesSelected
         }
 
-        requireContext().run {
-            registerReceiver(openSelectedNote, IntentFilter(ACTION_OPEN_NOTE))
-            registerReceiver(createNote, IntentFilter(ACTION_CREATE_NOTE))
-        }
-
         val swipeToOpenOn = sharedPreferences.getBoolean(SWIPE_OPEN_KEY, true)
         val swipeToDeleteOn = sharedPreferences.getBoolean(SWIPE_DELETE_KEY, true)
 
@@ -262,14 +260,7 @@ class NotesListFragment : Fragment() {
     override fun onStop() {
         super.onStop()
 
-        requireContext().run {
-            unregisterReceiver(openSelectedNote)
-            unregisterReceiver(createNote)
-        }
-
-        (requireActivity() as AppCompatActivity).supportActionBar?.apply {
-            subtitle = String()
-        }
+        (requireActivity() as AppCompatActivity).supportActionBar?.subtitle = String()
     }
 
     override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
@@ -455,6 +446,22 @@ class NotesListFragment : Fragment() {
                 arguments = Bundle().apply {
                     putString(ARG_NOTE_ID_REQUEST, noteIdRequest)
                 }
+            }
+        }
+    }
+
+    internal inner class LifecycleObserver : DefaultLifecycleObserver {
+        override fun onStart(owner: LifecycleOwner) {
+            requireContext().run {
+                registerReceiver(openSelectedNote, IntentFilter(ACTION_OPEN_NOTE))
+                registerReceiver(createNote, IntentFilter(ACTION_CREATE_NOTE))
+            }
+        }
+
+        override fun onStop(owner: LifecycleOwner) {
+            requireContext().run {
+                unregisterReceiver(openSelectedNote)
+                unregisterReceiver(createNote)
             }
         }
     }

@@ -12,6 +12,8 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.AppCompatEditText
 import androidx.core.content.FileProvider
 import androidx.fragment.app.Fragment
+import androidx.lifecycle.DefaultLifecycleObserver
+import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.ViewModelProvider
 import androidx.preference.PreferenceManager
 import com.digital.construction.notes.R
@@ -92,9 +94,7 @@ class NoteFragment : Fragment() {
             noteViewModel.loadNote(noteId)
         }
 
-        requireContext().run {
-            registerReceiver(renameNote, IntentFilter(ACTION_RENAME_NOTE))
-        }
+        lifecycle.addObserver(LifecycleObserver())
     }
 
     override fun onCreateView(
@@ -207,6 +207,9 @@ class NoteFragment : Fragment() {
                     .newInstance(NoteNameDialog.DialogType.RENAME, note.name)
                     .show(childFragmentManager, null)
             }
+            android.R.id.home -> {
+                requireActivity().onBackPressed()
+            }
             else -> return super.onOptionsItemSelected(item)
         }
 
@@ -215,14 +218,8 @@ class NoteFragment : Fragment() {
 
     override fun onDestroy() {
         super.onDestroy()
-        (activity as AppCompatActivity).supportActionBar?.apply {
-            title = getString(R.string.app_name)
-        }
 
-        requireContext().apply {
-            deleteFile(note.fileName)
-            unregisterReceiver(renameNote)
-        }
+        requireContext().deleteFile(note.fileName)
 
         if (!changeBackBehavior && note.text != savedNoteText) {
             Snackbar.make(
@@ -234,9 +231,7 @@ class NoteFragment : Fragment() {
     }
 
     private fun updateUI() {
-        (activity as AppCompatActivity).supportActionBar?.apply {
-            title = note.name
-        }
+        (activity as AppCompatActivity).supportActionBar?.title = note.name
 
         noteTextEditText.setText(note.text)
     }
@@ -284,6 +279,30 @@ class NoteFragment : Fragment() {
                 arguments = Bundle().apply {
                     putLong(ARG_NOTE_ID, noteId)
                 }
+            }
+        }
+    }
+
+    internal inner class LifecycleObserver : DefaultLifecycleObserver {
+        override fun onCreate(owner: LifecycleOwner) {
+            requireContext().registerReceiver(renameNote, IntentFilter(ACTION_RENAME_NOTE))
+
+            // Enable back arrow in left toolbar
+            (activity as AppCompatActivity).supportActionBar?.run {
+                setDisplayHomeAsUpEnabled(true)
+                setDisplayShowHomeEnabled(true)
+                setHomeAsUpIndicator(R.drawable.ic_outline_arrow_back_24)
+            }
+        }
+
+        override fun onDestroy(owner: LifecycleOwner) {
+            requireContext().unregisterReceiver(renameNote)
+
+            // Disable back arrow in left toolbar and change title
+            (activity as AppCompatActivity).supportActionBar?.apply {
+                title = getString(R.string.app_name)
+                setDisplayHomeAsUpEnabled(false)
+                setDisplayShowHomeEnabled(false)
             }
         }
     }
