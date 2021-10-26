@@ -8,12 +8,21 @@
 
 ## Screenshots
 
-[<img src="screenshots/Screenshot_empty_list.png" width=160>](screenshots/Screenshot_empty_list.png)
-[<img src="screenshots/Screenshot_new_note.png" width=160>](screenshots/Screenshot_new_note.png)
-[<img src="screenshots/Screenshot_note_text.png" width=160>](screenshots/Screenshot_note_text.png)
-[<img src="screenshots/Screenshot_empty_list_dark.png" width=160>](screenshots/Screenshot_empty_list_dark.png)
-[<img src="screenshots/Screenshot_new_note_dark.png" width=160>](screenshots/Screenshot_new_note_dark.png)
-[<img src="screenshots/Screenshot_note_text_dark.png" width=160>](screenshots/Screenshot_note_text_dark.png)
+[<img src="screenshots/phones/Screenshot_empty_list.png" width=160>](screenshots/phones/Screenshot_empty_list.png)
+[<img src="screenshots/phones/Screenshot_new_note.png" width=160>](screenshots/phones/Screenshot_new_note.png)
+[<img src="screenshots/phones/Screenshot_note_text.png" width=160>](screenshots/phones/Screenshot_note_text.png)
+[<img src="screenshots/phones/Screenshot_note_list.png" width=160>](screenshots/phones/Screenshot_note_list.png)
+
+[<img src="screenshots/phones/Screenshot_empty_list_dark.png" width=160>](screenshots/phones/Screenshot_empty_list_dark.png)
+[<img src="screenshots/phones/Screenshot_new_note_dark.png" width=160>](screenshots/phones/Screenshot_new_note_dark.png)
+[<img src="screenshots/phones/Screenshot_note_text_dark.png" width=160>](screenshots/phones/Screenshot_note_text_dark.png)
+[<img src="screenshots/phones/Screenshot_note_list_dark.png" width=160>](screenshots/phones/Screenshot_note_list_dark.png)
+
+[<img src="screenshots/7-inch_tablet/Screenshot_note_text.png" width=340>](screenshots/7-inch_tablet/Screenshot_note_text.png)
+[<img src="screenshots/7-inch_tablet/Screenshot_note_text_dark.png" width=340>](screenshots/7-inch_tablet/Screenshot_note_text_dark.png)
+
+[<img src="screenshots/10-inch_tablet/Screenshot_note_text.png" width=405>](screenshots/10-inch_tablet/Screenshot_note_text_dark.png)
+[<img src="screenshots/10-inch_tablet/Screenshot_note_text_dark.png" width=405>](screenshots/10-inch_tablet/Screenshot_note_text_dark.png)
 
 ## Description
 
