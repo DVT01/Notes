@@ -7,18 +7,19 @@ import android.view.MotionEvent
 import android.view.View
 import androidx.appcompat.widget.AppCompatTextView
 import androidx.core.view.GestureDetectorCompat
-import androidx.recyclerview.widget.RecyclerView
 import com.digital.construction.notes.R
+import com.digital.construction.notes.fragments.ACTION_DELETE_NOTE
 import com.digital.construction.notes.fragments.ACTION_OPEN_NOTE
 import com.digital.construction.notes.fragments.ACTION_REPLACE_SELECT_ALL_TEXT
 import com.digital.construction.notes.fragments.NOTE_ID
 import com.digital.construction.notes.model.Note
+import com.h6ah4i.android.widget.advrecyclerview.utils.AbstractSwipeableItemViewHolder
 import timber.log.Timber
 
 private const val TAG = "NotesListHolder"
 
 @SuppressLint("ClickableViewAccessibility")
-class NotesListHolder(view: View) : RecyclerView.ViewHolder(view) {
+class NotesListHolder(view: View) : AbstractSwipeableItemViewHolder(view) {
 
     private lateinit var note: Note
 
@@ -35,6 +36,10 @@ class NotesListHolder(view: View) : RecyclerView.ViewHolder(view) {
         noteNameTextView.text = note.name
 
         itemView.isActivated = NotesListDataHolder.selectedItemsValue.contains(note.id)
+    }
+
+    override fun getSwipeableContainerView(): View {
+        return itemView.findViewById(R.id.container)
     }
 
     private fun selectNote() {
@@ -67,6 +72,14 @@ class NotesListHolder(view: View) : RecyclerView.ViewHolder(view) {
     fun openNote() {
         itemView.context?.sendBroadcast(
             Intent(ACTION_OPEN_NOTE).run {
+                putExtra(NOTE_ID, note.id)
+            }
+        )
+    }
+
+    fun deleteNote() {
+        itemView.context?.sendBroadcast(
+            Intent(ACTION_DELETE_NOTE).run {
                 putExtra(NOTE_ID, note.id)
             }
         )

@@ -17,7 +17,6 @@ import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.ViewModelProvider
 import androidx.preference.PreferenceManager
 import androidx.recyclerview.widget.GridLayoutManager
-import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.digital.construction.notes.R
@@ -26,6 +25,7 @@ import com.digital.construction.notes.activities.ACTION_OPEN_SETTINGS
 import com.digital.construction.notes.model.Note
 import com.digital.construction.notes.recyclerview.*
 import com.google.android.material.floatingactionbutton.FloatingActionButton
+import com.h6ah4i.android.widget.advrecyclerview.swipeable.RecyclerViewSwipeManager
 import timber.log.Timber
 import java.io.BufferedReader
 import java.io.InputStreamReader
@@ -37,6 +37,7 @@ private const val ARG_NOTE_ID_REQUEST = "note_id_request_key"
 const val ACTION_REPLACE_SELECT_ALL_TEXT = "com.digital.construction.notes.replace_select_all_text"
 const val ACTION_OPEN_NOTE = "com.digital.construction.notes.open_note"
 const val ACTION_CREATE_NOTE = "com.digital.construction.notes.create_note"
+const val ACTION_DELETE_NOTE = "com.digital.construction.notes.delete_note"
 
 const val NOTE_NAME = "note_name"
 const val NOTE_NAME_REQUIRED = "Must pass the note's name in the Intent using NOTE_NAME"
@@ -52,7 +53,7 @@ class NotesListFragment : Fragment() {
     private lateinit var sortByOrder: SortBy
     private lateinit var createNoteFab: FloatingActionButton
 
-    private var adapter: NotesListAdapter = NotesListAdapter()
+    private var notesListAdapter: NotesListAdapter = NotesListAdapter()
     private val importNoteLauncher = registerForActivityResult(
         ActivityResultContracts.OpenDocument()
     ) { noteDirUri ->
@@ -92,36 +93,6 @@ class NotesListFragment : Fragment() {
         }
     }
 
-    private val itemTouchHelperCallback =
-        object : ItemTouchHelper.SimpleCallback(
-            0,
-            ItemTouchHelper.LEFT or ItemTouchHelper.RIGHT
-        ) {
-            override fun onMove(
-                recyclerView: RecyclerView,
-                viewHolder: RecyclerView.ViewHolder,
-                target: RecyclerView.ViewHolder
-            ): Boolean {
-                Timber.d("Item moved: ${viewHolder.bindingAdapterPosition}")
-                return false
-            }
-
-            override fun onSwiped(viewHolder: RecyclerView.ViewHolder, direction: Int) {
-                Timber.d("Item swiped: ${viewHolder.bindingAdapterPosition}, direction: $direction")
-
-                when (direction) {
-                    ItemTouchHelper.LEFT -> {
-                        (viewHolder as NotesListHolder).openNote()
-                    }
-                    ItemTouchHelper.RIGHT -> {
-                        adapter.currentList[viewHolder.bindingAdapterPosition].let { note ->
-                            notesListViewModel.deleteNote(note)
-                        }
-                    }
-                }
-            }
-        }
-
     private val notesListViewModel: NotesListViewModel by lazy {
         ViewModelProvider(this).get(NotesListViewModel::class.java)
     }
@@ -145,6 +116,15 @@ class NotesListFragment : Fragment() {
                         openNote(id)
                     }
                 }
+            }
+        }
+    }
+    private val deleteNote: BroadcastReceiver by lazy {
+        object : BroadcastReceiver() {
+            override fun onReceive(context: Context, intent: Intent) {
+                val noteId = intent.getLongExtra(NOTE_ID, 0)
+
+                notesListViewModel.deleteNote(noteId)
             }
         }
     }
@@ -182,19 +162,25 @@ class NotesListFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View? {
         val view = inflater.inflate(R.layout.fragment_notes_list, container, false)
-            .apply {
-                notesRecyclerView = findViewById(R.id.notes_list)
-                notifyEmptyDBTextView = findViewById(R.id.empty_list)
-                createNoteFab = findViewById(R.id.new_note_fab)
-            }
 
-        if (resources.configuration.orientation == Configuration.ORIENTATION_LANDSCAPE) {
-            notesRecyclerView.layoutManager = GridLayoutManager(context, 2)
-        } else {
-            notesRecyclerView.layoutManager = LinearLayoutManager(context)
+        notesRecyclerView = view.findViewById(R.id.notes_list)
+        notifyEmptyDBTextView = view.findViewById(R.id.empty_list)
+        createNoteFab = view.findViewById(R.id.new_note_fab)
+
+        notesRecyclerView.run {
+            layoutManager =
+                if (resources.configuration.orientation == Configuration.ORIENTATION_LANDSCAPE) {
+                    GridLayoutManager(context, 2)
+                } else {
+                    LinearLayoutManager(context)
+                }
+
+            val swipeManager = RecyclerViewSwipeManager()
+
+            adapter = swipeManager.createWrappedAdapter(notesListAdapter)
+
+            swipeManager.attachRecyclerView(this)
         }
-
-        notesRecyclerView.adapter = adapter
 
         return view
     }
@@ -241,20 +227,6 @@ class NotesListFragment : Fragment() {
 
             actionMode.notesSelected = notesSelected
         }
-
-        val swipeToOpenOn = sharedPreferences.getBoolean(SWIPE_OPEN_KEY, true)
-        val swipeToDeleteOn = sharedPreferences.getBoolean(SWIPE_DELETE_KEY, true)
-
-        itemTouchHelperCallback.setDefaultSwipeDirs(
-            when {
-                swipeToDeleteOn && swipeToOpenOn -> ItemTouchHelper.LEFT or ItemTouchHelper.RIGHT
-                swipeToOpenOn -> ItemTouchHelper.LEFT
-                swipeToDeleteOn -> ItemTouchHelper.RIGHT
-                else -> 0
-            }
-        )
-
-        ItemTouchHelper(itemTouchHelperCallback).attachToRecyclerView(notesRecyclerView)
     }
 
     override fun onStop() {
@@ -302,8 +274,8 @@ class NotesListFragment : Fragment() {
         }
     }
 
-    private fun updateUI(notes: List<Note> = adapter.currentList) {
-        adapter.submitList(
+    private fun updateUI(notes: List<Note> = notesListAdapter.currentList) {
+        notesListAdapter.submitList(
             when (sortByOrder) {
                 SortBy.ASCENDING -> {
                     notes.sortedBy { note ->
@@ -362,10 +334,10 @@ class NotesListFragment : Fragment() {
                     if (value.isEmpty()) {
                         actionMode.finish()
                     } else {
-                        actionMode.title = "${value.size}/${adapter.currentList.size}"
+                        actionMode.title = "${value.size}/${notesListAdapter.currentList.size}"
 
                         actionMode.menu.findItem(R.id.select_all_notes).apply {
-                            title = if (value.size == adapter.currentList.size) {
+                            title = if (value.size == notesListAdapter.currentList.size) {
                                 getString(R.string.deselect_all)
                             } else {
                                 getString(R.string.select_all)
@@ -455,6 +427,7 @@ class NotesListFragment : Fragment() {
             requireContext().run {
                 registerReceiver(openSelectedNote, IntentFilter(ACTION_OPEN_NOTE))
                 registerReceiver(createNote, IntentFilter(ACTION_CREATE_NOTE))
+                registerReceiver(deleteNote, IntentFilter(ACTION_DELETE_NOTE))
             }
         }
 
@@ -462,6 +435,7 @@ class NotesListFragment : Fragment() {
             requireContext().run {
                 unregisterReceiver(openSelectedNote)
                 unregisterReceiver(createNote)
+                unregisterReceiver(deleteNote)
             }
         }
     }

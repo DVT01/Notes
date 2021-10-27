@@ -7,11 +7,18 @@ import android.content.Intent
 import android.content.IntentFilter
 import android.view.LayoutInflater
 import android.view.ViewGroup
+import androidx.preference.PreferenceManager
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.digital.construction.notes.R
+import com.digital.construction.notes.fragments.SWIPE_DELETE_KEY
+import com.digital.construction.notes.fragments.SWIPE_OPEN_KEY
 import com.digital.construction.notes.model.Note
+import com.h6ah4i.android.widget.advrecyclerview.swipeable.SwipeableItemAdapter
+import com.h6ah4i.android.widget.advrecyclerview.swipeable.SwipeableItemConstants
+import com.h6ah4i.android.widget.advrecyclerview.swipeable.action.SwipeResultAction
+import com.h6ah4i.android.widget.advrecyclerview.swipeable.action.SwipeResultActionMoveToSwipedDirection
 import timber.log.Timber
 
 private const val TAG = "NotesListAdapter"
@@ -19,7 +26,8 @@ private const val TAG = "NotesListAdapter"
 const val ACTION_DESELECT_NOTES = "com.digital.construction.notes.deselect_notes"
 const val ACTION_SELECT_NOTES = "com.digital.construction.notes.select_notes"
 
-class NotesListAdapter : ListAdapter<Note, NotesListHolder>(NoteComparator()) {
+class NotesListAdapter : ListAdapter<Note, NotesListHolder>(NoteComparator()),
+    SwipeableItemAdapter<NotesListHolder> {
 
     private lateinit var recyclerView: RecyclerView
 
@@ -46,6 +54,7 @@ class NotesListAdapter : ListAdapter<Note, NotesListHolder>(NoteComparator()) {
 
     init {
         Timber.tag(TAG)
+        setHasStableIds(true)
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): NotesListHolder {
@@ -81,6 +90,10 @@ class NotesListAdapter : ListAdapter<Note, NotesListHolder>(NoteComparator()) {
         }
     }
 
+    override fun getItemId(position: Int): Long {
+        return currentList[position].id
+    }
+
     @SuppressLint("NotifyDataSetChanged")
     fun selectAllNotes(selectAll: Boolean) {
         NotesListDataHolder.selectAllNotesIsOn = selectAll
@@ -103,5 +116,43 @@ class NotesListAdapter : ListAdapter<Note, NotesListHolder>(NoteComparator()) {
         override fun areContentsTheSame(oldItem: Note, newItem: Note): Boolean {
             return oldItem == newItem
         }
+    }
+
+    override fun onGetSwipeReactionType(
+        holder: NotesListHolder,
+        position: Int,
+        x: Int,
+        y: Int
+    ): Int {
+        val sharedPreferences =
+            PreferenceManager.getDefaultSharedPreferences(recyclerView.context)
+
+        val swipeToOpenOn = sharedPreferences.getBoolean(SWIPE_OPEN_KEY, true)
+        val swipeToDeleteOn = sharedPreferences.getBoolean(SWIPE_DELETE_KEY, true)
+
+        return when {
+            swipeToDeleteOn && swipeToOpenOn -> SwipeableItemConstants.REACTION_CAN_SWIPE_BOTH_H
+            swipeToOpenOn -> SwipeableItemConstants.REACTION_CAN_SWIPE_LEFT
+            swipeToDeleteOn -> SwipeableItemConstants.REACTION_CAN_SWIPE_RIGHT
+            else -> SwipeableItemConstants.REACTION_CAN_NOT_SWIPE_ANY
+        }
+    }
+
+    override fun onSwipeItemStarted(holder: NotesListHolder, position: Int) {}
+
+    override fun onSetSwipeBackground(holder: NotesListHolder, position: Int, type: Int) {}
+
+    override fun onSwipeItem(
+        holder: NotesListHolder,
+        position: Int,
+        result: Int
+    ): SwipeResultAction {
+        if (result == SwipeableItemConstants.RESULT_SWIPED_LEFT) {
+            holder.openNote()
+        } else if (result == SwipeableItemConstants.RESULT_SWIPED_RIGHT) {
+            holder.deleteNote()
+        }
+
+        return object : SwipeResultActionMoveToSwipedDirection() {}
     }
 }
