@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:layout_margin="4dp"
@@ -13,15 +12,12 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
 
-        <androidx.appcompat.widget.AppCompatTextView
-            android:id="@+id/note_name"
+        <com.skydoves.expandablelayout.ExpandableLayout
+            android:id="@+id/expandable"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:ellipsize="end"
-            android:maxLines="3"
-            android:padding="5dp"
-            android:textSize="16sp"
-            tools:text="This is a note's name" />
+            app:expandable_parentLayout="@layout/list_item_note_name"
+            app:expandable_secondLayout="@layout/list_item_note_text" />
     </FrameLayout>
 
 </androidx.cardview.widget.CardView>

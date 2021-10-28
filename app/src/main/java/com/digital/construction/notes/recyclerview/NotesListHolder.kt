@@ -14,6 +14,7 @@ import com.digital.construction.notes.fragments.ACTION_REPLACE_SELECT_ALL_TEXT
 import com.digital.construction.notes.fragments.NOTE_ID
 import com.digital.construction.notes.model.Note
 import com.h6ah4i.android.widget.advrecyclerview.utils.AbstractSwipeableItemViewHolder
+import com.skydoves.expandablelayout.ExpandableLayout
 import timber.log.Timber
 
 private const val TAG = "NotesListHolder"
@@ -23,9 +24,17 @@ class NotesListHolder(view: View) : AbstractSwipeableItemViewHolder(view) {
 
     private lateinit var note: Note
 
-    private val noteNameTextView: AppCompatTextView = itemView.findViewById(R.id.note_name)
+    private val expandableLayout: ExpandableLayout = itemView.findViewById(R.id.expandable)
+
+    private val noteNameTextView: AppCompatTextView =
+        expandableLayout.parentLayout.findViewById(R.id.note_name)
+
+    private val noteTextTextView: AppCompatTextView =
+        expandableLayout.secondLayout.findViewById(R.id.note_text)
 
     init {
+        Timber.tag(TAG)
+
         GestureDetectorCompat(itemView.context, GestureListener()).run {
             itemView.setOnTouchListener { _, event -> onTouchEvent(event) }
         }
@@ -35,6 +44,13 @@ class NotesListHolder(view: View) : AbstractSwipeableItemViewHolder(view) {
         this.note = note
         noteNameTextView.text = note.name
 
+        note.text.let { text ->
+            noteTextTextView.text = text
+
+            // Hide spinner if the note doesn't have any text
+            expandableLayout.showSpinner = text.isNotEmpty()
+        }
+
         itemView.isActivated = NotesListDataHolder.selectedItemsValue.contains(note.id)
     }
 
@@ -43,6 +59,8 @@ class NotesListHolder(view: View) : AbstractSwipeableItemViewHolder(view) {
     }
 
     private fun selectNote() {
+        expandableLayout.collapse()
+
         NotesListDataHolder.selectedItemsValue.run {
             add(note.id)
             NotesListDataHolder.changeLiveDataValue(this)
@@ -87,27 +105,19 @@ class NotesListHolder(view: View) : AbstractSwipeableItemViewHolder(view) {
 
     private inner class GestureListener : GestureDetector.SimpleOnGestureListener() {
 
-        init {
-            Timber.tag(TAG)
-        }
-
         override fun onDown(event: MotionEvent): Boolean = true
 
         override fun onSingleTapConfirmed(event: MotionEvent): Boolean {
             Timber.d("GestureDetector: onSingleTapConfirmed")
 
             NotesListDataHolder.selectedItemsValue.run {
-                if (isEmpty()) { // Not in selection mode
-                    openNote()
-                } else { // In selection mode
-                    when {
-                        // Note was selected
-                        contains(note.id) -> deselectNote()
-                        // Note was not selected
-                        !contains(note.id) -> selectNote()
-                    }
+                when {
+                    isEmpty() -> openNote()  // Not in selection mode
+                    contains(note.id) -> deselectNote()  // Note was selected
+                    !contains(note.id) -> selectNote()  // Note was not selected
                 }
             }
+
             return true
         }
 
@@ -123,13 +133,12 @@ class NotesListHolder(view: View) : AbstractSwipeableItemViewHolder(view) {
             Timber.d("GestureDetector: onDoubleTap")
 
             // Not in selection mode
-            if (NotesListDataHolder.selectedItemsValue.isEmpty()) {
-                if (noteNameTextView.maxLines == 3) {
-                    noteNameTextView.maxLines = Int.MAX_VALUE
-                } else {
-                    noteNameTextView.maxLines = 3
-                }
+            if (NotesListDataHolder.selectedItemsValue.isEmpty() && !expandableLayout.isExpanded && note.text.isNotEmpty()) {
+                expandableLayout.expand()
+            } else if (expandableLayout.isExpanded) {
+                expandableLayout.collapse()
             }
+
             return true
         }
     }
