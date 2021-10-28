@@ -18,6 +18,7 @@ import com.digital.construction.notes.model.Note
 import com.h6ah4i.android.widget.advrecyclerview.swipeable.SwipeableItemAdapter
 import com.h6ah4i.android.widget.advrecyclerview.swipeable.SwipeableItemConstants
 import com.h6ah4i.android.widget.advrecyclerview.swipeable.action.SwipeResultAction
+import com.h6ah4i.android.widget.advrecyclerview.swipeable.action.SwipeResultActionDefault
 import com.h6ah4i.android.widget.advrecyclerview.swipeable.action.SwipeResultActionMoveToSwipedDirection
 import timber.log.Timber
 
@@ -153,6 +154,6 @@ class NotesListAdapter : ListAdapter<Note, NotesListHolder>(NoteComparator()),
             holder.deleteNote()
         }
 
-        return object : SwipeResultActionMoveToSwipedDirection() {}
+        return SwipeResultActionDefault()
     }
 }
