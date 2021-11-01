@@ -3,7 +3,22 @@
 <h4 align="center">A modern and beautiful Android 5.0+ app to write down notes!</h4>
 
 <p align="center">
-<a href="https://digital-construction.mit-license.org/"><img src="https://img.shields.io/badge/License-MIT-blue?style=flat-square" alt="License: MIT"></a>
+    <a href="https://digital-construction.mit-license.org/">
+        <img
+            src="https://img.shields.io/badge/License-MIT-blue?style=flat-square"
+            alt="License: MIT"
+        />
+    </a>
+</p>
+
+<p align="center">
+    <a href='https://play.google.com/store/apps/details?id=com.digital.construction.notes'>
+        <img
+            alt='Get it on Google Play'
+            src='https://play.google.com/intl/en_us/badges/static/images/badges/en_badge_web_generic.png'
+            height="80"
+        />
+    </a>
 </p>
 
 ## Screenshots
