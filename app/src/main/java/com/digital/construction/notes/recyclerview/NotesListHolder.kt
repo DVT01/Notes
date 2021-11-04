@@ -13,6 +13,7 @@ import com.digital.construction.notes.fragments.ACTION_OPEN_NOTE
 import com.digital.construction.notes.fragments.ACTION_REPLACE_SELECT_ALL_TEXT
 import com.digital.construction.notes.fragments.NOTE_ID
 import com.digital.construction.notes.model.Note
+import com.google.android.material.snackbar.Snackbar
 import com.h6ah4i.android.widget.advrecyclerview.utils.AbstractSwipeableItemViewHolder
 import com.skydoves.expandablelayout.ExpandableLayout
 import timber.log.Timber
@@ -132,8 +133,16 @@ class NotesListHolder(view: View) : AbstractSwipeableItemViewHolder(view) {
         override fun onDoubleTap(event: MotionEvent): Boolean {
             Timber.d("GestureDetector: onDoubleTap")
 
+            if (note.text.isEmpty()) {
+                Snackbar
+                    .make(itemView, "This note doesn't have any text", Snackbar.LENGTH_SHORT)
+                    .show()
+
+                return true
+            }
+
             // Not in selection mode
-            if (NotesListDataHolder.selectedItemsValue.isEmpty() && !expandableLayout.isExpanded && note.text.isNotEmpty()) {
+            if (NotesListDataHolder.selectedItemsValue.isEmpty() && !expandableLayout.isExpanded) {
                 expandableLayout.expand()
             } else if (expandableLayout.isExpanded) {
                 expandableLayout.collapse()
