@@ -8,6 +8,8 @@
         <item quantity="one">%d nota guardada</item>
         <item quantity="other">%d notas guardadas</item>
     </plurals>
+    <string name="no_note_selected">Ninguna nota ha sido seleccionada</string>
+    <string name="import_successful">La nota ha sido importada exitosamente</string>
 
     <!-- note_list_fragment_menu -->
     <string name="settings">Ajustes</string>
@@ -26,6 +28,9 @@
     <string name="note_saved">Nota guardada</string>
     <string name="note_not_saved">La nota no ha sido guardada</string>
     <string name="note_has_not_changed">La nota no ha sido modificada</string>
+    <string name="export_failed">No se pudo exportar la nota: %s</string>
+    <string name="no_file_created">El archivo no fue creado</string>
+    <string name="export_successful">La nota ha sido exportada exitosamente</string>
 
     <!-- Action Mode -->
     <string name="delete">Borrar</string>

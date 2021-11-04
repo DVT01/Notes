@@ -7,6 +7,7 @@ import android.provider.OpenableColumns
 import android.view.*
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.annotation.IdRes
+import androidx.annotation.StringRes
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.AppCompatTextView
 import androidx.core.content.edit
@@ -25,6 +26,7 @@ import com.digital.construction.notes.activities.ACTION_OPEN_SETTINGS
 import com.digital.construction.notes.model.Note
 import com.digital.construction.notes.recyclerview.*
 import com.google.android.material.floatingactionbutton.FloatingActionButton
+import com.google.android.material.snackbar.Snackbar
 import com.h6ah4i.android.widget.advrecyclerview.swipeable.RecyclerViewSwipeManager
 import timber.log.Timber
 import java.io.BufferedReader
@@ -59,6 +61,7 @@ class NotesListFragment : Fragment() {
     ) { noteDirUri ->
         // Make sure user selected a document to import
         if (noteDirUri == null) {
+            showSnackbar(R.string.no_note_selected)
             return@registerForActivityResult
         }
 
@@ -88,9 +91,11 @@ class NotesListFragment : Fragment() {
             cursor.getString(fileNameIndex).removeSuffix(".txt")
         }
 
-        Note(fileName, fileText).let {
-            notesListViewModel.insertNote(it)
+        Note(fileName, fileText).let { note ->
+            notesListViewModel.insertNote(note)
         }
+
+        showSnackbar(R.string.import_successful)
     }
 
     private val notesListViewModel: NotesListViewModel by lazy {
@@ -321,6 +326,12 @@ class NotesListFragment : Fragment() {
 
     private fun openAbout() {
         requireContext().sendBroadcast(Intent(ACTION_OPEN_ABOUT))
+    }
+
+    private fun showSnackbar(@StringRes text: Int) {
+        Snackbar
+            .make(requireView(), text, Snackbar.LENGTH_SHORT)
+            .show()
     }
 
     private inner class NotesListActionMode : ActionMode.Callback {

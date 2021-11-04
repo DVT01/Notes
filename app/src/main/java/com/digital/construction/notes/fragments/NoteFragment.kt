@@ -8,6 +8,7 @@ import android.util.TypedValue
 import android.view.*
 import androidx.activity.OnBackPressedCallback
 import androidx.activity.result.contract.ActivityResultContracts
+import androidx.annotation.StringRes
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.AppCompatEditText
 import androidx.core.content.FileProvider
@@ -21,9 +22,7 @@ import com.digital.construction.notes.model.Note
 import com.google.android.material.snackbar.Snackbar
 import timber.log.Timber
 import java.io.File
-import java.io.FileNotFoundException
 import java.io.FileOutputStream
-import java.io.IOException
 import java.util.*
 
 private const val TAG = "NoteFragment"
@@ -51,7 +50,7 @@ class NoteFragment : Fragment() {
     private val exportNoteLauncher = registerForActivityResult(
         ActivityResultContracts.CreateDocument()
     ) { noteDirUri ->
-        Timber.i("Starting export (id: ${note.id}")
+        Timber.i("Starting export (id: ${note.id})")
 
         try {
             requireContext().contentResolver.run {
@@ -61,14 +60,10 @@ class NoteFragment : Fragment() {
                     }
                 }
             }
-        } catch (error: Exception) {
-            when (error) {
-                // Catch all expected possible errors
-                is NullPointerException, is FileNotFoundException, is IOException -> {
-                    Timber.e(error, "Note export failed (id: ${note.id})")
-                }
-                else -> throw error
-            }
+
+            showSnackbar(R.string.export_successful)
+        } catch (error: NullPointerException) {
+            showSnackbar(getString(R.string.export_failed, getString(R.string.no_file_created)))
         }
     }
 
@@ -233,11 +228,7 @@ class NoteFragment : Fragment() {
         requireContext().deleteFile(note.fileName)
 
         if (!changeBackBehavior && noteTextIsNotSaved) {
-            Snackbar.make(
-                requireActivity().findViewById(R.id.fragment_container_view),
-                R.string.note_not_saved,
-                Snackbar.LENGTH_SHORT
-            ).show()
+            showSnackbar(R.string.note_not_saved)
         }
     }
 
@@ -277,11 +268,20 @@ class NoteFragment : Fragment() {
         if (noteTextIsNotSaved) {
             noteViewModel.saveNote(note)
 
-            Snackbar.make(requireView(), R.string.note_saved, Snackbar.LENGTH_SHORT).show()
+            showSnackbar(R.string.note_saved)
         } else if (!changeBackBehavior) {
-            Snackbar.make(requireView(), R.string.note_has_not_changed, Snackbar.LENGTH_SHORT)
-                .show()
+            showSnackbar(R.string.note_has_not_changed)
         }
+    }
+
+    private fun showSnackbar(text: String) {
+        Snackbar
+            .make(requireView(), text, Snackbar.LENGTH_SHORT)
+            .show()
+    }
+
+    private fun showSnackbar(@StringRes text: Int) {
+        showSnackbar(getString(text))
     }
 
     companion object {

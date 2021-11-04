@@ -8,6 +8,8 @@
         <item quantity="one">%d note saved</item>
         <item quantity="other">%d notes saved</item>
     </plurals>
+    <string name="no_note_selected">No note was selected</string>
+    <string name="import_successful">Import successful</string>
 
     <!-- note_list_fragment_menu -->
     <string name="settings">Settings</string>
@@ -26,6 +28,9 @@
     <string name="note_saved">Note saved</string>
     <string name="note_not_saved">Note was not saved</string>
     <string name="note_has_not_changed">Note was not modified</string>
+    <string name="export_failed">Could not export note: %s</string>
+    <string name="no_file_created">There was no file created</string>
+    <string name="export_successful">Note exported successfully</string>
 
     <!-- Action Mode -->
     <string name="delete">Delete</string>
