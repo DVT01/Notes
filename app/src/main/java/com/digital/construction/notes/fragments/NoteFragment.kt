@@ -41,6 +41,13 @@ class NoteFragment : Fragment() {
 
     private var fontSizePercentage: Float = 1f
     private var changeBackBehavior: Boolean = true
+
+    private val noteTextIsSaved: Boolean
+        get() = note.text == savedNoteText
+
+    private val noteTextIsNotSaved: Boolean
+        get() = !noteTextIsSaved
+
     private val exportNoteLauncher = registerForActivityResult(
         ActivityResultContracts.CreateDocument()
     ) { noteDirUri ->
@@ -157,8 +164,7 @@ class NoteFragment : Fragment() {
                     start: Int,
                     count: Int,
                     after: Int
-                ) {
-                }
+                ) {}
 
                 override fun onTextChanged(
                     sequence: CharSequence,
@@ -171,7 +177,7 @@ class NoteFragment : Fragment() {
 
                 override fun afterTextChanged(sequence: Editable) {
                     (activity as AppCompatActivity).supportActionBar?.apply {
-                        title = if (note.text == savedNoteText) {
+                        title = if (noteTextIsSaved) {
                             note.name
                         } else {
                             "*${note.name}"
@@ -216,12 +222,17 @@ class NoteFragment : Fragment() {
         return true
     }
 
+    override fun onStop() {
+        super.onStop()
+        saveNote()
+    }
+
     override fun onDestroy() {
         super.onDestroy()
 
         requireContext().deleteFile(note.fileName)
 
-        if (!changeBackBehavior && note.text != savedNoteText) {
+        if (!changeBackBehavior && noteTextIsNotSaved) {
             Snackbar.make(
                 requireActivity().findViewById(R.id.fragment_container_view),
                 R.string.note_not_saved,
@@ -263,7 +274,7 @@ class NoteFragment : Fragment() {
     }
 
     private fun saveNote() {
-        if (note.text != savedNoteText) {
+        if (noteTextIsNotSaved) {
             noteViewModel.saveNote(note)
 
             Snackbar.make(requireView(), R.string.note_saved, Snackbar.LENGTH_SHORT).show()
