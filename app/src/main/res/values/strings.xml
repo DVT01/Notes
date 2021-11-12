@@ -74,4 +74,7 @@
     <string name="max_note_name_lines">Double tap a note to expand its name</string>
     <string name="max_note_name_lines_description">If a note\'s name is too long, then it will only show the first three lines, unless you double tap on the note\'s name.</string>
     <string name="get_started">GET STARTED</string>
+
+    <!-- Note Widget Configuration -->
+    <string name="accept">Accept</string>
 </resources>

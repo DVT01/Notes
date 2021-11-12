@@ -72,4 +72,7 @@
     <string name="max_note_name_lines">Toque la nota dos veces para expandirla</string>
     <string name="max_note_name_lines_description">Si una nota ocupa más de tres líneas pues automáticamente mostrará solamente las primeras tres líneas, a menos que toque la nota dos veces.</string>
     <string name="get_started">EMPEZAR</string>
+
+    <!-- Note Widget Configuration -->
+    <string name="accept">Aceptar</string>
 </resources>
