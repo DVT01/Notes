@@ -3,21 +3,23 @@ package com.digital.construction.notes.fragments
 import android.app.Dialog
 import android.content.Intent
 import android.os.Bundle
+import android.text.InputFilter
+import android.text.Spanned
 import androidx.annotation.StringRes
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.widget.AppCompatEditText
 import androidx.fragment.app.DialogFragment
 import androidx.fragment.app.activityViewModels
 import com.digital.construction.notes.R
+import com.google.android.material.snackbar.Snackbar
 import timber.log.Timber
 import java.util.*
 
 private const val TAG = "NoteNameDialog"
 private const val ARG_DIALOG_TYPE = "dialog_type"
 private const val ARG_NOTE_NAME = "note_name"
-
-private const val MISSING_ARGUMENTS_MSG =
-    "Get an instance of this class using the newInstance function"
+private const val MISSING_ARGUMENTS_MSG = "Get an instance of this class using the newInstance function"
+private val INVALID_CHARACTERS = arrayOf("/")
 
 class NoteNameDialog : DialogFragment() {
 
@@ -42,6 +44,29 @@ class NoteNameDialog : DialogFragment() {
         val dialogView = layoutInflater.inflate(R.layout.dialog_note_name, null)
         val noteNameEditText = dialogView.findViewById<AppCompatEditText>(R.id.note_name).apply {
             setText(initialNoteName)
+
+            filters = arrayOf(
+                object : InputFilter {
+                    override fun filter(
+                        source: CharSequence,
+                        start: Int,
+                        end: Int,
+                        dest: Spanned,
+                        dstart: Int,
+                        dend: Int
+                    ): CharSequence {
+                        if (INVALID_CHARACTERS.contains(source)) {
+                            Snackbar
+                                .make(rootView, "That character is not allowed", Snackbar.LENGTH_SHORT)
+                                .show()
+
+                            return String()
+                        }
+
+                        return source
+                    }
+                }
+            )
         }
 
         @StringRes val dialogTitle: Int
@@ -77,19 +102,21 @@ class NoteNameDialog : DialogFragment() {
 
                 Timber.i("Note name chosen: $confirmedNoteName")
 
-                val notes = notesListViewModel.notesLiveData.value?.map { it.name } ?: emptyList()
+                notesListViewModel.notesLiveData.observe(this) { allNotes ->
+                    val noteNames = allNotes.map { it.name }
 
-                if (notes.contains(confirmedNoteName)) {
-                    noteNameEditText.apply {
-                        setText(String())
-                        hint = getString(R.string.note_exists)
-                    }
-                } else if (confirmedNoteName.isNotBlank()) {
-                    alertDialog.dismiss()
+                    if (noteNames.contains(confirmedNoteName)) {
+                        noteNameEditText.apply {
+                            setText(String())
+                            hint = getString(R.string.note_exists)
+                        }
+                    } else if (confirmedNoteName.isNotBlank()) {
+                        alertDialog.dismiss()
 
-                    broadcastIntent.apply {
-                        putExtra(NOTE_NAME, confirmedNoteName)
-                        requireContext().sendBroadcast(this)
+                        broadcastIntent.apply {
+                            putExtra(NOTE_NAME, confirmedNoteName)
+                            requireContext().sendBroadcast(this)
+                        }
                     }
                 }
             }
@@ -100,6 +127,11 @@ class NoteNameDialog : DialogFragment() {
         }
 
         return alertDialog
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        notesListViewModel.notesLiveData.removeObservers(this)
     }
 
     companion object {

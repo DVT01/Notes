@@ -39,7 +39,6 @@ class NoteFragment : Fragment() {
     private lateinit var note: Note
 
     private var fontSizePercentage: Float = 1f
-    private var changeBackBehavior: Boolean = true
 
     private val noteTextIsSaved: Boolean
         get() = note.text == savedNoteText
@@ -110,8 +109,6 @@ class NoteFragment : Fragment() {
             .getString(FONT_SIZE_KEY, "100")!!
             .toFloat()
             .div(100)
-        changeBackBehavior = sharedPreferences
-            .getBoolean(SAVE_NOTE_AUTOMATICALLY_KEY, true)
 
         val view = inflater.inflate(R.layout.fragment_note, container, false)
 
@@ -119,16 +116,6 @@ class NoteFragment : Fragment() {
         noteTextEditText.setTextSize(
             TypedValue.COMPLEX_UNIT_PX,
             noteTextEditText.textSize.times(fontSizePercentage)
-        )
-
-        requireActivity().onBackPressedDispatcher.addCallback(viewLifecycleOwner,
-            object : OnBackPressedCallback(changeBackBehavior) {
-                override fun handleOnBackPressed() {
-                    saveNote()
-                    remove()
-                    requireActivity().onBackPressed()
-                }
-            }
         )
 
         return view
@@ -179,7 +166,6 @@ class NoteFragment : Fragment() {
                         }
                     }
                 }
-
             }
 
         noteTextEditText.addTextChangedListener(noteTextWatcher)
@@ -188,15 +174,10 @@ class NoteFragment : Fragment() {
     override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
         super.onCreateOptionsMenu(menu, inflater)
         inflater.inflate(R.menu.note_fragment_menu, menu)
-
-        menu.findItem(R.id.save_note).isVisible = !changeBackBehavior
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         when (item.itemId) {
-            R.id.save_note -> {
-                saveNote()
-            }
             R.id.export_note -> {
                 exportNoteLauncher.launch(note.fileName)
             }
@@ -226,10 +207,6 @@ class NoteFragment : Fragment() {
         super.onDestroy()
 
         requireContext().deleteFile(note.fileName)
-
-        if (!changeBackBehavior && noteTextIsNotSaved) {
-            showSnackbar(R.string.note_not_saved)
-        }
     }
 
     private fun updateUI() {
@@ -269,8 +246,6 @@ class NoteFragment : Fragment() {
             noteViewModel.saveNote(note)
 
             showSnackbar(R.string.note_saved)
-        } else if (!changeBackBehavior) {
-            showSnackbar(R.string.note_has_not_changed)
         }
     }
 
