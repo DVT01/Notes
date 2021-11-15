@@ -17,7 +17,8 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             app:expandable_parentLayout="@layout/list_item_note_name"
-            app:expandable_secondLayout="@layout/list_item_note_text" />
+            app:expandable_secondLayout="@layout/list_item_note_text"
+            app:expandable_spinner_color="@color/colorPrimaryDark" />
     </FrameLayout>
 
 </androidx.cardview.widget.CardView>

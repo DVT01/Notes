@@ -7,14 +7,14 @@
 
     <View
         android:layout_width="match_parent"
-        android:layout_height="0.1dp"
+        android:layout_height="1dp"
         android:background="@color/colorOnPrimary" />
 
     <androidx.appcompat.widget.AppCompatTextView
         android:id="@+id/note_text"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="@color/colorSecondary"
+        android:background="@color/background"
         android:ellipsize="end"
         android:maxLines="3"
         android:padding="5dp"
