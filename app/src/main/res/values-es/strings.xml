@@ -64,12 +64,10 @@
 
     <!-- Introduction -->
     <string name="app_description">Bienvenido a una nueva, moderna y bella aplicación usada para escribir notas.</string>
-    <string name="swipe">Deslize para abrir o borrar notas</string>
-    <string name="swipe_description">Puede deslizar hacia la izquierda para abrir la nota, o hacia la derecha para borrarla</string>
+    <string name="swipe_feature">Deslize la nota hacia la izquierda para abrirla, o hacia la derecha para borrarla</string>
     <string name="import_and_export">Puede importar y exportar notas</string>
     <string name="import_and_export_description">Presione el botón de importar/exportar notas para añadir una nota de un archivo de texto o salvar una nota como un archivo de texto.</string>
-    <string name="max_note_name_lines">Toque la nota dos veces para expandirla</string>
-    <string name="max_note_name_lines_description">Si una nota ocupa más de tres líneas pues automáticamente mostrará solamente las primeras tres líneas, a menos que toque la nota dos veces.</string>
+    <string name="double_tap_feature">Toque la nota dos veces para ver brevemente el contenido de esta</string>
     <string name="get_started">EMPEZAR</string>
 
     <!-- Note Widget Configuration -->
