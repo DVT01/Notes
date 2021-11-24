@@ -76,25 +76,22 @@ class MainActivity : AppCompatActivity(), FragmentResultListener {
                 }
             }
         }
+
+        /**
+         * If this activity was launched from a widget, then this should give me the id of the note
+         * as passed by the widget, if it wasn't launched by a widget then the id will be -1
+         */
+        val noteId = intent.getLongExtra(NOTE_ID, -1)
+        if (noteId != -1L) {
+            openNote(noteId)
+        }
     }
 
     override fun onFragmentResult(requestKey: String, result: Bundle) {
         when (requestKey) {
             REQUEST_NOTE_ID -> {
                 val noteId = result.getLong(REQUEST_NOTE_ID)
-                Timber.i("Opening note (id: $noteId)")
-
-                val noteFragment = NoteFragment.newInstance(noteId)
-                supportFragmentManager.commit {
-                    setCustomAnimations(
-                        R.anim.slide_in,
-                        R.anim.fade_out,
-                        R.anim.fade_in,
-                        R.anim.slide_out
-                    )
-                    replace(R.id.fragment_container_view, noteFragment)
-                    addToBackStack(null)
-                }
+                openNote(noteId)
             }
         }
     }
@@ -108,6 +105,22 @@ class MainActivity : AppCompatActivity(), FragmentResultListener {
                 R.anim.fade_out
             )
             replace(R.id.fragment_container_view, fragment)
+            addToBackStack(null)
+        }
+    }
+
+    private fun openNote(noteId: Long) {
+        Timber.i("Opening note (id: $noteId)")
+
+        val noteFragment = NoteFragment.newInstance(noteId)
+        supportFragmentManager.commit {
+            setCustomAnimations(
+                R.anim.slide_in,
+                R.anim.fade_out,
+                R.anim.fade_in,
+                R.anim.slide_out
+            )
+            replace(R.id.fragment_container_view, noteFragment)
             addToBackStack(null)
         }
     }
