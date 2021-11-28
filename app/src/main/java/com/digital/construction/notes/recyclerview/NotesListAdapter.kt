@@ -19,7 +19,6 @@ import com.h6ah4i.android.widget.advrecyclerview.swipeable.SwipeableItemAdapter
 import com.h6ah4i.android.widget.advrecyclerview.swipeable.SwipeableItemConstants
 import com.h6ah4i.android.widget.advrecyclerview.swipeable.action.SwipeResultAction
 import com.h6ah4i.android.widget.advrecyclerview.swipeable.action.SwipeResultActionDefault
-import com.h6ah4i.android.widget.advrecyclerview.swipeable.action.SwipeResultActionMoveToSwipedDirection
 import timber.log.Timber
 
 private const val TAG = "NotesListAdapter"
@@ -100,11 +99,9 @@ class NotesListAdapter : ListAdapter<Note, NotesListHolder>(NoteComparator()),
         NotesListDataHolder.selectAllNotesIsOn = selectAll
 
         for (viewHolderIndex in 0 until recyclerView.childCount) {
-            recyclerView.run {
-                getChildViewHolder(getChildAt(viewHolderIndex)).run {
-                    itemView.isActivated = selectAll
-                }
-            }
+            val view = recyclerView.getChildAt(viewHolderIndex)
+            val viewHolder = recyclerView.getChildViewHolder(view)
+            viewHolder.itemView.isActivated = selectAll
         }
         notifyDataSetChanged()
     }
@@ -125,8 +122,7 @@ class NotesListAdapter : ListAdapter<Note, NotesListHolder>(NoteComparator()),
         x: Int,
         y: Int
     ): Int {
-        val sharedPreferences =
-            PreferenceManager.getDefaultSharedPreferences(recyclerView.context)
+        val sharedPreferences = PreferenceManager.getDefaultSharedPreferences(recyclerView.context)
 
         val swipeToOpenOn = sharedPreferences.getBoolean(SWIPE_OPEN_KEY, true)
         val swipeToDeleteOn = sharedPreferences.getBoolean(SWIPE_DELETE_KEY, true)

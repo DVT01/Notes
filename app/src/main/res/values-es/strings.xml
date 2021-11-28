@@ -18,6 +18,7 @@
     <string name="descending">Descendente</string>
     <string name="import_note">Importar nota</string>
     <string name="about">Información</string>
+    <string name="no_text">Esta nota no tiene texto</string>
 
     <!-- NoteFragment -->
     <string name="save">Guardar</string>
@@ -44,6 +45,7 @@
     <string name="cancel">Cancelar</string>
     <string name="rename_note">Renombrar nota</string>
     <string name="rename">Renombrar</string>
+    <string name="invalid_character">Esa letra no está permitida</string>
 
     <!-- Settings -->
     <string name="theme">Tema</string>

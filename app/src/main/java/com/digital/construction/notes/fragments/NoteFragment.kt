@@ -146,7 +146,8 @@ class NoteFragment : Fragment() {
                     start: Int,
                     count: Int,
                     after: Int
-                ) {}
+                ) {
+                }
 
                 override fun onTextChanged(
                     sequence: CharSequence,
@@ -224,19 +225,14 @@ class NoteFragment : Fragment() {
         }
 
         val sendNoteIntent = Intent(Intent.ACTION_SEND).apply {
-            addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION)
+            val uri = FileProvider.getUriForFile(requireContext(), PROVIDER_AUTHORITY, noteFile)
 
-            FileProvider.getUriForFile(requireContext(), PROVIDER_AUTHORITY, noteFile)
-                .also { uri ->
-                    putExtra(Intent.EXTRA_STREAM, uri)
-                    type = requireContext().contentResolver.getType(uri)
-                }
+            addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION)
+            putExtra(Intent.EXTRA_STREAM, uri)
+            type = requireContext().contentResolver.getType(uri)
         }
 
-        val noteChooserIntent = Intent.createChooser(
-            sendNoteIntent,
-            getString(R.string.note_chooser_text)
-        )
+        val noteChooserIntent = Intent.createChooser(sendNoteIntent, getString(R.string.note_chooser_text))
 
         startActivity(noteChooserIntent)
     }

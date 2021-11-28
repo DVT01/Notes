@@ -38,8 +38,7 @@ class AboutFragment : Fragment() {
             licenseLinearLayoutCompat = findViewById(R.id.license)
             writeEmailLinearLayoutCompat = findViewById(R.id.write_me_an_email)
 
-            appVersionTextView.text =
-                getString(R.string.app_version, BuildConfig.VERSION_NAME, BuildConfig.VERSION_CODE)
+            appVersionTextView.text = getString(R.string.app_version, BuildConfig.VERSION_NAME, BuildConfig.VERSION_CODE)
 
             introductionLinearLayoutCompat.setOnClickListener {
                 startActivity(Intent(context, MainIntroActivity::class.java))

@@ -42,32 +42,31 @@ class NoteNameDialog : DialogFragment() {
             ?: throw MissingFormatArgumentException(MISSING_ARGUMENTS_MSG)
 
         val dialogView = layoutInflater.inflate(R.layout.dialog_note_name, null)
-        val noteNameEditText = dialogView.findViewById<AppCompatEditText>(R.id.note_name).apply {
-            setText(initialNoteName)
+        val noteNameEditText: AppCompatEditText = dialogView.findViewById(R.id.note_name)
 
-            filters = arrayOf(
-                object : InputFilter {
-                    override fun filter(
-                        source: CharSequence,
-                        start: Int,
-                        end: Int,
-                        dest: Spanned,
-                        dstart: Int,
-                        dend: Int
-                    ): CharSequence {
-                        if (INVALID_CHARACTERS.contains(source)) {
-                            Snackbar
-                                .make(rootView, "That character is not allowed", Snackbar.LENGTH_SHORT)
-                                .show()
+        noteNameEditText.setText(initialNoteName)
+        noteNameEditText.filters = arrayOf(
+            object : InputFilter {
+                override fun filter(
+                    source: CharSequence,
+                    start: Int,
+                    end: Int,
+                    dest: Spanned,
+                    dstart: Int,
+                    dend: Int
+                ): CharSequence {
+                    if (INVALID_CHARACTERS.contains(source)) {
+                        Snackbar
+                            .make(requireView(), R.string.invalid_character, Snackbar.LENGTH_SHORT)
+                            .show()
 
-                            return String()
-                        }
-
-                        return source
+                        return String()
                     }
+
+                    return source
                 }
-            )
-        }
+            }
+        )
 
         @StringRes val dialogTitle: Int
         @StringRes val positiveButtonText: Int
@@ -135,7 +134,7 @@ class NoteNameDialog : DialogFragment() {
     }
 
     companion object {
-        fun newInstance(dialogType: DialogType, noteName: String): NoteNameDialog {
+        fun newInstance(dialogType: DialogType, noteName: String = String()): NoteNameDialog {
             return NoteNameDialog().apply {
                 arguments = Bundle().apply {
                     putString(ARG_DIALOG_TYPE, dialogType.name)

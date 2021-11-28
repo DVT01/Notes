@@ -91,9 +91,8 @@ class NotesListFragment : Fragment() {
             cursor.getString(fileNameIndex).removeSuffix(".txt")
         }
 
-        Note(fileName, fileText).let { note ->
-            notesListViewModel.insertNote(note)
-        }
+        val importedNote = Note(fileName, fileText)
+        notesListViewModel.insertNote(importedNote)
 
         showSnackbar(R.string.import_successful)
     }
@@ -105,7 +104,6 @@ class NotesListFragment : Fragment() {
         object : BroadcastReceiver() {
             override fun onReceive(context: Context, intent: Intent) {
                 val noteId = intent.getLongExtra(NOTE_ID, 0)
-
                 openNote(noteId)
             }
         }
@@ -116,10 +114,10 @@ class NotesListFragment : Fragment() {
                 val noteName = intent.getStringExtra(NOTE_NAME)
                     ?: throw MissingFormatArgumentException(NOTE_NAME_REQUIRED)
 
-                Note(noteName, String()).let { note ->
-                    notesListViewModel.insertNote(note).observe(viewLifecycleOwner) { id ->
-                        openNote(id)
-                    }
+                val newNote = Note(noteName, String())
+                val newNoteIdLiveData = notesListViewModel.insertNote(newNote)
+                newNoteIdLiveData.observe(viewLifecycleOwner) { noteId ->
+                    openNote(noteId)
                 }
             }
         }
@@ -128,7 +126,6 @@ class NotesListFragment : Fragment() {
         object : BroadcastReceiver() {
             override fun onReceive(context: Context, intent: Intent) {
                 val noteId = intent.getLongExtra(NOTE_ID, 0)
-
                 notesListViewModel.deleteNote(noteId)
             }
         }
@@ -142,7 +139,7 @@ class NotesListFragment : Fragment() {
         DESCENDING(R.id.descending);
 
         companion object {
-            fun getSortById(@IdRes id: Int): SortBy? {
+            fun getSortFromId(@IdRes id: Int): SortBy? {
                 return values().find { it.id == id }
             }
         }
@@ -154,9 +151,8 @@ class NotesListFragment : Fragment() {
 
         Timber.tag(TAG)
 
-        sortByOrder = sharedPreferences
-            .getString(SORT_MODE_KEY, SortBy.ASCENDING.name)!!
-            .let { SortBy.valueOf(it) }
+        val savedSortBy = sharedPreferences.getString(SORT_MODE_KEY, SortBy.ASCENDING.name)!!
+        sortByOrder = SortBy.valueOf(savedSortBy)
 
         lifecycle.addObserver(LifecycleObserver())
     }
@@ -181,9 +177,7 @@ class NotesListFragment : Fragment() {
                 }
 
             val swipeManager = RecyclerViewSwipeManager()
-
             adapter = swipeManager.createWrappedAdapter(notesListAdapter)
-
             swipeManager.attachRecyclerView(this)
         }
 
@@ -208,7 +202,7 @@ class NotesListFragment : Fragment() {
 
         createNoteFab.setOnClickListener {
             NoteNameDialog
-                .newInstance(NoteNameDialog.DialogType.CREATE, String())
+                .newInstance(NoteNameDialog.DialogType.CREATE)
                 .show(childFragmentManager, null)
         }
     }
@@ -261,7 +255,7 @@ class NotesListFragment : Fragment() {
                 true
             }
             in SortBy.values().map { it.id } -> {
-                sortByOrder = SortBy.getSortById(item.itemId)!!
+                sortByOrder = SortBy.getSortFromId(item.itemId)!!
                 checkSortOrderMenuItem()
 
                 sharedPreferences.edit {
@@ -313,11 +307,9 @@ class NotesListFragment : Fragment() {
     }
 
     private fun openNote(noteId: Long) {
-        requireArguments().getString(ARG_NOTE_ID_REQUEST, String()).let { noteIdKey ->
-            setFragmentResult(noteIdKey, Bundle().apply {
-                putLong(noteIdKey, noteId)
-            })
-        }
+        val noteIdKey = requireArguments().getString(ARG_NOTE_ID_REQUEST, String())
+        val chosenNoteId = Bundle().apply { putLong(noteIdKey, noteId) }
+        setFragmentResult(noteIdKey, chosenNoteId)
     }
 
     private fun openSettings() {
@@ -345,15 +337,15 @@ class NotesListFragment : Fragment() {
                     if (value.isEmpty()) {
                         actionMode.finish()
                     } else {
-                        actionMode.title = "${value.size}/${notesListAdapter.currentList.size}"
+                        val selectNotesMenuItem = actionMode.menu.findItem(R.id.select_all_notes)
 
-                        actionMode.menu.findItem(R.id.select_all_notes).apply {
-                            title = if (value.size == notesListAdapter.currentList.size) {
+                        actionMode.title = "${value.size}/${notesListAdapter.currentList.size}"
+                        selectNotesMenuItem.title =
+                            if (value.size == notesListAdapter.currentList.size) {
                                 getString(R.string.deselect_all)
                             } else {
                                 getString(R.string.select_all)
                             }
-                        }
                     }
                 }
             }
@@ -364,9 +356,8 @@ class NotesListFragment : Fragment() {
                 override fun onReceive(context: Context, intent: Intent) {
                     Timber.i("Received broadcast to replace select all button text")
 
-                    actionMode.menu.findItem(R.id.select_all_notes).apply {
-                        title = getString(R.string.select_all)
-                    }
+                    val selectNotesMenuItem = actionMode.menu.findItem(R.id.select_all_notes)
+                    selectNotesMenuItem.title = getString(R.string.select_all)
                 }
             }
         }
@@ -401,13 +392,13 @@ class NotesListFragment : Fragment() {
                 }
                 R.id.select_all_notes -> {
 
-                    val selectAllNotesItem = mode.menu.findItem(R.id.select_all_notes)
+                    val selectNotesMenuItem = mode.menu.findItem(R.id.select_all_notes)
 
-                    if (selectAllNotesItem.title == getString(R.string.deselect_all)) {
+                    if (selectNotesMenuItem.title == getString(R.string.deselect_all)) {
                         requireContext().sendBroadcast(Intent(ACTION_DESELECT_NOTES))
                     } else {
                         requireContext().sendBroadcast(Intent(ACTION_SELECT_NOTES))
-                        selectAllNotesItem.title = getString(R.string.deselect_all)
+                        selectNotesMenuItem.title = getString(R.string.deselect_all)
                     }
                 }
             }

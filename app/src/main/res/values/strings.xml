@@ -18,6 +18,7 @@
     <string name="descending">Descending</string>
     <string name="import_note">Import note</string>
     <string name="about">About</string>
+    <string name="no_text">This note does not have any text</string>
 
     <!-- NoteFragment -->
     <string name="save">Save</string>
@@ -44,6 +45,7 @@
     <string name="cancel">Cancel</string>
     <string name="rename_note">Rename note</string>
     <string name="rename">Rename</string>
+    <string name="invalid_character">That character is not allowed</string>
 
     <!-- Settings -->
     <string name="theme">Theme</string>

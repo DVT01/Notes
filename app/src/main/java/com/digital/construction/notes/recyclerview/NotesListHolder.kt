@@ -44,13 +44,10 @@ class NotesListHolder(view: View) : AbstractSwipeableItemViewHolder(view) {
     fun bind(note: Note) {
         this.note = note
         noteNameTextView.text = note.name
+        noteTextTextView.text = note.text
 
-        note.text.let { text ->
-            noteTextTextView.text = text
-
-            // Hide spinner if the note doesn't have any text
-            expandableLayout.showSpinner = text.isNotEmpty()
-        }
+        // Hide spinner if the note doesn't have any text
+        expandableLayout.showSpinner = note.text.isNotEmpty()
 
         itemView.isActivated = NotesListDataHolder.selectedItemsValue.contains(note.id)
     }
@@ -82,9 +79,7 @@ class NotesListHolder(view: View) : AbstractSwipeableItemViewHolder(view) {
         if (NotesListDataHolder.selectAllNotesIsOn) {
             NotesListDataHolder.selectAllNotesIsOn = false
 
-            itemView.context?.run {
-                sendBroadcast(Intent(ACTION_REPLACE_SELECT_ALL_TEXT))
-            }
+            itemView.context?.sendBroadcast(Intent(ACTION_REPLACE_SELECT_ALL_TEXT))
         }
     }
 
@@ -135,13 +130,13 @@ class NotesListHolder(view: View) : AbstractSwipeableItemViewHolder(view) {
 
             if (note.text.isEmpty()) {
                 Snackbar
-                    .make(itemView, "This note doesn't have any text", Snackbar.LENGTH_SHORT)
+                    .make(itemView, R.string.no_text, Snackbar.LENGTH_SHORT)
                     .show()
 
                 return true
             }
 
-            // Not in selection mode
+            // Check if we're in selection mode
             if (NotesListDataHolder.selectedItemsValue.isEmpty() && !expandableLayout.isExpanded) {
                 expandableLayout.expand()
             } else if (expandableLayout.isExpanded) {

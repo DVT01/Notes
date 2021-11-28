@@ -60,7 +60,6 @@ class MainActivity : AppCompatActivity(), FragmentResultListener {
         lifecycle.addObserver(LifecycleObserver())
 
         val currentFragment = supportFragmentManager.findFragmentById(R.id.fragment_container_view)
-
         if (currentFragment == null) {
             val notesListFragment = NotesListFragment.newInstance(REQUEST_NOTE_ID)
             supportFragmentManager.commit {
@@ -68,12 +67,13 @@ class MainActivity : AppCompatActivity(), FragmentResultListener {
             }
         }
 
-        sharedPreferences.getBoolean(INTRODUCTION_SEEN_KEY, false).let { introductionSeen ->
-            if (!introductionSeen) {
-                startActivity(Intent(this, MainIntroActivity::class.java))
-                sharedPreferences.edit {
-                    putBoolean(INTRODUCTION_SEEN_KEY, true)
-                }
+        val introductionSeen = sharedPreferences.getBoolean(INTRODUCTION_SEEN_KEY, false)
+        if (!introductionSeen) {
+            val introActivityIntent = Intent(this, MainIntroActivity::class.java)
+            startActivity(introActivityIntent)
+
+            sharedPreferences.edit {
+                putBoolean(INTRODUCTION_SEEN_KEY, true)
             }
         }
 

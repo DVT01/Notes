@@ -67,7 +67,7 @@ class NoteWidgetConfigurationActivity : AppCompatActivity() {
                 override fun onNothingSelected(parent: AdapterView<*>) {}
             }
 
-        notesListSpinner.adapter =
+        val noteArrayAdapter =
             object : ArrayAdapter<Note>(this, android.R.layout.simple_spinner_item) {
                 override fun getView(position: Int, convertView: View?, parent: ViewGroup): View {
                     return initView(position, convertView, parent, false)
@@ -109,31 +109,33 @@ class NoteWidgetConfigurationActivity : AppCompatActivity() {
                     }
                 }
             }
-                .apply {
-                    notesRepository.getAllNotes().asLiveData()
-                        .observe(this@NoteWidgetConfigurationActivity) { allNotes ->
-                            addAll(allNotes.filter { it.text.isNotEmpty() })
-                        }
-                }
+
+        notesRepository.getAllNotes().asLiveData().observe(this) { allNotes ->
+            noteArrayAdapter.addAll(
+                // Make sure to remove all notes without anything written
+                allNotes.filter { it.text.isNotEmpty() }
+            )
+        }
+
+        notesListSpinner.adapter = noteArrayAdapter
 
         acceptButton.setOnClickListener {
-
             val note = try {
                 notesListSpinner.selectedItem as Note
             } catch (error: NullPointerException) {
                 Timber.e(error, "There are no notes with text to choose from")
-
                 finish()
                 return@setOnClickListener
             }
 
             Timber.d("note.id (${note.id}) for widgetId ($appWidgetId)")
 
-            PreferenceManager.getDefaultSharedPreferences(this).edit(true) {
+            val sharedPreferences = PreferenceManager.getDefaultSharedPreferences(this)
+            sharedPreferences.edit(true) {
                 putLong(appWidgetId.toString(), note.id)
             }
 
-            val intent = Intent(this, NoteWidgetProvider::class.java).apply {
+            val noteWidgetProviderIntent = Intent(this, NoteWidgetProvider::class.java).apply {
                 action = AppWidgetManager.ACTION_APPWIDGET_UPDATE
 
                 val appWidgetIds = AppWidgetManager
@@ -148,8 +150,8 @@ class NoteWidgetConfigurationActivity : AppCompatActivity() {
                 putExtra(AppWidgetManager.EXTRA_APPWIDGET_IDS, appWidgetIds)
             }
 
-            sendBroadcast(intent)
-            setResult(Activity.RESULT_OK, intent)
+            sendBroadcast(noteWidgetProviderIntent)
+            setResult(Activity.RESULT_OK, noteWidgetProviderIntent)
             finish()
         }
     }
