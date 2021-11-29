@@ -38,37 +38,36 @@ class NoteWidgetProvider : AppWidgetProvider() {
         val sharedPreferences = PreferenceManager.getDefaultSharedPreferences(context)
 
         scope.launch {
-            appWidgetIds.forEach { widgetId ->
-                sharedPreferences.getLong(widgetId.toString(), 1).let { noteId ->
-                    NotesRepository.get().getNote(noteId).collect { note ->
+            for (widgetId in appWidgetIds) {
+                val noteId = sharedPreferences.getLong(widgetId.toString(), -1)
 
-                        /**
-                         * Note is null when the widget tries to update before having
-                         * the widget configuration activity finish
-                         */
-                        if (note == null) return@collect
+                /**
+                 * noteId is -1 when the widget tries to update before having
+                 * the widget configuration activity finish
+                 */
+                if (noteId == -1L) continue
 
-                        Timber.d("Updating widget (id=$widgetId)")
+                NotesRepository.get().getNote(noteId).collect { note ->
+                    Timber.d("Updating widget (id=$widgetId)")
 
-                        val intent = Intent(context, MainActivity::class.java).apply {
-                            putExtra(NOTE_ID, noteId)
+                    val intent = Intent(context, MainActivity::class.java).apply {
+                        putExtra(NOTE_ID, noteId)
+                    }
+
+                    val pendingIntent = PendingIntent.getActivity(
+                        context,
+                        0,
+                        intent,
+                        PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE
+                    )
+
+                    val remoteViews =
+                        RemoteViews(context.packageName, R.layout.note_widget).apply {
+                            setOnClickPendingIntent(R.id.widget, pendingIntent)
+                            setTextViewText(R.id.note_text, note.text)
                         }
 
-                        val pendingIntent = PendingIntent.getActivity(
-                            context,
-                            0,
-                            intent,
-                            PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE
-                        )
-
-                        val remoteViews =
-                            RemoteViews(context.packageName, R.layout.note_widget).apply {
-                                setOnClickPendingIntent(R.id.widget, pendingIntent)
-                                setTextViewText(R.id.note_text, note.text)
-                            }
-
-                        appWidgetManager.updateAppWidget(widgetId, remoteViews)
-                    }
+                    appWidgetManager.updateAppWidget(widgetId, remoteViews)
                 }
             }
         }
