@@ -30,6 +30,10 @@
                 android:resource="@xml/note_widget_provider_info" />
         </receiver>
 
+        <service
+            android:name=".widget.ListWidgetService"
+            android:permission="android.permission.BIND_REMOTEVIEWS" />
+
         <activity
             android:name=".activities.MainActivity"
             android:exported="true">

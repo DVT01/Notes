@@ -1,12 +1,12 @@
 package com.digital.construction.notes.fragments
 
+import android.appwidget.AppWidgetManager
 import android.content.*
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
 import android.util.TypedValue
 import android.view.*
-import androidx.activity.OnBackPressedCallback
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.annotation.StringRes
 import androidx.appcompat.app.AppCompatActivity
@@ -238,10 +238,29 @@ class NoteFragment : Fragment() {
     }
 
     private fun saveNote() {
+        /**
+         * Update all widgets that display this [Note]
+         */
+        fun updateWidgets() {
+            val appWidgetManager = AppWidgetManager.getInstance(requireContext())
+            val widgetIds = mutableListOf<Int>()
+
+            for (item in sharedPreferences.all) {
+                if (item.value == note.id) {
+                    val widgetId = item.key.toInt()
+
+                    Timber.d("Updating widget with widgetId=$widgetId for note.id=${note.id}")
+                    widgetIds.add(widgetId)
+                }
+            }
+
+            appWidgetManager.notifyAppWidgetViewDataChanged(widgetIds.toIntArray(), R.id.list_view)
+        }
+
         if (noteTextIsNotSaved) {
             noteViewModel.saveNote(note)
-
             showSnackbar(R.string.note_saved)
+            updateWidgets()
         }
     }
 
