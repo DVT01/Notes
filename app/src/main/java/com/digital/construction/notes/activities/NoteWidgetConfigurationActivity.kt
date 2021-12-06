@@ -10,10 +10,9 @@ import android.view.ViewGroup
 import android.widget.*
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.AppCompatSpinner
-import androidx.core.content.edit
 import androidx.lifecycle.asLiveData
-import androidx.preference.PreferenceManager
 import com.digital.construction.notes.R
+import com.digital.construction.notes.database.NotesPreferences
 import com.digital.construction.notes.model.Note
 import com.digital.construction.notes.model.NotesRepository
 import com.digital.construction.notes.widget.NoteWidgetProvider
@@ -26,7 +25,6 @@ class NoteWidgetConfigurationActivity : AppCompatActivity() {
     private lateinit var notesListSpinner: AppCompatSpinner
     private lateinit var noteTextTextView: TextView
     private lateinit var acceptButton: Button
-    private lateinit var notesRepository: NotesRepository
 
     private var appWidgetId = AppWidgetManager.INVALID_APPWIDGET_ID
 
@@ -36,9 +34,6 @@ class NoteWidgetConfigurationActivity : AppCompatActivity() {
         setResult(Activity.RESULT_CANCELED)
 
         Timber.tag(TAG)
-
-        NotesRepository.initialize(this)
-        notesRepository = NotesRepository.get()
 
         notesListSpinner = findViewById(R.id.notes_list)
         noteTextTextView = findViewById(R.id.note_text)
@@ -110,7 +105,7 @@ class NoteWidgetConfigurationActivity : AppCompatActivity() {
                 }
             }
 
-        notesRepository.getAllNotes().asLiveData().observe(this) { allNotes ->
+        NotesRepository.get().getAllNotes().asLiveData().observe(this) { allNotes ->
             noteArrayAdapter.addAll(
                 // Make sure to remove all notes without anything written
                 allNotes.filter { it.text.isNotEmpty() }
@@ -128,12 +123,8 @@ class NoteWidgetConfigurationActivity : AppCompatActivity() {
                 return@setOnClickListener
             }
 
-            Timber.d("note.id (${note.id}) for widgetId ($appWidgetId)")
-
-            val sharedPreferences = PreferenceManager.getDefaultSharedPreferences(this)
-            sharedPreferences.edit(true) {
-                putLong(appWidgetId.toString(), note.id)
-            }
+            val preference = NotesPreferences.get().createPreference(appWidgetId.toString(), -1L, note.id)
+            Timber.d("Creating $preference")
 
             val noteWidgetProviderIntent = Intent(this, NoteWidgetProvider::class.java).apply {
                 action = AppWidgetManager.ACTION_APPWIDGET_UPDATE

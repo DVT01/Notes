@@ -7,13 +7,11 @@ import android.content.Intent
 import android.content.IntentFilter
 import android.view.LayoutInflater
 import android.view.ViewGroup
-import androidx.preference.PreferenceManager
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.digital.construction.notes.R
-import com.digital.construction.notes.fragments.SWIPE_DELETE_KEY
-import com.digital.construction.notes.fragments.SWIPE_OPEN_KEY
+import com.digital.construction.notes.database.NotesPreferences
 import com.digital.construction.notes.model.Note
 import com.h6ah4i.android.widget.advrecyclerview.swipeable.SwipeableItemAdapter
 import com.h6ah4i.android.widget.advrecyclerview.swipeable.SwipeableItemConstants
@@ -122,10 +120,8 @@ class NotesListAdapter : ListAdapter<Note, NotesListHolder>(NoteComparator()),
         x: Int,
         y: Int
     ): Int {
-        val sharedPreferences = PreferenceManager.getDefaultSharedPreferences(recyclerView.context)
-
-        val swipeToOpenOn = sharedPreferences.getBoolean(SWIPE_OPEN_KEY, true)
-        val swipeToDeleteOn = sharedPreferences.getBoolean(SWIPE_DELETE_KEY, true)
+        val swipeToOpenOn = NotesPreferences.get().swipeToOpenOn.value
+        val swipeToDeleteOn = NotesPreferences.get().swipeToDeleteOn.value
 
         return when {
             swipeToDeleteOn && swipeToOpenOn -> SwipeableItemConstants.REACTION_CAN_SWIPE_BOTH_H

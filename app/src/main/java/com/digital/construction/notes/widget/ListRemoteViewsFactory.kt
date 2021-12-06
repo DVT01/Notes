@@ -6,9 +6,8 @@ import android.content.Intent
 import android.util.TypedValue
 import android.widget.RemoteViews
 import android.widget.RemoteViewsService
-import androidx.core.content.edit
-import androidx.preference.PreferenceManager
 import com.digital.construction.notes.R
+import com.digital.construction.notes.database.NotesPreferences
 import com.digital.construction.notes.fragments.NOTE_ID
 import com.digital.construction.notes.model.Note
 import com.digital.construction.notes.model.NotesRepository
@@ -60,14 +59,11 @@ class ListRemoteViewsFactory(
     override fun getItemId(position: Int) = position.toLong()
 
     override fun onDestroy() {
-        Timber.d("Deleting widget with widgetId=$widgetId and noteId=$noteId")
-        ListWidgetDataHolder.noteWidgets.remove(widgetId)
+        val preference = NotesPreferences.get().getPreference(widgetId.toString())
+        Timber.d("Deleting $preference")
 
-        // Delete saved widget id and note id entry in the shared preferences
-        val sharedPreferences = PreferenceManager.getDefaultSharedPreferences(context)
-        sharedPreferences.edit {
-            remove(widgetId.toString())
-        }
+        preference?.delete()
+        ListWidgetDataHolder.noteWidgets.remove(widgetId)
     }
 
     private fun getUpToDateNote() = runBlocking {

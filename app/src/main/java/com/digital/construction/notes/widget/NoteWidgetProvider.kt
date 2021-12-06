@@ -7,9 +7,9 @@ import android.content.Context
 import android.content.Intent
 import android.net.Uri
 import android.widget.RemoteViews
-import androidx.preference.PreferenceManager
 import com.digital.construction.notes.R
 import com.digital.construction.notes.activities.MainActivity
+import com.digital.construction.notes.database.NotesPreferences
 import com.digital.construction.notes.fragments.NOTE_ID
 import com.digital.construction.notes.model.NotesRepository
 import kotlinx.coroutines.CoroutineScope
@@ -36,20 +36,18 @@ class NoteWidgetProvider : AppWidgetProvider() {
     ) {
         super.onUpdate(context, appWidgetManager, appWidgetIds)
 
-        val sharedPreferences = PreferenceManager.getDefaultSharedPreferences(context)
-
         for (widgetId in appWidgetIds) {
-            val noteId = sharedPreferences.getLong(widgetId.toString(), -1)
-
             /**
-             * noteId is -1 when the widget tries to update before having
-             * the widget configuration activity finish
+             * preference is null when the widget tries to update before having
+             * the widget configuration activity finish thus trying to get a SharedPreference
+             * that doesn't exist.
              */
-            if (noteId == -1L) continue
+            val preference = NotesPreferences.get().getPreference(widgetId.toString()) ?: continue
+            val noteId = preference.value as Long
 
             scope.launch {
                 NotesRepository.get().getNote(noteId).collect { note ->
-                    Timber.d("Updating widgetId=$widgetId with note.id=${note.id}")
+                    Timber.d("Updating $preference")
 
                     ListWidgetDataHolder.noteWidgets[widgetId] = note
 

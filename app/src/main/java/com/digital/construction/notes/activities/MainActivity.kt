@@ -1,16 +1,18 @@
 package com.digital.construction.notes.activities
 
-import android.content.*
+import android.content.BroadcastReceiver
+import android.content.Context
+import android.content.Intent
+import android.content.IntentFilter
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
-import androidx.core.content.edit
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentResultListener
 import androidx.fragment.app.commit
 import androidx.lifecycle.DefaultLifecycleObserver
 import androidx.lifecycle.LifecycleOwner
-import androidx.preference.PreferenceManager
 import com.digital.construction.notes.R
+import com.digital.construction.notes.database.NotesPreferences
 import com.digital.construction.notes.fragments.*
 import timber.log.Timber
 
@@ -21,8 +23,6 @@ const val ACTION_OPEN_SETTINGS = "com.digital.construction.notes.open_settings"
 const val ACTION_OPEN_ABOUT = "com.digital.construction.notes.open_about"
 
 class MainActivity : AppCompatActivity(), FragmentResultListener {
-
-    private lateinit var sharedPreferences: SharedPreferences
 
     private val openSettings: BroadcastReceiver by lazy {
         object : BroadcastReceiver() {
@@ -49,8 +49,6 @@ class MainActivity : AppCompatActivity(), FragmentResultListener {
 
         Timber.tag(TAG)
 
-        sharedPreferences = PreferenceManager.getDefaultSharedPreferences(this)
-
         supportFragmentManager.setFragmentResultListener(
             REQUEST_NOTE_ID,
             this,
@@ -67,14 +65,12 @@ class MainActivity : AppCompatActivity(), FragmentResultListener {
             }
         }
 
-        val introductionSeen = sharedPreferences.getBoolean(INTRODUCTION_SEEN_KEY, false)
-        if (!introductionSeen) {
+        val introductionSeen = NotesPreferences.get().introductionSeen
+        if (!introductionSeen.value) {
             val introActivityIntent = Intent(this, MainIntroActivity::class.java)
             startActivity(introActivityIntent)
 
-            sharedPreferences.edit {
-                putBoolean(INTRODUCTION_SEEN_KEY, true)
-            }
+            introductionSeen.value = true
         }
 
         /**

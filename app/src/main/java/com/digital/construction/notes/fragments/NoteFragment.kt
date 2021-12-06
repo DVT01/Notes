@@ -16,8 +16,8 @@ import androidx.fragment.app.Fragment
 import androidx.lifecycle.DefaultLifecycleObserver
 import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.ViewModelProvider
-import androidx.preference.PreferenceManager
 import com.digital.construction.notes.R
+import com.digital.construction.notes.database.NotesPreferences
 import com.digital.construction.notes.model.Note
 import com.google.android.material.snackbar.Snackbar
 import timber.log.Timber
@@ -34,11 +34,8 @@ const val ACTION_RENAME_NOTE = "com.digital.construction.notes.rename_note"
 class NoteFragment : Fragment() {
 
     private lateinit var noteTextEditText: AppCompatEditText
-    private lateinit var sharedPreferences: SharedPreferences
     private lateinit var savedNoteText: String
     private lateinit var note: Note
-
-    private var fontSizePercentage: Float = 1f
 
     private val noteTextIsSaved: Boolean
         get() = note.text == savedNoteText
@@ -103,14 +100,11 @@ class NoteFragment : Fragment() {
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        sharedPreferences = PreferenceManager
-            .getDefaultSharedPreferences(requireContext())
-        fontSizePercentage = sharedPreferences
-            .getString(FONT_SIZE_KEY, "100")!!
+        val view = inflater.inflate(R.layout.fragment_note, container, false)
+
+        val fontSizePercentage = NotesPreferences.get().fontSizePercentage.value
             .toFloat()
             .div(100)
-
-        val view = inflater.inflate(R.layout.fragment_note, container, false)
 
         noteTextEditText = view.findViewById(R.id.note_text)
         noteTextEditText.setTextSize(
@@ -245,7 +239,7 @@ class NoteFragment : Fragment() {
             val appWidgetManager = AppWidgetManager.getInstance(requireContext())
             val widgetIds = mutableListOf<Int>()
 
-            for (item in sharedPreferences.all) {
+            for (item in NotesPreferences.get().all) {
                 if (item.value == note.id) {
                     val widgetId = item.key.toInt()
 

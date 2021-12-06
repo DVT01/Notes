@@ -10,19 +10,18 @@ import androidx.annotation.IdRes
 import androidx.annotation.StringRes
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.AppCompatTextView
-import androidx.core.content.edit
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.setFragmentResult
 import androidx.lifecycle.DefaultLifecycleObserver
 import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.ViewModelProvider
-import androidx.preference.PreferenceManager
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.digital.construction.notes.R
 import com.digital.construction.notes.activities.ACTION_OPEN_ABOUT
 import com.digital.construction.notes.activities.ACTION_OPEN_SETTINGS
+import com.digital.construction.notes.database.NotesPreferences
 import com.digital.construction.notes.model.Note
 import com.digital.construction.notes.recyclerview.*
 import com.google.android.material.floatingactionbutton.FloatingActionButton
@@ -130,11 +129,8 @@ class NotesListFragment : Fragment() {
             }
         }
     }
-    private val sharedPreferences: SharedPreferences by lazy {
-        PreferenceManager.getDefaultSharedPreferences(requireContext())
-    }
 
-    private enum class SortBy(@IdRes val id: Int) {
+    enum class SortBy(@IdRes val id: Int) {
         ASCENDING(R.id.ascending),
         DESCENDING(R.id.descending);
 
@@ -151,7 +147,7 @@ class NotesListFragment : Fragment() {
 
         Timber.tag(TAG)
 
-        val savedSortBy = sharedPreferences.getString(SORT_MODE_KEY, SortBy.ASCENDING.name)!!
+        val savedSortBy = NotesPreferences.get().savedSortBy.value
         sortByOrder = SortBy.valueOf(savedSortBy)
 
         lifecycle.addObserver(LifecycleObserver())
@@ -258,9 +254,7 @@ class NotesListFragment : Fragment() {
                 sortByOrder = SortBy.getSortFromId(item.itemId)!!
                 checkSortOrderMenuItem()
 
-                sharedPreferences.edit {
-                    putString(SORT_MODE_KEY, sortByOrder.name)
-                }
+                NotesPreferences.get().savedSortBy.value = sortByOrder.name
 
                 updateUI()
                 true
