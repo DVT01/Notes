@@ -19,6 +19,8 @@ class NotesPreferences private constructor(context: Context) {
 
     private val sharedPreferences = PreferenceManager.getDefaultSharedPreferences(context)
     private val widgetNotesPreferences = mutableListOf<Preference<*>>()
+    val widgetNotes: List<Preference<*>>
+        get() = widgetNotesPreferences.toList()
 
     private val preDefinedKeys = listOf(
         DARK_MODE_KEY,
@@ -33,6 +35,7 @@ class NotesPreferences private constructor(context: Context) {
         Timber.tag(TAG)
 
         createDynamicPreferences()
+        Timber.d("Created $widgetNotesPreferences")
     }
 
     inner class Preference<T : Any>(val key: String, private val defValue: T, value: T? = null) {

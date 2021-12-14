@@ -19,6 +19,7 @@ import androidx.lifecycle.ViewModelProvider
 import com.digital.construction.notes.R
 import com.digital.construction.notes.database.NotesPreferences
 import com.digital.construction.notes.model.Note
+import com.digital.construction.notes.widget.NoteWidgetDataHolder
 import com.google.android.material.snackbar.Snackbar
 import timber.log.Timber
 import java.io.File
@@ -233,28 +234,17 @@ class NoteFragment : Fragment() {
 
     private fun saveNote() {
         /**
-         * Update all widgets that display this [Note]
+         * Update all widgets that display this [note]
          */
         fun updateWidgets() {
             val appWidgetManager = AppWidgetManager.getInstance(requireContext())
-            val widgetIds = mutableListOf<Int>()
-
-            for (item in NotesPreferences.get().all) {
-                if (item.value == note.id) {
-                    val widgetId = item.key.toInt()
-
-                    Timber.d("Updating widget with widgetId=$widgetId for note.id=${note.id}")
-                    widgetIds.add(widgetId)
-                }
-            }
-
-            appWidgetManager.notifyAppWidgetViewDataChanged(widgetIds.toIntArray(), R.id.list_view)
+            NoteWidgetDataHolder.updateWidgets(appWidgetManager, note)
         }
 
         if (noteTextIsNotSaved) {
             noteViewModel.saveNote(note)
-            showSnackbar(R.string.note_saved)
             updateWidgets()
+            showSnackbar(R.string.note_saved)
         }
     }
 

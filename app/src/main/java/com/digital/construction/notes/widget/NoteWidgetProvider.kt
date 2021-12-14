@@ -49,7 +49,7 @@ class NoteWidgetProvider : AppWidgetProvider() {
                 NotesRepository.get().getNote(noteId).collect { note ->
                     Timber.d("Updating $preference")
 
-                    ListWidgetDataHolder.noteWidgets[widgetId] = note
+                    NoteWidgetDataHolder.addWidget(widgetId, note)
 
                     val pendingIntent: PendingIntent = Intent(context, MainActivity::class.java)
                         .apply { putExtra(NOTE_ID, noteId) }

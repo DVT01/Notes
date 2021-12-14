@@ -10,8 +10,6 @@ import com.digital.construction.notes.R
 import com.digital.construction.notes.database.NotesPreferences
 import com.digital.construction.notes.fragments.NOTE_ID
 import com.digital.construction.notes.model.Note
-import com.digital.construction.notes.model.NotesRepository
-import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.runBlocking
 import timber.log.Timber
 
@@ -33,12 +31,13 @@ class ListRemoteViewsFactory(
 
     override fun onCreate() {
         Timber.d("Creating widget with widgetId=$widgetId and noteId=$noteId")
-        Timber.d("Got ${ListWidgetDataHolder.noteWidgets.size} saved widgets")
-
         getUpToDateNote()
     }
 
-    override fun onDataSetChanged() = getUpToDateNote()
+    override fun onDataSetChanged() {
+        Timber.d("Updating widgetId=$widgetId")
+        getUpToDateNote()
+    }
 
     override fun hasStableIds() = false
 
@@ -49,6 +48,7 @@ class ListRemoteViewsFactory(
     override fun getLoadingView() = RemoteViews(context.packageName, R.layout.widget_line)
 
     override fun getViewAt(position: Int): RemoteViews {
+        Timber.d("getViewAt: widgetId=$widgetId")
         return RemoteViews(context.packageName, R.layout.widget_line).apply {
             setOnClickFillInIntent(R.id.line, Intent())
             setTextViewText(R.id.line, note.text.lines()[position])
@@ -63,19 +63,10 @@ class ListRemoteViewsFactory(
         Timber.d("Deleting $preference")
 
         preference?.delete()
-        ListWidgetDataHolder.noteWidgets.remove(widgetId)
+        NoteWidgetDataHolder.getWidget(widgetId).delete()
     }
 
     private fun getUpToDateNote() = runBlocking {
-        note = ListWidgetDataHolder.noteWidgets.getOrPut(widgetId) {
-            /**
-             * When the singleton instance of ListWidgetDataHolder is destroyed and restarted,
-             * there are no saved widgets and the program crashes.
-             *
-             * This gets the note from the DB and saves it to the singleton for later use.
-             */
-            Timber.w("noteId=$noteId was not found for widgetId=$widgetId")
-            NotesRepository.get().getNote(noteId).first()
-        }
+        note = NoteWidgetDataHolder.getWidget(widgetId).note
     }
 }
