@@ -1,7 +1,10 @@
 package com.digital.construction.notes.recyclerview
 
 import android.annotation.SuppressLint
+import android.content.BroadcastReceiver
+import android.content.Context
 import android.content.Intent
+import android.content.IntentFilter
 import android.view.GestureDetector
 import android.view.MotionEvent
 import android.view.View
@@ -18,6 +21,8 @@ import com.h6ah4i.android.widget.advrecyclerview.utils.AbstractSwipeableItemView
 import com.skydoves.expandablelayout.ExpandableLayout
 import timber.log.Timber
 
+const val ACTION_ENTERED_SELECTION_MODE = "com.digital.construction.notes.entered_selection_mode"
+
 private const val TAG = "NotesListHolder"
 
 @SuppressLint("ClickableViewAccessibility")
@@ -33,12 +38,25 @@ class NotesListHolder(view: View) : AbstractSwipeableItemViewHolder(view) {
     private val noteTextTextView: AppCompatTextView =
         expandableLayout.secondLayout.findViewById(R.id.note_text)
 
+    private val enteredSelectionModeReceiver: BroadcastReceiver by lazy {
+        object : BroadcastReceiver() {
+            override fun onReceive(context: Context, intent: Intent) {
+                expandableLayout.collapse()
+            }
+        }
+    }
+
     init {
         Timber.tag(TAG)
 
         GestureDetectorCompat(itemView.context, GestureListener()).run {
             itemView.setOnTouchListener { _, event -> onTouchEvent(event) }
         }
+
+        itemView.context?.registerReceiver(
+            enteredSelectionModeReceiver,
+            IntentFilter(ACTION_ENTERED_SELECTION_MODE)
+        )
     }
 
     fun bind(note: Note) {
@@ -57,9 +75,12 @@ class NotesListHolder(view: View) : AbstractSwipeableItemViewHolder(view) {
     }
 
     private fun selectNote() {
-        expandableLayout.collapse()
-
         NotesListDataHolder.selectedItemsValue.run {
+            // Send broadcast notifying every receiver that we have entered selection mode
+            if (isEmpty()) {
+                itemView.context?.sendBroadcast(Intent(ACTION_ENTERED_SELECTION_MODE))
+            }
+
             add(note.id)
             NotesListDataHolder.changeLiveDataValue(this)
         }
