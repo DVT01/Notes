@@ -49,19 +49,20 @@ class NoteFragment : Fragment() {
     ) { noteDirUri ->
         Timber.i("Starting export (id: ${note.id})")
 
-        try {
-            requireContext().contentResolver.run {
-                openFileDescriptor(noteDirUri, "w")?.use { parcelFileDescriptor ->
-                    FileOutputStream(parcelFileDescriptor.fileDescriptor).use { fileOutputStream ->
-                        fileOutputStream.write(note.text.toByteArray())
-                    }
+        if (noteDirUri == null) {
+            showSnackbar(getString(R.string.export_failed, getString(R.string.no_file_created)))
+            return@registerForActivityResult
+        }
+
+        requireContext().contentResolver.run {
+            openFileDescriptor(noteDirUri, "w")?.use { parcelFileDescriptor ->
+                FileOutputStream(parcelFileDescriptor.fileDescriptor).use { fileOutputStream ->
+                    fileOutputStream.write(note.text.toByteArray())
                 }
             }
-
-            showSnackbar(R.string.export_successful)
-        } catch (error: NullPointerException) {
-            showSnackbar(getString(R.string.export_failed, getString(R.string.no_file_created)))
         }
+
+        showSnackbar(R.string.export_successful)
     }
 
     private val noteViewModel: NoteViewModel by lazy {
