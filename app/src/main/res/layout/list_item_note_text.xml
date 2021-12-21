@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.appcompat.widget.LinearLayoutCompat xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical">
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:background="@color/colorOnPrimary" />
+
+    <androidx.appcompat.widget.AppCompatTextView
+        android:id="@+id/note_text"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/background"
+        android:ellipsize="end"
+        android:maxLines="3"
+        android:padding="5dp"
+        android:textSize="13sp"
+        tools:text="This is a note's text" />
+</androidx.appcompat.widget.LinearLayoutCompat>

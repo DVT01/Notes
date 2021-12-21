@@ -28,8 +28,15 @@ class MainIntroActivity : IntroActivity() {
 
         addSlide(
             SimpleSlide.Builder()
-                .title(R.string.swipe)
-                .description(R.string.swipe_description)
+                .title(R.string.swipe_feature)
+                .background(R.color.colorPrimaryDark)
+                .backgroundDark(R.color.colorPrimaryDark)
+                .build()
+        )
+
+        addSlide(
+            SimpleSlide.Builder()
+                .title(R.string.double_tap_feature)
                 .background(R.color.colorPrimaryDark)
                 .backgroundDark(R.color.colorPrimaryDark)
                 .build()
@@ -39,15 +46,6 @@ class MainIntroActivity : IntroActivity() {
             SimpleSlide.Builder()
                 .title(R.string.import_and_export)
                 .description(R.string.import_and_export_description)
-                .background(R.color.colorPrimaryDark)
-                .backgroundDark(R.color.colorPrimaryDark)
-                .build()
-        )
-
-        addSlide(
-            SimpleSlide.Builder()
-                .title(R.string.max_note_name_lines)
-                .description(R.string.max_note_name_lines_description)
                 .background(R.color.colorPrimaryDark)
                 .backgroundDark(R.color.colorPrimaryDark)
                 .build()

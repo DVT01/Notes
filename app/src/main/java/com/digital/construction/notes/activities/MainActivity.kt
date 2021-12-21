@@ -1,16 +1,18 @@
 package com.digital.construction.notes.activities
 
-import android.content.*
+import android.content.BroadcastReceiver
+import android.content.Context
+import android.content.Intent
+import android.content.IntentFilter
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
-import androidx.core.content.edit
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentResultListener
 import androidx.fragment.app.commit
 import androidx.lifecycle.DefaultLifecycleObserver
 import androidx.lifecycle.LifecycleOwner
-import androidx.preference.PreferenceManager
 import com.digital.construction.notes.R
+import com.digital.construction.notes.database.NotesPreferences
 import com.digital.construction.notes.fragments.*
 import timber.log.Timber
 
@@ -21,8 +23,6 @@ const val ACTION_OPEN_SETTINGS = "com.digital.construction.notes.open_settings"
 const val ACTION_OPEN_ABOUT = "com.digital.construction.notes.open_about"
 
 class MainActivity : AppCompatActivity(), FragmentResultListener {
-
-    private lateinit var sharedPreferences: SharedPreferences
 
     private val openSettings: BroadcastReceiver by lazy {
         object : BroadcastReceiver() {
@@ -49,8 +49,6 @@ class MainActivity : AppCompatActivity(), FragmentResultListener {
 
         Timber.tag(TAG)
 
-        sharedPreferences = PreferenceManager.getDefaultSharedPreferences(this)
-
         supportFragmentManager.setFragmentResultListener(
             REQUEST_NOTE_ID,
             this,
@@ -60,7 +58,6 @@ class MainActivity : AppCompatActivity(), FragmentResultListener {
         lifecycle.addObserver(LifecycleObserver())
 
         val currentFragment = supportFragmentManager.findFragmentById(R.id.fragment_container_view)
-
         if (currentFragment == null) {
             val notesListFragment = NotesListFragment.newInstance(REQUEST_NOTE_ID)
             supportFragmentManager.commit {
@@ -68,13 +65,21 @@ class MainActivity : AppCompatActivity(), FragmentResultListener {
             }
         }
 
-        sharedPreferences.getBoolean(INTRODUCTION_SEEN_KEY, false).let { introductionSeen ->
-            if (!introductionSeen) {
-                startActivity(Intent(this, MainIntroActivity::class.java))
-                sharedPreferences.edit {
-                    putBoolean(INTRODUCTION_SEEN_KEY, true)
-                }
-            }
+        val introductionSeen = NotesPreferences.get().introductionSeen
+        if (!introductionSeen.value) {
+            val introActivityIntent = Intent(this, MainIntroActivity::class.java)
+            startActivity(introActivityIntent)
+
+            introductionSeen.value = true
+        }
+
+        /**
+         * If this activity was launched from a widget, then this should give me the id of the note
+         * as passed by the widget, if it wasn't launched by a widget then the id will be -1
+         */
+        val noteId = intent.getLongExtra(NOTE_ID, -1)
+        if (noteId != -1L) {
+            openNote(noteId)
         }
     }
 
@@ -82,19 +87,7 @@ class MainActivity : AppCompatActivity(), FragmentResultListener {
         when (requestKey) {
             REQUEST_NOTE_ID -> {
                 val noteId = result.getLong(REQUEST_NOTE_ID)
-                Timber.i("Opening note (id: $noteId)")
-
-                val noteFragment = NoteFragment.newInstance(noteId)
-                supportFragmentManager.commit {
-                    setCustomAnimations(
-                        R.anim.slide_in,
-                        R.anim.fade_out,
-                        R.anim.fade_in,
-                        R.anim.slide_out
-                    )
-                    replace(R.id.fragment_container_view, noteFragment)
-                    addToBackStack(null)
-                }
+                openNote(noteId)
             }
         }
     }
@@ -108,6 +101,22 @@ class MainActivity : AppCompatActivity(), FragmentResultListener {
                 R.anim.fade_out
             )
             replace(R.id.fragment_container_view, fragment)
+            addToBackStack(null)
+        }
+    }
+
+    private fun openNote(noteId: Long) {
+        Timber.i("Opening note (id: $noteId)")
+
+        val noteFragment = NoteFragment.newInstance(noteId)
+        supportFragmentManager.commit {
+            setCustomAnimations(
+                R.anim.slide_in,
+                R.anim.fade_out,
+                R.anim.fade_in,
+                R.anim.slide_out
+            )
+            replace(R.id.fragment_container_view, noteFragment)
             addToBackStack(null)
         }
     }

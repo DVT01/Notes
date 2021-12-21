@@ -6,11 +6,6 @@
         android:title="@string/export_note"
         app:showAsAction="ifRoom" />
     <item
-        android:id="@+id/save_note"
-        android:icon="@drawable/ic_save_note"
-        android:title="@string/save"
-        app:showAsAction="ifRoom" />
-    <item
         android:id="@+id/rename_note"
         android:title="@string/rename_note"
         app:showAsAction="never" />

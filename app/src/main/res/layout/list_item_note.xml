@@ -1,21 +1,24 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:layout_margin="4dp"
     app:cardBackgroundColor="@drawable/list_item_note_background"
     app:cardCornerRadius="4dp">
 
-    <androidx.appcompat.widget.AppCompatTextView
-        android:id="@+id/note_name"
+    <FrameLayout
+        android:id="@+id/container"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:ellipsize="end"
-        android:maxLines="3"
-        android:padding="5dp"
-        android:textSize="16sp"
-        tools:text="This is a note's name" />
+        android:layout_height="wrap_content">
+
+        <com.skydoves.expandablelayout.ExpandableLayout
+            android:id="@+id/expandable"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:expandable_parentLayout="@layout/list_item_note_name"
+            app:expandable_secondLayout="@layout/list_item_note_text"
+            app:expandable_spinner_color="@color/colorPrimaryDark" />
+    </FrameLayout>
 
 </androidx.cardview.widget.CardView>

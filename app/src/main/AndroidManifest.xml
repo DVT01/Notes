@@ -11,6 +11,30 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.Notes">
         <activity
+            android:name=".activities.NoteWidgetConfigurationActivity"
+            android:exported="false">
+            <intent-filter>
+                <action android:name="android.appwidget.action.APPWIDGET_CONFIGURE" />
+            </intent-filter>
+        </activity>
+
+        <receiver
+            android:name=".widget.NoteWidgetProvider"
+            android:exported="true">
+            <intent-filter>
+                <action android:name="android.appwidget.action.APPWIDGET_UPDATE" />
+            </intent-filter>
+
+            <meta-data
+                android:name="android.appwidget.provider"
+                android:resource="@xml/note_widget_provider_info" />
+        </receiver>
+
+        <service
+            android:name=".widget.ListWidgetService"
+            android:permission="android.permission.BIND_REMOTEVIEWS" />
+
+        <activity
             android:name=".activities.MainActivity"
             android:exported="true">
             <intent-filter>
