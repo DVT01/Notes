@@ -106,44 +106,55 @@ class NoteWidgetConfigurationActivity : AppCompatActivity() {
             }
 
         NotesRepository.get().getAllNotes().asLiveData().observe(this) { allNotes ->
-            noteArrayAdapter.addAll(
-                // Make sure to remove all notes without anything written
-                allNotes.filter { it.text.isNotEmpty() }
-            )
+            // Filter out all notes that don't have anything written
+            val filteredNotes = allNotes.filter { it.text.isNotBlank() }
+
+            // Checks how many notes there are available to choose from and acts accordingly
+            when (filteredNotes.size) {
+                0 -> {
+                    Timber.e("There are no notes with text to choose from")
+
+                    Toast
+                        .makeText(this, R.string.no_notes_with_text_available, Toast.LENGTH_LONG)
+                        .show()
+
+                    finish()
+                }
+                1 -> chooseNote(filteredNotes.first())
+                else -> noteArrayAdapter.addAll(filteredNotes)
+            }
         }
 
         notesListSpinner.adapter = noteArrayAdapter
 
         acceptButton.setOnClickListener {
-            val note = try {
-                notesListSpinner.selectedItem as Note
-            } catch (error: NullPointerException) {
-                Timber.e(error, "There are no notes with text to choose from")
-                finish()
-                return@setOnClickListener
-            }
-
-            val preference = NotesPreferences.get().createPreference(appWidgetId.toString(), -1L, note.id)
-            Timber.d("Creating $preference")
-
-            val noteWidgetProviderIntent = Intent(this, NoteWidgetProvider::class.java).apply {
-                action = AppWidgetManager.ACTION_APPWIDGET_UPDATE
-
-                val appWidgetIds = AppWidgetManager
-                    .getInstance(application)
-                    .getAppWidgetIds(
-                        ComponentName(
-                            application,
-                            NoteWidgetProvider::class.java
-                        )
-                    )
-
-                putExtra(AppWidgetManager.EXTRA_APPWIDGET_IDS, appWidgetIds)
-            }
-
-            sendBroadcast(noteWidgetProviderIntent)
-            setResult(Activity.RESULT_OK, noteWidgetProviderIntent)
-            finish()
+            val note = notesListSpinner.selectedItem as Note
+            chooseNote(note)
         }
+    }
+
+    private fun chooseNote(note: Note) {
+        Timber.d("Choose $note for widget (id=$appWidgetId)")
+
+        NotesPreferences.get().createPreference(appWidgetId.toString(), -1L, note.id)
+
+        val noteWidgetProviderIntent = Intent(this, NoteWidgetProvider::class.java).apply {
+            action = AppWidgetManager.ACTION_APPWIDGET_UPDATE
+
+            val appWidgetIds = AppWidgetManager
+                .getInstance(application)
+                .getAppWidgetIds(
+                    ComponentName(
+                        application,
+                        NoteWidgetProvider::class.java
+                    )
+                )
+
+            putExtra(AppWidgetManager.EXTRA_APPWIDGET_IDS, appWidgetIds)
+        }
+
+        sendBroadcast(noteWidgetProviderIntent)
+        setResult(Activity.RESULT_OK, noteWidgetProviderIntent)
+        finish()
     }
 }

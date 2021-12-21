@@ -76,4 +76,5 @@
 
     <!-- Note Widget Configuration -->
     <string name="accept">Accept</string>
+    <string name="no_notes_with_text_available">There are no saved notes with text available!</string>
 </resources>
