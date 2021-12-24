@@ -272,12 +272,12 @@ class NotesListFragment : Fragment() {
             when (sortByOrder) {
                 SortBy.ASCENDING -> {
                     notes.sortedBy { note ->
-                        note.name
+                        note.name.lowercase()
                     }
                 }
                 SortBy.DESCENDING -> {
                     notes.sortedByDescending { note ->
-                        note.name
+                        note.name.lowercase()
                     }
                 }
             }
