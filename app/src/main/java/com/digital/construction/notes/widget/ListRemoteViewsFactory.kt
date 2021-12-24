@@ -52,7 +52,6 @@ class ListRemoteViewsFactory(
         return RemoteViews(context.packageName, R.layout.widget_line).apply {
             setOnClickFillInIntent(R.id.line, Intent())
             setTextViewText(R.id.line, note.text.lines()[position])
-            setTextViewTextSize(R.id.line, TypedValue.COMPLEX_UNIT_PX, 50F)
         }
     }
 
