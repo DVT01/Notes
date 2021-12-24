@@ -3,6 +3,5 @@
     android:id="@+id/line"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:maxLines="1"
     android:paddingHorizontal="8dp"
     android:textColor="@android:color/white" />
