@@ -5,7 +5,6 @@ import android.content.Intent
 import android.os.Bundle
 import android.text.InputFilter
 import android.text.Spanned
-import androidx.annotation.StringRes
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.widget.AppCompatEditText
 import androidx.fragment.app.DialogFragment
@@ -26,7 +25,26 @@ class NoteNameDialog : DialogFragment() {
     private val notesListViewModel: NotesListViewModel by activityViewModels()
 
     enum class DialogType {
-        CREATE, RENAME
+        CREATE {
+            override val dialogTitle: Int
+                get() = R.string.new_note
+            override val positiveButtonText: Int
+                get() = R.string.create
+            override val broadcastIntent: Intent
+                get() = Intent(ACTION_CREATE_NOTE)
+        },
+        RENAME {
+            override val dialogTitle: Int
+                get() = R.string.rename_note
+            override val positiveButtonText: Int
+                get() = R.string.rename
+            override val broadcastIntent: Intent
+                get() = Intent(ACTION_RENAME_NOTE)
+        };
+
+        abstract val dialogTitle: Int
+        abstract val positiveButtonText: Int
+        open val broadcastIntent: Intent? = null
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -35,7 +53,7 @@ class NoteNameDialog : DialogFragment() {
     }
 
     override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
-        val dialogType = requireArguments().getString(ARG_DIALOG_TYPE)
+        val dialogTypeStr = requireArguments().getString(ARG_DIALOG_TYPE)
             ?: throw MissingFormatArgumentException(MISSING_ARGUMENTS_MSG)
 
         val initialNoteName = requireArguments().getString(ARG_NOTE_NAME)
@@ -43,6 +61,7 @@ class NoteNameDialog : DialogFragment() {
 
         val dialogView = layoutInflater.inflate(R.layout.dialog_note_name, null)
         val noteNameEditText: AppCompatEditText = dialogView.findViewById(R.id.note_name)
+        val dialogType = DialogType.valueOf(dialogTypeStr)
 
         noteNameEditText.setText(initialNoteName)
         noteNameEditText.filters = arrayOf(
@@ -68,27 +87,10 @@ class NoteNameDialog : DialogFragment() {
             }
         )
 
-        @StringRes val dialogTitle: Int
-        @StringRes val positiveButtonText: Int
-        val broadcastIntent: Intent
-
-        when (DialogType.valueOf(dialogType)) {
-            DialogType.CREATE -> {
-                dialogTitle = R.string.new_note
-                positiveButtonText = R.string.create
-                broadcastIntent = Intent(ACTION_CREATE_NOTE)
-            }
-            DialogType.RENAME -> {
-                dialogTitle = R.string.rename_note
-                positiveButtonText = R.string.rename
-                broadcastIntent = Intent(ACTION_RENAME_NOTE)
-            }
-        }
-
         val alertDialog = AlertDialog.Builder(requireContext())
             .setView(dialogView)
-            .setTitle(dialogTitle)
-            .setPositiveButton(positiveButtonText, null)
+            .setTitle(dialogType.dialogTitle)
+            .setPositiveButton(dialogType.positiveButtonText, null)
             .setNegativeButton(R.string.cancel, null)
             .create()
 
@@ -112,7 +114,7 @@ class NoteNameDialog : DialogFragment() {
                     } else if (confirmedNoteName.isNotBlank()) {
                         alertDialog.dismiss()
 
-                        broadcastIntent.apply {
+                        dialogType.broadcastIntent?.apply {
                             putExtra(NOTE_NAME, confirmedNoteName)
                             requireContext().sendBroadcast(this)
                         }
