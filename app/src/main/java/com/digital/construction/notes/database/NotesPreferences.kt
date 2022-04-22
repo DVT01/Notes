@@ -1,6 +1,7 @@
 package com.digital.construction.notes.database
 
 import android.content.Context
+import androidx.appcompat.app.AppCompatDelegate
 import androidx.core.content.edit
 import androidx.preference.PreferenceManager
 import com.digital.construction.notes.fragments.NotesListFragment
@@ -12,6 +13,10 @@ private const val FONT_SIZE_KEY = "font_size"
 private const val INTRODUCTION_SEEN_KEY = "introduction_seen"
 private const val SWIPE_DELETE_KEY = "swipe_delete"
 private const val SWIPE_OPEN_KEY = "swipe_open"
+
+const val DARK_MODE_LIGHT = "1"
+const val DARK_MODE_SYSTEM = "0"
+const val DARK_MODE_DARK = "-1"
 
 private const val TAG = "NotesPreferences"
 
@@ -87,7 +92,7 @@ class NotesPreferences private constructor(context: Context) {
     val all: Map<String, *>
         get() = sharedPreferences.all
 
-    val darkModeIsOn = Preference(DARK_MODE_KEY, false)
+    val darkMode = Preference(DARK_MODE_KEY, DARK_MODE_SYSTEM)
     val introductionSeen = Preference(INTRODUCTION_SEEN_KEY, false)
     var savedSortBy = Preference(SORT_MODE_KEY, NotesListFragment.SortBy.ASCENDING.name)
     val fontSizePercentage = Preference(FONT_SIZE_KEY, "100")
@@ -120,6 +125,21 @@ class NotesPreferences private constructor(context: Context) {
         for (item in all) {
             if (item.key !in preDefinedKeys) {
                 createPreference(item.key, item.value!!, item.value!!)
+            }
+        }
+    }
+
+    // Should be called every time the theme is changed to apply it
+    fun applyDarkMode() {
+        when (darkMode.value) {
+            DARK_MODE_DARK -> {
+                AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES)
+            }
+            DARK_MODE_SYSTEM -> {
+                AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_FOLLOW_SYSTEM)
+            }
+            DARK_MODE_LIGHT -> {
+                AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO)
             }
         }
     }

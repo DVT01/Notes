@@ -2,7 +2,6 @@ package com.digital.construction.notes.fragments
 
 import android.content.SharedPreferences
 import android.os.Bundle
-import androidx.appcompat.app.AppCompatDelegate
 import androidx.preference.PreferenceFragmentCompat
 import com.digital.construction.notes.R
 import com.digital.construction.notes.database.NotesPreferences
@@ -25,17 +24,9 @@ class SettingsFragment : PreferenceFragmentCompat(),
     }
 
     override fun onSharedPreferenceChanged(sharedPreferences: SharedPreferences, key: String) {
-        val darkMode = NotesPreferences.get().darkModeIsOn
-
         when (key) {
-            darkMode.key -> {
-                val darkModeIsOn = darkMode.value
-
-                if (darkModeIsOn) {
-                    AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES)
-                } else {
-                    AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO)
-                }
+            NotesPreferences.get().darkMode.key -> {
+                NotesPreferences.get().applyDarkMode()
             }
         }
     }

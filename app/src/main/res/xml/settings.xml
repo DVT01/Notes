@@ -3,8 +3,10 @@
 
     <PreferenceCategory android:title="@string/theme">
 
-        <SwitchPreferenceCompat
-            android:defaultValue="false"
+        <ListPreference
+            android:defaultValue="0"
+            android:entries="@array/dark_mode"
+            android:entryValues="@array/dark_mode_values"
             android:key="dark_mode"
             android:title="@string/dark_mode" />
 
