@@ -32,6 +32,7 @@
     <string name="export_failed">No se pudo exportar la nota: %s</string>
     <string name="no_file_created">El archivo no fue creado</string>
     <string name="export_successful">La nota ha sido exportada exitosamente</string>
+    <string name="undo">Deshacer</string>
 
     <!-- Action Mode -->
     <string name="delete">Borrar</string>

@@ -32,6 +32,7 @@
     <string name="export_failed">Could not export note: %s</string>
     <string name="no_file_created">There was no file created</string>
     <string name="export_successful">Note exported successfully</string>
+    <string name="undo">Undo</string>
 
     <!-- Action Mode -->
     <string name="delete">Delete</string>

@@ -37,6 +37,7 @@ class NoteFragment : Fragment() {
     private lateinit var noteTextEditText: AppCompatEditText
     private lateinit var savedNoteText: String
     private lateinit var note: Note
+    private lateinit var menu: Menu
 
     private val noteTextIsSaved: Boolean
         get() = note.text == savedNoteText
@@ -151,15 +152,31 @@ class NoteFragment : Fragment() {
                     before: Int,
                     count: Int
                 ) {
-                    note.text = sequence.toString()
+                    // Will crash if you type immediately after opening the note
+                    try {
+                        note.text = sequence.toString()
+                    } catch (error: UninitializedPropertyAccessException) {
+                        Timber.e(error)
+                    }
                 }
 
                 override fun afterTextChanged(sequence: Editable) {
                     (activity as AppCompatActivity).supportActionBar?.apply {
-                        title = if (noteTextIsSaved) {
-                            note.name
-                        } else {
-                            "*${note.name}"
+                        // Will crash if you type immediately after opening the note
+                        try {
+                            val undo = menu.findItem(R.id.undo)
+
+                            title = if (noteTextIsSaved) {
+                                undo.isVisible = false
+
+                                note.name
+                            } else {
+                                undo.isVisible = true
+
+                                "*${note.name}"
+                            }
+                        } catch (error: UninitializedPropertyAccessException) {
+                            Timber.e(error)
                         }
                     }
                 }
@@ -171,10 +188,15 @@ class NoteFragment : Fragment() {
     override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
         super.onCreateOptionsMenu(menu, inflater)
         inflater.inflate(R.menu.note_fragment_menu, menu)
+
+        this.menu = menu
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         when (item.itemId) {
+            R.id.undo -> {
+                undoNote()
+            }
             R.id.export_note -> {
                 exportNoteLauncher.launch(note.fileName)
             }
@@ -257,6 +279,12 @@ class NoteFragment : Fragment() {
 
     private fun showSnackbar(@StringRes text: Int) {
         showSnackbar(getString(text))
+    }
+
+    private fun undoNote() {
+        if (noteTextIsNotSaved) {
+            noteTextEditText.setText(savedNoteText)
+        }
     }
 
     companion object {
