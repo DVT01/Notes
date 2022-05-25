@@ -39,8 +39,27 @@ class NotesPreferences private constructor(context: Context) {
     init {
         Timber.tag(TAG)
 
+        checkDarkModePreference()
         createDynamicPreferences()
         Timber.d("Created $widgetNotesPreferences")
+    }
+
+    /**
+     * Updating from version 1.1.0 to 1.1.1 would always crash on startup because dark mode was
+     * stored as a boolean in 1.1.0 but as a string in 1.1.1, thus crashing when trying to cast.
+     *
+     * This function is a 1.1.2 hotfix for that
+     */
+    private fun checkDarkModePreference() {
+        try {
+            sharedPreferences.getString(DARK_MODE_KEY, null)
+        } catch (error: ClassCastException) {
+            Timber.e(error, "Detected incorrect dark mode preference object type!")
+
+            sharedPreferences.edit {
+                remove(DARK_MODE_KEY)
+            }
+        }
     }
 
     inner class Preference<T : Any>(val key: String, private val defValue: T, value: T? = null) {
